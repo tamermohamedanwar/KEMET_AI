@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kemet AI</title>
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    font-family:Arial,sans-serif;
+}
+.sidebar{
+    width:260px;
+    background:#202123;
+    color:white;
+    padding:20px;
+}
+.new-chat{
+    width:100%;
+    padding:12px;
+}
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+.header{
+    padding:20px;
+    border-bottom:1px solid #ddd;
+}
+.messages{
+    flex:1;
+    padding:20px;
+}
+.input-box{
+    display:flex;
+    padding:20px;
+}
+.input-box input{
+    flex:1;
+    padding:12px;
+}
+.input-box button{
+    padding:12px 20px;
+}
+</style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+<p><a href="/conversations/new">+ New Chat</a></p>
+
+{% for c in conversations %}
+<p>
+<a href="/chat?conversation_id={{ c.id }}">
+{{ c.title }}
+</a>
+</p>
+{% else %}
+<p>No conversations</p>
+{% endfor %}
+</div>
+
+<div class="main">
+<div class="header">
+Kemet AI Assistant
+</div>
+
+<div class="messages">
+{% if messages %}
+    {% for msg in messages %}
+        <p><b>You:</b> {{ msg.question }}</p>
+        <p><b>Kemet AI:</b> {{ msg.answer }}</p>
+    {% endfor %}
+{% else %}
+    <p>Welcome to Kemet AI</p>
+{% endif %}
+</div>
+
+<div class="input-box">
+<input placeholder="Type your message">
+<button>Send</button>
+</div>
+
+</div>
+
+
+<script>
+let conversationId = {{ conversation_id|tojson }};
+
+const input = document.querySelector(".input-box input");
+const button = document.querySelector(".input-box button");
+const messages = document.querySelector(".messages");
+
+button.onclick = async function(){
+
+    const message = input.value.trim();
+
+    if(!message){
+        return;
+    }
+
+    messages.innerHTML += "<p><b>You:</b> " + message + "</p>";
+    input.value = "";
+
+    const response = await fetch("/api/chat", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body:JSON.stringify({
+            message:message,
+            conversation_id:conversationId
+        })
+    });
+
+    if (!response.ok) {
+    const text = await response.text();
+    console.log("Status:", response.status);
+    console.log(text);
+    alert("HTTP " + response.status);
+    return;
+}
+
+const data = await response.json();
+
+    conversationId = data.conversation_id;
+
+    messages.innerHTML += "<p><b>Kemet AI:</b> " + data.reply + "</p>";
+};
+</script>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

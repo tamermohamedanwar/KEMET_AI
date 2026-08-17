@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kemet AI — New Ticket</title>
+<style>
+:root{
+    --bg:#07111f;
+    --panel:#0d1a2b;
+    --border:rgba(255,255,255,.08);
+    --text:#f4f7fb;
+    --muted:#8fa2b8;
+    --primary:#6d5dfc;
+    --cyan:#19c8ff;
+}
+*{box-sizing:border-box}
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:
+        radial-gradient(circle at 80% 0%,rgba(109,93,252,.16),transparent 30%),
+        radial-gradient(circle at 10% 80%,rgba(25,200,255,.08),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    font-family:Tahoma,Arial,sans-serif;
+}
+.card{
+    width:min(620px,100%);
+    padding:30px;
+    border:1px solid var(--border);
+    border-radius:24px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015)),var(--panel);
+    box-shadow:0 25px 70px rgba(0,0,0,.28);
+}
+.icon{
+    width:58px;
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:17px;
+    background:linear-gradient(135deg,var(--primary),var(--cyan));
+    font-size:25px;
+    margin-bottom:18px;
+}
+h1{margin:0;font-size:25px}
+p{color:var(--muted);line-height:1.7}
+label{
+    display:block;
+    margin:20px 0 8px;
+    font-size:13px;
+    font-weight:700;
+}
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    outline:0;
+    background:#081421;
+    color:var(--text);
+    font-family:inherit;
+}
+input:focus{
+    border-color:rgba(109,93,252,.65);
+    box-shadow:0 0 0 4px rgba(109,93,252,.10);
+}
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+button,.back{
+    flex:1;
+    padding:13px 16px;
+    border:0;
+    border-radius:12px;
+    text-align:center;
+    font-family:inherit;
+    font-weight:700;
+    text-decoration:none;
+}
+button{
+    color:#fff;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--primary),#5143df);
+}
+.back{
+    color:#cbd5e1;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+}
+@media(max-width:520px){
+    .card{padding:22px}
+    .actions{flex-direction:column}
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+<body>
+{% include "partials/sidebar.html" %}
+
+<div class="card">
+    <div class="icon">🎫</div>
+    <h1>إنشاء تذكرة دعم</h1>
+    <p>أرسل المشكلة أو الطلب وسيتولى فريق الدعم متابعته من داخل Kemet AI.</p>
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label for="title">عنوان المشكلة</label>
+        <input
+            id="title"
+            type="text"
+            name="title"
+            placeholder="مثال: مشكلة في رفع ملف أو استخدام AI"
+            required
+            autocomplete="off"
+        >
+
+        <div class="actions">
+            <a class="back" href="/tickets">إلغاء</a>
+            <button type="submit">إنشاء التذكرة</button>
+        </div>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="h3 mb-1">
+                Approval #{{ approval.id }}
+            </h1>
+
+            <p class="text-muted mb-0">
+                {{ approval.action_type }}
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_automation.automation_approvals') }}"
+            class="btn btn-outline-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header">
+                    <strong>Request</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-3">Action</dt>
+                        <dd class="col-sm-9">
+                            <code>{{ approval.action_type }}</code>
+                        </dd>
+
+                        <dt class="col-sm-3">Reason</dt>
+                        <dd class="col-sm-9">
+                            {{ approval.reason or "No reason provided." }}
+                        </dd>
+
+                        <dt class="col-sm-3">Workflow ID</dt>
+                        <dd class="col-sm-9">
+                            {{ approval.workflow_id or "-" }}
+                        </dd>
+
+                        <dt class="col-sm-3">Execution ID</dt>
+                        <dd class="col-sm-9">
+                            {{ approval.execution_id or "-" }}
+                        </dd>
+
+                        <dt class="col-sm-3">Requested By</dt>
+                        <dd class="col-sm-9">
+                            {{ approval.requested_by or "-" }}
+                        </dd>
+
+                        <dt class="col-sm-3">Created</dt>
+                        <dd class="col-sm-9">
+                            {{ approval.created_at.strftime("%Y-%m-%d %H:%M:%S") }}
+                        </dd>
+
+                    </dl>
+
+                </div>
+
+            </div>
+
+            <div class="card shadow-sm">
+
+                <div class="card-header">
+                    <strong>Request Payload</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <pre class="mb-0"
+                         style="white-space: pre-wrap;">{{ request_data | tojson(indent=2) }}</pre>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header">
+                    <strong>Decision</strong>
+                </div>
+
+                <div class="card-body">
+
+                    {% if approval.status == "pending" %}
+
+                        <div class="alert alert-warning">
+                            This action is waiting for human approval.
+                        </div>
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin_automation.approve_automation_approval',
+                                approval_id=approval.id
+                            ) }}"
+                            class="mb-3"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-success w-100"
+                            >
+                                Approve
+                            </button>
+
+                        </form>
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin_automation.reject_automation_approval',
+                                approval_id=approval.id
+                            ) }}"
+                        >
+
+                            <textarea
+                                name="reason"
+                                class="form-control mb-2"
+                                rows="3"
+                                placeholder="Rejection reason"
+                            ></textarea>
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger w-100"
+                            >
+                                Reject
+                            </button>
+
+                        </form>
+
+                    {% elif approval.status == "approved" %}
+
+                        <div class="alert alert-success">
+                            This request has been approved.
+                        </div>
+
+                    {% elif approval.status == "rejected" %}
+
+                        <div class="alert alert-danger">
+                            This request has been rejected.
+                        </div>
+
+                    {% else %}
+
+                        <div class="alert alert-secondary">
+                            Status: {{ approval.status }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% if approval.decision_json %}
+
+            <div class="card shadow-sm">
+
+                <div class="card-header">
+                    <strong>Decision Data</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <pre class="mb-0"
+                         style="white-space: pre-wrap;">{{ decision_data | tojson(indent=2) }}</pre>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

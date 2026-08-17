@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kemet AI - Edit Automation</title>
+
+    <link rel="stylesheet"
+          href="/static/css/kemet-v2.css">
+
+    <link rel="stylesheet"
+          href="/static/css/kemet-v3.css">
+
+    <style>
+        .kemet-edit-page {
+            width: min(920px, 100%);
+            margin: 24px auto;
+            padding: 0 16px 40px;
+        }
+
+        .kemet-edit-card {
+            border: 1px solid rgba(128,128,128,.22);
+            border-radius: 20px;
+            padding: 24px;
+            background: rgba(128,128,128,.05);
+        }
+
+        .kemet-edit-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(99,102,241,.12);
+            margin-bottom: 10px;
+        }
+
+        .kemet-edit-card h1 {
+            margin: 0 0 8px;
+            font-size: clamp(24px, 4vw, 34px);
+        }
+
+        .kemet-edit-card > p {
+            opacity: .72;
+            line-height: 1.6;
+        }
+
+        .kemet-field {
+            margin-top: 18px;
+        }
+
+        .kemet-field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .kemet-field input,
+        .kemet-field textarea,
+        .kemet-field select {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(128,128,128,.28);
+            border-radius: 11px;
+            padding: 12px 14px;
+            font: inherit;
+            background: transparent;
+        }
+
+        .kemet-field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .kemet-flow {
+            margin: 22px 0;
+            padding: 14px;
+            border-radius: 13px;
+            background: rgba(99,102,241,.08);
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .kemet-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .kemet-actions button,
+        .kemet-actions a {
+            min-height: 46px;
+            padding: 11px 18px;
+            border-radius: 11px;
+            border: 0;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .kemet-save {
+            flex: 1;
+        }
+
+        .kemet-back {
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .kemet-edit-page {
+                margin: 14px auto;
+                padding: 0 10px 30px;
+            }
+
+            .kemet-edit-card {
+                padding: 17px;
+                border-radius: 16px;
+            }
+
+            .kemet-actions {
+                flex-direction: column;
+            }
+
+            .kemet-actions button,
+            .kemet-actions a {
+                width: 100%;
+            }
+        }
+    
+<style>
+.kemet-control-v2 {
+    margin: 24px 0;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 22px;
+    background:
+        linear-gradient(145deg, rgba(20,25,38,.96), rgba(10,14,24,.96));
+    box-shadow: 0 20px 60px rgba(0,0,0,.22);
+}
+
+.kemet-control-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.kemet-control-eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    opacity: .58;
+    margin-bottom: 7px;
+}
+
+.kemet-control-header h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+}
+
+.kemet-control-header p {
+    margin: 0;
+    opacity: .62;
+    font-size: 13px;
+}
+
+.kemet-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    background: rgba(50,205,120,.10);
+    border: 1px solid rgba(50,205,120,.25);
+}
+
+.kemet-live-pill span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #35d07f;
+    box-shadow: 0 0 12px rgba(53,208,127,.8);
+}
+
+.kemet-control-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.kemet-control-item {
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.kemet-control-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    opacity: .48;
+    margin-bottom: 7px;
+}
+
+.kemet-control-item strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.kemet-status-live {
+    color: #35d07f;
+}
+
+.kemet-control-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.kemet-control-actions button,
+.kemet-control-actions a {
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.10);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.kemet-v2-save {
+    background: rgba(255,255,255,.08);
+    color: inherit;
+}
+
+.kemet-v2-run {
+    background: linear-gradient(135deg, #5b7cff, #7a5cff);
+    color: white;
+    border-color: transparent !important;
+    box-shadow: 0 10px 28px rgba(91,124,255,.25);
+}
+
+.kemet-v2-back {
+    background: rgba(255,255,255,.035);
+    color: inherit;
+}
+
+.kemet-control-actions button:hover,
+.kemet-control-actions a:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+}
+
+@media (max-width: 800px) {
+    .kemet-control-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kemet-control-header {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 500px) {
+    .kemet-control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kemet-control-actions {
+        flex-direction: column;
+    }
+
+    .kemet-control-actions button,
+    .kemet-control-actions a {
+        width: 100%;
+    }
+}
+</style>
+
+</style>
+
+<style>
+.kemet-builder-pro {
+    margin: 22px 0;
+    padding: 22px;
+    border: 1px solid rgba(120,140,180,.18);
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(18,25,42,.96), rgba(10,15,28,.96));
+    box-shadow: 0 18px 55px rgba(0,0,0,.22);
+}
+
+.kemet-builder-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:20px;
+}
+
+.kemet-builder-title {
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:.2px;
+}
+
+.kemet-builder-subtitle {
+    margin-top:5px;
+    opacity:.68;
+    font-size:13px;
+}
+
+.kemet-builder-status {
+    padding:8px 13px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    background:rgba(34,197,94,.12);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,.22);
+}
+
+.kemet-builder-flow {
+    display:grid;
+    gap:12px;
+}
+
+.kemet-builder-step {
+    display:grid;
+    grid-template-columns:48px 1fr;
+    gap:14px;
+    align-items:stretch;
+}
+
+.kemet-builder-node {
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.1);
+    font-size:21px;
+}
+
+.kemet-builder-card {
+    padding:16px 18px;
+    border-radius:17px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+    transition:.2s ease;
+}
+
+.kemet-builder-card:hover {
+    transform:translateY(-1px);
+    border-color:rgba(120,160,255,.3);
+}
+
+.kemet-builder-card strong {
+    display:block;
+    margin-bottom:5px;
+}
+
+.kemet-builder-meta {
+    font-size:12px;
+    opacity:.62;
+}
+
+.kemet-builder-connector {
+    width:2px;
+    height:18px;
+    margin-left:23px;
+    background:linear-gradient(to bottom, rgba(120,160,255,.65), transparent);
+}
+
+.kemet-live-preview {
+    margin-top:20px;
+    padding:16px;
+    border-radius:17px;
+    background:rgba(0,0,0,.16);
+    border:1px dashed rgba(255,255,255,.12);
+}
+
+.kemet-live-preview-title {
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    opacity:.55;
+    margin-bottom:10px;
+}
+
+.kemet-preview-code {
+    font-family:monospace;
+    font-size:12px;
+    line-height:1.7;
+    white-space:pre-wrap;
+    word-break:break-word;
+    opacity:.85;
+}
+
+.kemet-action-tools {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.kemet-action-chip {
+    padding:7px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:11px;
+}
+
+@media (max-width:700px) {
+    .kemet-builder-head {
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .kemet-builder-pro {
+        padding:16px;
+        border-radius:18px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="kemet-edit-page">
+
+    <div class="kemet-edit-card">
+
+        <div class="kemet-edit-badge">
+            Kemet AI Automation
+        </div>
+
+        <h1>تخصيص الأتمتة</h1>
+
+        <p>
+            القالب أصبح Workflow حقيقيًا.
+            عدّل الإعدادات ثم احفظه وابدأ التشغيل.
+        </p>
+
+        <div class="kemet-flow">
+            {{ workflow.name }}
+            →
+            {{ action.action_type if action else "Automation" }}
+            →
+            Kemet AI
+        </div>
+
+        
+<div class="kemet-builder-pro" id="kemetAutomationBuilder">
+    <div class="kemet-builder-head">
+        <div>
+            <div class="kemet-builder-title">Automation Builder Pro</div>
+            <div class="kemet-builder-subtitle">
+                Configure, preview and validate this workflow before activation.
+            </div>
+        </div>
+        <div class="kemet-builder-status" id="kemetBuilderStatus">
+            READY
+        </div>
+    </div>
+
+    <div class="kemet-builder-flow">
+        <div class="kemet-builder-step">
+            <div class="kemet-builder-node">⚡</div>
+            <div class="kemet-builder-card">
+                <strong>TRIGGER</strong>
+                <div class="kemet-builder-meta" id="kemetTriggerPreview">
+                    Workflow event
+                </div>
+            </div>
+        </div>
+
+        <div class="kemet-builder-connector"></div>
+
+        <div class="kemet-builder-step">
+            <div class="kemet-builder-node">🤖</div>
+            <div class="kemet-builder-card">
+                <strong>ACTION</strong>
+                <div class="kemet-builder-meta" id="kemetActionPreview">
+                    Automation action
+                </div>
+
+                <div class="kemet-action-tools">
+                    <span class="kemet-action-chip">AI</span>
+                    <span class="kemet-action-chip">Business Logic</span>
+                    <span class="kemet-action-chip">Notification</span>
+                    <span class="kemet-action-chip">Ticketing</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kemet-builder-connector"></div>
+
+        <div class="kemet-builder-step">
+            <div class="kemet-builder-node">✓</div>
+            <div class="kemet-builder-card">
+                <strong>EXECUTION</strong>
+                <div class="kemet-builder-meta">
+                    Save → Activate → Run
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kemet-live-preview">
+        <div class="kemet-live-preview-title">Live workflow preview</div>
+        <div class="kemet-preview-code" id="kemetWorkflowPreview"></div>
+    </div>
+</div>
+
+<form method="POST" id="kemet-workflow-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+
+            <div class="kemet-field">
+                <label>اسم الـ Workflow</label>
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ workflow.name }}"
+                    required
+                >
+            </div>
+
+            <div class="kemet-field">
+                <label>الوصف</label>
+                <textarea
+                    name="description"
+                >{{ workflow.description or "" }}</textarea>
+            </div>
+
+            <div class="kemet-field">
+                <label>Trigger</label>
+                <select name="trigger_type">
+                    <option
+                        value="ticket_message_created"
+                        {% if workflow.trigger_type == "ticket_message_created" %}selected{% endif %}
+                    >
+                        Ticket Message Created
+                    </option>
+
+                    <option
+                        value="ticket_created"
+                        {% if workflow.trigger_type == "ticket_created" %}selected{% endif %}
+                    >
+                        Ticket Created
+                    </option>
+                </select>
+            </div>
+
+            {% if action %}
+
+            <div class="kemet-field">
+                <label>Action</label>
+
+                <select name="action_type">
+
+                    <option
+                        value="generate_ai_reply"
+                        {% if action.action_type == "generate_ai_reply" %}selected{% endif %}
+                    >
+                        Generate AI Reply
+                    </option>
+
+                    <option
+                        value="check_order"
+                        {% if action.action_type == "check_order" %}selected{% endif %}
+                    >
+                        Check Order
+                    </option>
+
+                    <option
+                        value="create_ticket"
+                        {% if action.action_type == "create_ticket" %}selected{% endif %}
+                    >
+                        Create Ticket
+                    </option>
+
+                    <option
+                        value="send_notification"
+                        {% if action.action_type == "send_notification" %}selected{% endif %}
+                    >
+                        Send Notification
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="kemet-field">
+                <label>AI / Automation Message</label>
+
+                <textarea
+                    name="message"
+                >{{ config.get("message", "") }}</textarea>
+            </div>
+
+            <div class="kemet-field">
+                <label>Order ID</label>
+
+                <input
+                    type="text"
+                    name="order_id"
+                    value="{{ config.get("order_id", "") }}"
+                    placeholder="KEMET-1001"
+                >
+            </div>
+
+            <div class="kemet-field">
+                <label>Ticket Title</label>
+
+                <input
+                    type="text"
+                    name="ticket_title"
+                    value="{{ config.get("title", "") }}"
+                >
+            </div>
+
+            <div class="kemet-field">
+                <label>Notification Title</label>
+
+                <input
+                    type="text"
+                    name="notification_title"
+                    value="{{ config.get("title", "") }}"
+                >
+            </div>
+
+            <div class="kemet-field">
+                <label>Notification Message</label>
+
+                <textarea
+                    name="notification_message"
+                >{{ config.get("message", "") }}</textarea>
+            </div>
+
+            {% endif %}
+
+            
+        <section class="kemet-control-v2">
+            <div class="kemet-control-header">
+                <div>
+                    <span class="kemet-control-eyebrow">KEMET BUILDER CONTROL V2</span>
+                    <h2>Workflow Control Center</h2>
+                    <p>Save, test and run this automation directly from the builder.</p>
+                </div>
+                <div class="kemet-live-pill">
+                    <span></span>
+                    LIVE
+                </div>
+            </div>
+
+            <div class="kemet-control-grid">
+                <div class="kemet-control-item">
+                    <span class="kemet-control-label">WORKFLOW</span>
+                    <strong>#{{ workflow.id }}</strong>
+                </div>
+
+                <div class="kemet-control-item">
+                    <span class="kemet-control-label">TRIGGER</span>
+                    <strong>{{ workflow.trigger_type }}</strong>
+                </div>
+
+                <div class="kemet-control-item">
+                    <span class="kemet-control-label">ACTION</span>
+                    <strong>{{ action.action_type if action else "No action" }}</strong>
+                </div>
+
+                <div class="kemet-control-item">
+                    <span class="kemet-control-label">STATUS</span>
+                    <strong class="kemet-status-live">
+                        {{ "ACTIVE" if workflow.is_active else "PAUSED" }}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="kemet-control-actions">
+                <button type="submit" form="kemet-workflow-form" class="kemet-v2-save">
+                    Save Workflow
+                </button>
+
+                <button
+                    type="submit"
+                    form="kemet-toggle-form"
+                    class="kemet-v2-toggle"
+                    id="kemet-activate-btn">
+                    {{ "Disable Workflow" if workflow.is_active else "Activate Workflow" }}
+                </button>
+
+                <button
+                    type="submit"
+                    form="kemet-run-form"
+                    class="kemet-v2-run"
+                    onclick="return confirm('Run this workflow now?');">
+                    Run Test
+                </button>
+
+                <a
+                    href="{{ url_for('admin_automation.index') }}"
+                    class="kemet-v2-back">
+                    Back to Automations
+                </a>
+            </div>
+        </section>
+
+        <form
+            id="kemet-toggle-form"
+            method="POST"
+            action="{{ url_for('admin_automation.toggle', workflow_id=workflow.id) }}"
+            style="display:none;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+
+        <script>
+        (function () {
+            const form = document.getElementById("kemet-toggle-form");
+            const button = document.getElementById("kemet-activate-btn");
+
+            if (!form || !button) return;
+
+            button.addEventListener("click", function () {
+                form.submit();
+            });
+        })();
+        </script>
+
+        <form
+            id="kemet-run-form"
+            method="POST"
+            action="{{ url_for('admin_automation.run', workflow_id=workflow.id) }}"
+            style="display:none;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+
+<div class="kemet-actions">
+
+                <button
+                    class="kemet-save"
+                    type="submit"
+                >
+                    حفظ الـ Workflow
+                </button>
+
+                <a
+                    class="kemet-back"
+                    href="{{ url_for('admin_automation.index') }}"
+                >
+                    العودة إلى الأتمتة
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+(function () {
+    function valueOf(name) {
+        var el = document.querySelector('[name="' + name + '"]');
+        return el ? el.value : "";
+    }
+
+    function updateBuilder() {
+        var trigger = valueOf("trigger_type");
+        var action = valueOf("action_type");
+        var message = valueOf("message");
+        var orderId = valueOf("order_id");
+        var ticketTitle = valueOf("ticket_title");
+        var notificationTitle = valueOf("notification_title");
+
+        var triggerEl = document.getElementById("kemetTriggerPreview");
+        var actionEl = document.getElementById("kemetActionPreview");
+        var previewEl = document.getElementById("kemetWorkflowPreview");
+        var statusEl = document.getElementById("kemetBuilderStatus");
+
+        if (triggerEl) {
+            triggerEl.textContent = trigger || "Workflow event";
+        }
+
+        if (actionEl) {
+            actionEl.textContent = action || "Automation action";
+        }
+
+        var lines = [];
+        lines.push("TRIGGER  : " + (trigger || "not configured"));
+        lines.push("ACTION   : " + (action || "not configured"));
+
+        if (message) {
+            lines.push("MESSAGE  : " + message);
+        }
+
+        if (orderId) {
+            lines.push("ORDER ID : " + orderId);
+        }
+
+        if (ticketTitle) {
+            lines.push("TICKET   : " + ticketTitle);
+        }
+
+        if (notificationTitle) {
+            lines.push("NOTIFY   : " + notificationTitle);
+        }
+
+        if (previewEl) {
+            previewEl.textContent = lines.join("\n");
+        }
+
+        if (statusEl) {
+            statusEl.textContent = trigger && action ? "READY" : "INCOMPLETE";
+        }
+    }
+
+    document.addEventListener("change", function (event) {
+        if (
+            event.target.name === "trigger_type" ||
+            event.target.name === "action_type"
+        ) {
+            updateBuilder();
+        }
+    });
+
+    document.addEventListener("input", function (event) {
+        if (
+            event.target.name === "message" ||
+            event.target.name === "order_id" ||
+            event.target.name === "ticket_title" ||
+            event.target.name === "notification_title"
+        ) {
+            updateBuilder();
+        }
+    });
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", updateBuilder);
+    } else {
+        updateBuilder();
+    }
+})();
+</script>
+
+</body>
+</html>

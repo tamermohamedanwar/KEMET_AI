@@ -1,0 +1,43 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
+uploads/
+logs/
+*.log
+*.tar.gz
+
+# Local/generated artifacts
+PY
+for
+from
+if
+}
+approved_action.position
+test.txt
+kemet_checkout_url.txt
+
+# Local backups and audit artifacts
+archive/
+audit/
+backup_paymob/
+backup_ui/
+*.bak
+*.backup
+*.bak_*
+*.backup_*
+
+# Local databases / runtime
+instance/
+uploads/
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc

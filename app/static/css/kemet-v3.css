@@ -1,0 +1,324 @@
+/* Kemet AI V3 Product Polish */
+
+:root {
+    --kemet-primary: #2563eb;
+    --kemet-primary-dark: #1d4ed8;
+    --kemet-bg: #f5f7fb;
+    --kemet-surface: #ffffff;
+    --kemet-text: #111827;
+    --kemet-muted: #6b7280;
+    --kemet-border: #e5e7eb;
+    --kemet-success: #16a34a;
+    --kemet-danger: #dc2626;
+    --kemet-warning: #d97706;
+    --kemet-radius: 14px;
+    --kemet-shadow: 0 8px 30px rgba(15, 23, 42, .07);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--kemet-bg);
+    color: var(--kemet-text);
+}
+
+button,
+.btn,
+a.button,
+input[type="submit"] {
+    min-height: 40px;
+    border-radius: 10px;
+    transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        background-color .16s ease,
+        opacity .16s ease;
+}
+
+button:hover,
+.btn:hover,
+a.button:hover,
+input[type="submit"]:hover {
+    transform: translateY(-1px);
+}
+
+button:active,
+.btn:active,
+a.button:active,
+input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+button:disabled,
+.btn:disabled,
+input[type="submit"]:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.card,
+.panel,
+.dashboard-card,
+.stat-card,
+.pricing-card,
+.ticket-card,
+.conversation-card {
+    border-radius: var(--kemet-radius);
+    box-shadow: var(--kemet-shadow);
+}
+
+input,
+textarea,
+select {
+    border-radius: 10px;
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--kemet-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+/* Consistent navigation */
+
+.kemet-v3-nav,
+.sidebar,
+.admin-sidebar {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.kemet-v3-nav a,
+.sidebar a,
+.admin-sidebar a {
+    transition:
+        background-color .15s ease,
+        color .15s ease,
+        transform .15s ease;
+}
+
+.kemet-v3-nav a:hover,
+.sidebar a:hover,
+.admin-sidebar a:hover {
+    transform: translateX(2px);
+}
+
+/* Better mobile tables */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    max-width: 100%;
+}
+
+/* Empty states */
+
+.kemet-v3-empty {
+    padding: 35px 20px;
+    text-align: center;
+    color: var(--kemet-muted);
+    border: 1px dashed var(--kemet-border);
+    border-radius: var(--kemet-radius);
+    background: rgba(255, 255, 255, .7);
+}
+
+.kemet-v3-empty strong {
+    display: block;
+    color: var(--kemet-text);
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+/* Status badges */
+
+.kemet-v3-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.kemet-v3-status.success {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.kemet-v3-status.warning {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.kemet-v3-status.danger {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.kemet-v3-status.info {
+    color: #1e40af;
+    background: #dbeafe;
+}
+
+/* Loading indicator */
+
+.kemet-v3-loading {
+    pointer-events: none;
+    opacity: .7;
+    position: relative;
+}
+
+.kemet-v3-loading::after {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 7px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -2px;
+    animation: kemetV3Spin .7s linear infinite;
+}
+
+@keyframes kemetV3Spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Toast */
+
+.kemet-v3-toast-container {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(380px, calc(100vw - 36px));
+}
+
+.kemet-v3-toast {
+    background: #fff;
+    color: var(--kemet-text);
+    border: 1px solid var(--kemet-border);
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, .15);
+    padding: 13px 15px;
+    font-size: 14px;
+    animation: kemetV3ToastIn .2s ease;
+}
+
+.kemet-v3-toast.success {
+    border-left: 4px solid var(--kemet-success);
+}
+
+.kemet-v3-toast.error {
+    border-left: 4px solid var(--kemet-danger);
+}
+
+.kemet-v3-toast.info {
+    border-left: 4px solid var(--kemet-primary);
+}
+
+@keyframes kemetV3ToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Back to top */
+
+.kemet-v3-top {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--kemet-primary);
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, .28);
+}
+
+.kemet-v3-top.visible {
+    display: flex;
+}
+
+/* Hide legacy yellow action */
+
+.btn-yellow,
+.yellow-button,
+.warning-yellow-button,
+.kemet-yellow-button {
+    display: none !important;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .container,
+    .content,
+    .main-content,
+    .dashboard-content {
+        max-width: 100%;
+    }
+
+    .grid,
+    .cards,
+    .stats-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .kemet-v3-toast-container {
+        top: 10px;
+        right: 10px;
+        width: calc(100vw - 20px);
+    }
+
+    button,
+    .btn,
+    input[type="submit"] {
+        max-width: 100%;
+    }
+}

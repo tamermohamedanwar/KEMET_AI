@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Kemet AI Profile</title>
+
+<style>
+body{
+margin:0;
+background:#0b1220;
+color:white;
+font-family:Tahoma,Arial;
+}
+
+.card{
+max-width:500px;
+margin:60px auto;
+background:#17233b;
+padding:30px;
+border-radius:20px;
+text-align:center;
+}
+
+.avatar{
+font-size:70px;
+}
+
+.info{
+background:#24324d;
+padding:15px;
+margin:15px;
+border-radius:12px;
+}
+
+a{
+display:inline-block;
+padding:12px 30px;
+background:#2563eb;
+color:white;
+border-radius:12px;
+text-decoration:none;
+}
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+{% include "partials/sidebar.html" %}
+
+
+<div class="card">
+
+<div class="avatar">👤</div>
+
+<h1>{{ user.full_name }}</h1>
+
+<div class="info">
+📧 {{ user.email }}
+</div>
+
+<div class="info">
+⭐ {{ user.role }}
+</div>
+
+<a href="/chat">
+العودة للشات
+</a>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

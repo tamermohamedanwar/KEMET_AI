@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>🎫 تفاصيل التذكرة - Kemet AI</title>
+
+
+
+<style>
+:root{
+    --bg:#07111f;
+    --panel:#0d1a2b;
+    --panel2:#111f33;
+    --border:rgba(255,255,255,.08);
+    --text:#f4f7fb;
+    --muted:#8fa2b8;
+    --primary:#6d5dfc;
+    --cyan:#19c8ff;
+    --green:#28d17c;
+    --yellow:#f5c451;
+    --red:#ff5d73;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 85% 0%,rgba(109,93,252,.14),transparent 30%),
+        radial-gradient(circle at 5% 20%,rgba(25,200,255,.07),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+.page{
+    width:min(1180px,calc(100% - 30px));
+    margin:0 auto;
+    padding:25px 0 40px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:16px;
+}
+
+.back{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:9px 13px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:rgba(255,255,255,.04);
+    color:#cbd5e1;
+}
+
+.ticket-header{
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    background:linear-gradient(135deg,rgba(109,93,252,.14),rgba(25,200,255,.04)),var(--panel);
+    box-shadow:0 20px 50px rgba(0,0,0,.20);
+}
+
+.ticket-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.ticket-title h1{
+    margin:0;
+    font-size:25px;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:15px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.status,.ai-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.status.open{
+    background:rgba(40,209,124,.12);
+    color:#62eca0;
+}
+
+.status.pending{
+    background:rgba(245,196,81,.12);
+    color:#f8d779;
+}
+
+.status.closed{
+    background:rgba(255,93,115,.12);
+    color:#ff8798;
+}
+
+.ai-badge{
+    background:rgba(109,93,252,.18);
+    color:#b8afff;
+}
+
+.chat{
+    margin-top:18px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px;
+    background:rgba(13,26,43,.78);
+}
+
+.message{
+    max-width:78%;
+    padding:15px 17px;
+    margin-bottom:15px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    line-height:1.8;
+    white-space:pre-wrap;
+}
+
+.message.staff{
+    margin-right:auto;
+    background:var(--panel2);
+}
+
+.message.customer{
+    margin-left:auto;
+    background:linear-gradient(135deg,rgba(109,93,252,.92),rgba(81,67,223,.92));
+    border-color:transparent;
+}
+
+.time{
+    display:inline-block;
+    margin-top:8px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.customer .time{
+    color:#d9d5ff;
+}
+
+.reply-box{
+    margin-top:18px;
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    background:var(--panel);
+}
+
+textarea{
+    width:100%;
+    min-height:130px;
+    resize:vertical;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px;
+    outline:none;
+    background:#081421;
+    color:var(--text);
+    font-family:inherit;
+}
+
+textarea:focus{
+    border-color:rgba(109,93,252,.65);
+    box-shadow:0 0 0 4px rgba(109,93,252,.10);
+}
+
+#ai-suggestion{
+    border-color:rgba(109,93,252,.30);
+}
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:12px;
+}
+
+button{
+    border:0;
+    border-radius:11px;
+    padding:11px 16px;
+    cursor:pointer;
+    color:#fff;
+    font-family:inherit;
+    font-weight:700;
+    transition:.18s ease;
+}
+
+button:hover{
+    transform:translateY(-1px);
+}
+
+button.ai{
+    background:linear-gradient(135deg,#6d5dfc,#5143df);
+}
+
+button.send{
+    background:linear-gradient(135deg,#19b86d,#28d17c);
+}
+
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
+}
+
+@media(max-width:700px){
+    .page{
+        width:calc(100% - 20px);
+        padding-top:15px;
+    }
+
+    .ticket-title{
+        flex-direction:column;
+    }
+
+    .message{
+        max-width:92%;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .actions button{
+        width:100%;
+    }
+}
+</style>
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+
+
+<body>
+{% include "partials/sidebar.html" %}
+
+<div class="page">
+
+
+<div class="topbar">
+
+
+<h2>
+🎫 {{ ticket.title }}
+</h1>
+
+
+
+<div>
+
+الحالة:
+
+{% if ticket.status == "Open" %}
+
+<span class="status open">
+🟢 Open
+</span>
+
+
+{% elif ticket.status == "Pending" %}
+
+<span class="status pending">
+🟡 Pending
+</span>
+
+
+{% else %}
+
+<span class="status closed">
+🔴 Closed
+</span>
+
+{% endif %}
+
+
+</div>
+
+
+
+
+</div>
+
+<div class="meta">
+
+    الأولوية:
+    <span class="status pending">
+        {{ ticket.priority }}
+    </span>
+
+    &nbsp;&nbsp; | &nbsp;&nbsp;
+
+    المسؤول:
+    <span class="status open">
+        {{ ticket.assigned_to.full_name if ticket.assigned_to else 'غير معين' }}
+    </span>
+
+</div>
+
+<div class="chat">
+
+
+
+{% for reply in ticket.replies %}
+
+
+{% if reply.is_staff %}
+
+
+<div class="message staff">
+
+<b>
+{% if reply.is_ai %}
+🤖 Kemet AI
+<span class="ai-badge">AI</span>
+{% else %}
+👨‍💻 الدعم
+{% endif %}
+</b>
+
+<br>
+
+{{ reply.message }}
+
+<br>
+
+<span class="time">
+{{ reply.created_at }}
+</span>
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<div class="message customer">
+
+
+<b>👤 العميل</b>
+
+<br>
+
+
+{{ reply.message }}
+
+
+<br>
+
+
+<span class="time">
+{{ reply.created_at }}
+</span>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+{% else %}
+
+
+<p>
+لا توجد رسائل حتى الآن.
+</p>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+<div class="reply-box">
+
+
+<form method="POST">
+
+
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="is_ai" id="is-ai" value="0">
+
+
+<textarea
+id="message-box" name="message"
+placeholder="اكتب رد الإدارة..."
+required></textarea>
+
+<div id="ai-suggestion-box" style="display:none; margin-top:10px;">
+<textarea id="ai-suggestion" readonly
+placeholder="اقتراح Kemet AI"></textarea>
+
+<button type="button" class="ai"
+onclick="useAISuggestion()">
+استخدام الرد المقترح
+</button>
+</div>
+
+
+<div class="actions">
+
+
+<button class="ai" type="button" onclick="getAISuggestion()">
+🤖 اقتراح رد Kemet AI
+</button>
+
+
+<button class="send" type="submit">
+إرسال الرد
+</button>
+
+
+</div>
+
+
+
+
+</form>
+
+
+<br>
+
+<a class="back" href="/tickets">
+⬅ العودة للتذاكر
+</a>
+
+
+</div>
+
+
+
+
+
+<script>
+
+function getAISuggestion(){
+
+const box = document.getElementById("ai-suggestion-box");
+const suggestion = document.getElementById("ai-suggestion");
+
+box.style.display = "block";
+suggestion.value = "جاري توليد اقتراح Kemet AI...";
+
+fetch("/admin/support/ticket/{{ ticket.id }}/ai-suggest")
+
+.then(response => {
+    if (!response.ok) {
+        throw new Error("AI Suggest request failed");
+    }
+    return response.json();
+})
+
+.then(data => {
+
+suggestion.value = data.suggestion || "لم يتم توليد اقتراح.";
+
+})
+
+.catch(error => {
+
+console.log(error);
+
+suggestion.value = "";
+box.style.display = "none";
+
+alert("حدث خطأ أثناء طلب اقتراح Kemet AI");
+
+});
+
+}
+
+
+function useAISuggestion(){
+
+document.getElementById("message-box").value =
+document.getElementById("ai-suggestion").value;
+
+document.getElementById("is-ai").value = "1";
+
+}
+
+</script>
+
+
+</div>
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kemet AI Users</title>
+
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1e293b;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #475569;
+}
+
+th{
+background:#334155;
+}
+
+a{
+color:#60a5fa;
+}
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<h1>User Management</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div style="background:#16a34a;padding:12px;border-radius:8px;margin:15px 0;">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<a href="{{ url_for('admin.dashboard') }}">
+← Back
+</a>
+
+<br><br>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Role</th>
+<th>Created</th>
+<th>Actions</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+<td>{{ user.id }}</td>
+<td>{{ user.full_name }}</td>
+<td>{{ user.email }}</td>
+<td>{{ user.role }}</td>
+<td>{{ user.created_at }}</td>
+<td>
+<a href="{{ url_for('admin.toggle_role', user_id=user.id) }}">
+Toggle Role
+</a>
+<br><br>
+<a href="{{ url_for('admin.delete_user', user_id=user.id) }}"
+onclick="return confirm('Delete this user?');">
+Delete
+</a>
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

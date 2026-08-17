@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Kemet AI Billing</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<h1>الاشتراك والفوترة</h1>
+
+<h2>الخطة الحالية</h2>
+<p>{{ usage.plan }}</p>
+
+<h2>الاستخدام الشهري</h2>
+
+<ul>
+    <li>الحد: {{ usage.limit }}</li>
+    <li>المستخدم: {{ usage.used }}</li>
+    <li>المتبقي: {{ usage.remaining }}</li>
+</ul>
+
+<h2>الترقية</h2>
+
+<ul>
+    <li>Starter - 1000 طلب</li>
+    <li>Business - 5000 طلب</li>
+    <li>Enterprise - 50000 طلب</li>
+</ul>
+
+<a href="/pricing">عرض الأسعار</a>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

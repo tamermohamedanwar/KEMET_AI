@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Kemet AI Demo</title>
+
+<style>
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Tahoma,Arial;
+background:#08111f;
+color:white;
+padding:40px 20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+background:#111827;
+padding:40px;
+border-radius:20px;
+border:1px solid #1e293b;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+p{
+text-align:center;
+color:#cbd5e1;
+line-height:1.8;
+margin-bottom:30px;
+}
+
+input,textarea{
+width:100%;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+border:1px solid #334155;
+background:#0f172a;
+color:white;
+}
+
+textarea{
+height:130px;
+resize:none;
+}
+
+button{
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.features{
+margin-top:30px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+text-align:center;
+}
+
+.card p{
+font-size:14px;
+margin:10px 0 0;
+}
+
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>تجربة Kemet AI</h1>
+
+<p>
+اكتشف كيف يساعد الذكاء الاصطناعي فريق الدعم لديك
+في الرد على العملاء وإدارة التذاكر.
+</p>
+
+<form method="POST">
+
+<input name="company" placeholder="اسم الشركة">
+
+<input name="email" placeholder="البريد الإلكتروني">
+
+<textarea name="message" placeholder="حدثنا عن احتياجات الدعم لديك"></textarea>
+
+<button>
+طلب تجربة مجانية
+</button>
+
+</form>
+
+
+<div class="features">
+
+<div class="card">
+🤖
+<h3>AI Support</h3>
+<p>ردود ذكية للعملاء</p>
+</div>
+
+<div class="card">
+🎫
+<h3>Tickets</h3>
+<p>إدارة الطلبات</p>
+</div>
+
+<div class="card">
+📚
+<h3>RAG</h3>
+<p>معرفة خاصة بالشركة</p>
+</div>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

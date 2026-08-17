@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Kemet AI — Support Tickets</title>
+
+<style>
+:root{
+    --bg:#07111f;
+    --panel:#0d1a2b;
+    --panel2:#111f33;
+    --border:rgba(255,255,255,.08);
+    --text:#f4f7fb;
+    --muted:#8fa2b8;
+    --primary:#6d5dfc;
+    --cyan:#19c8ff;
+    --green:#28d17c;
+    --yellow:#f5c542;
+    --red:#ff5d73;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 85% 0%,rgba(109,93,252,.14),transparent 30%),
+        radial-gradient(circle at 10% 20%,rgba(25,200,255,.07),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:250px;
+    flex:0 0 250px;
+    background:rgba(13,26,43,.96);
+    border-left:1px solid var(--border);
+    padding:22px 16px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 10px 25px;
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-mark{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--primary),var(--cyan));
+    box-shadow:0 10px 25px rgba(109,93,252,.25);
+}
+
+.section{
+    color:#64748b;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.08em;
+    margin:18px 10px 8px;
+}
+
+.nav a{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:11px 12px;
+    margin-bottom:5px;
+    border-radius:11px;
+    color:#aebdd0;
+    font-size:13px;
+    transition:.18s ease;
+}
+
+.nav a:hover,
+.nav a.active{
+    color:#fff;
+    background:rgba(109,93,252,.12);
+}
+
+.main{
+    flex:1;
+    min-width:0;
+    padding:28px;
+}
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin-bottom:24px;
+}
+
+.title h1{
+    margin:0;
+    font-size:29px;
+    letter-spacing:-.7px;
+}
+
+.title p{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.actions{
+    display:flex;
+    gap:9px;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:42px;
+    padding:9px 15px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.045);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    transition:.18s ease;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    background:rgba(255,255,255,.08);
+}
+
+.btn.primary{
+    border-color:transparent;
+    background:linear-gradient(135deg,var(--primary),#5143df);
+    box-shadow:0 8px 22px rgba(109,93,252,.2);
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:20px;
+}
+
+.stat{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+}
+
+.stat-value{
+    margin-top:9px;
+    font-size:25px;
+    font-weight:800;
+}
+
+.toolbar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:rgba(13,26,43,.75);
+}
+
+.search{
+    flex:1;
+    min-width:0;
+    padding:11px 13px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    outline:none;
+    background:rgba(255,255,255,.04);
+    color:#fff;
+}
+
+.search::placeholder{
+    color:#71839a;
+}
+
+.ticket-list{
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+}
+
+.ticket{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+    transition:.18s ease;
+}
+
+.ticket:hover{
+    transform:translateY(-2px);
+    border-color:rgba(109,93,252,.35);
+    box-shadow:0 14px 35px rgba(0,0,0,.18);
+}
+
+.ticket-icon{
+    width:44px;
+    height:44px;
+    flex:0 0 44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:rgba(109,93,252,.12);
+    font-size:20px;
+}
+
+.ticket-info{
+    flex:1;
+    min-width:0;
+}
+
+.ticket-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.ticket-meta{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.badges{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    min-height:25px;
+    padding:4px 9px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:800;
+}
+
+.open{
+    background:rgba(40,209,124,.12);
+    color:#62e99c;
+}
+
+.pending{
+    background:rgba(245,197,66,.12);
+    color:#f6d66c;
+}
+
+.closed{
+    background:rgba(255,93,115,.12);
+    color:#ff8294;
+}
+
+.medium{
+    background:rgba(25,200,255,.10);
+    color:#66d9ff;
+}
+
+.high{
+    background:rgba(255,93,115,.12);
+    color:#ff8294;
+}
+
+.details{
+    padding:9px 12px;
+    border-radius:10px;
+    background:rgba(255,255,255,.05);
+    color:#dbe7f5;
+    font-size:11px;
+    font-weight:700;
+}
+
+.empty{
+    text-align:center;
+    padding:65px 20px;
+    border:1px dashed var(--border);
+    border-radius:18px;
+    color:var(--muted);
+}
+
+.empty-icon{
+    font-size:36px;
+    margin-bottom:10px;
+}
+
+@media(max-width:900px){
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        padding:18px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    .topbar{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .actions,
+    .actions .btn{
+        width:100%;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .search{
+        width:100%;
+    }
+
+    .ticket{
+        align-items:flex-start;
+        flex-wrap:wrap;
+    }
+
+    .ticket .details{
+        width:100%;
+        text-align:center;
+    }
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+{% include "partials/sidebar.html" %}
+
+
+<div class="layout">
+
+
+
+<main class="main">
+
+<div class="topbar">
+    <div class="title">
+        <h1>🎫 Support Tickets</h1>
+        <p>Manage your support requests from one workspace.</p>
+    </div>
+
+    <div class="actions">
+        <a class="btn" href="/dashboard">← Dashboard</a>
+        <a class="btn primary" href="{{ url_for('tickets.create_ticket') }}">＋ New Ticket</a>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <div class="stat-label">TOTAL TICKETS</div>
+        <div class="stat-value">{{ tickets|length }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">OPEN</div>
+        <div class="stat-value">
+            {{ tickets|selectattr('status','equalto','open')|list|length }}
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">CLOSED</div>
+        <div class="stat-value">
+            {{ tickets|selectattr('status','equalto','closed')|list|length }}
+        </div>
+    </div>
+</div>
+
+<div class="toolbar">
+    <input
+        class="search"
+        id="ticketSearch"
+        type="search"
+        placeholder="Search tickets..."
+        autocomplete="off"
+    >
+</div>
+
+<div class="ticket-list" id="ticketList">
+
+{% if tickets %}
+
+{% for ticket in tickets %}
+
+<div
+    class="ticket"
+    data-search="{{ ticket.id }} {{ ticket.title }} {{ ticket.status }} {{ ticket.priority|default('') }}"
+>
+
+    <div class="ticket-icon">🎫</div>
+
+    <div class="ticket-info">
+
+        <div class="ticket-title">
+            {{ ticket.title }}
+        </div>
+
+        <div class="ticket-meta">
+            #{{ ticket.id }}
+            ·
+            {{ ticket.created_at }}
+        </div>
+
+    </div>
+
+    <div class="badges">
+
+        {% if ticket.status == 'open' %}
+            <span class="badge open">OPEN</span>
+        {% elif ticket.status == 'pending' %}
+            <span class="badge pending">PENDING</span>
+        {% elif ticket.status == 'closed' %}
+            <span class="badge closed">CLOSED</span>
+        {% else %}
+            <span class="badge medium">{{ ticket.status }}</span>
+        {% endif %}
+
+        {% if ticket.priority %}
+            <span class="badge {{ ticket.priority }}">
+                {{ ticket.priority|upper }}
+            </span>
+        {% endif %}
+
+    </div>
+
+    <a
+        class="details"
+        href="/tickets/{{ ticket.id }}"
+    >
+        View Details →
+    </a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="empty">
+    <div class="empty-icon">🎫</div>
+    <h3>No support tickets yet</h3>
+    <p>Create your first ticket and our support system will take care of it.</p>
+    <br>
+    <a class="btn primary" href="{{ url_for('tickets.create_ticket') }}">
+        ＋ Create Ticket
+    </a>
+</div>
+
+{% endif %}
+
+</div>
+
+</main>
+</div>
+
+<script>
+const search = document.getElementById("ticketSearch");
+
+if(search){
+    search.addEventListener("input", function(){
+        const q = this.value.toLowerCase().trim();
+
+        document.querySelectorAll(".ticket").forEach(function(ticket){
+            ticket.style.display =
+                ticket.dataset.search.toLowerCase().includes(q)
+                ? ""
+                : "none";
+        });
+    });
+}
+</script>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

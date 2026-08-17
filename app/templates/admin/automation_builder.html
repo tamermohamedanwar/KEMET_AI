@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemet AI - Automation Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #f5f7fb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            cursor: pointer;
+            border: 0;
+            background: #111827;
+            color: white;
+            font-weight: bold;
+        }
+
+        .workflow {
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .active {
+            color: #15803d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="card">
+        <h1>Automation Builder</h1>
+        <p>Create an AI automation workflow for your organization.</p>
+
+        <form method="POST">
+
+            <label>Workflow Name</label>
+            <input
+                type="text"
+                name="name"
+                placeholder="Example: VIP Customer Support"
+                required
+            >
+
+            <label>Trigger</label>
+            <select name="trigger_type" required>
+                <option value="ticket_message_created">
+                    Ticket Message Created
+                </option>
+                <option value="order_created">
+                    Order Created
+                </option>
+                <option value="payment_received">
+                    Payment Received
+                </option>
+                <option value="manual">
+                    Manual
+                </option>
+            </select>
+
+            <label>Condition</label>
+            <select name="condition">
+                <option value="">No condition</option>
+                <option value="order">Order / Shipping</option>
+                <option value="support">Customer Support</option>
+                <option value="notification">Notification</option>
+                <option value="payment">Payment / Billing</option>
+                <option value="refund">Refund</option>
+            </select>
+
+            <label>Action</label>
+            <select name="action_type" required>
+                <option value="smart_ticket_ai">
+                    Smart Ticket AI
+                </option>
+                <option value="generate_ai_reply">
+                    Generate AI Reply
+                </option>
+                <option value="send_notification">
+                    Send Notification
+                </option>
+            </select>
+
+            <button type="submit">
+                Create Automation
+            </button>
+
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Active Automations</h2>
+
+        {% if workflows %}
+            {% for workflow in workflows %}
+                <div class="workflow">
+                    <strong>{{ workflow.name }}</strong>
+
+                    <div>
+                        ID: {{ workflow.id }}
+                    </div>
+
+                    <div>
+                        Trigger: {{ workflow.trigger_type }}
+                    </div>
+
+                    <div class="active">
+                        ACTIVE
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No active automations.</p>
+        {% endif %}
+
+    </div>
+
+</div>
+</body>
+</html>

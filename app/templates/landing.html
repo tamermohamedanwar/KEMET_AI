@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Kemet AI | منصة دعم العملاء بالذكاء الاصطناعي</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Tahoma,Arial,sans-serif;
+    background:#08111f;
+    color:#fff;
+}
+
+header{
+    padding:90px 10%;
+    text-align:center;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+}
+
+h1{
+    font-size:56px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    max-width:800px;
+    margin:auto;
+    font-size:22px;
+    line-height:1.8;
+    color:#dbeafe;
+}
+
+.buttons{
+    margin-top:40px;
+}
+
+.btn{
+    display:inline-block;
+    padding:15px 35px;
+    margin:10px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.primary{
+    background:#fff;
+    color:#2563eb;
+}
+
+.secondary{
+    border:2px solid #fff;
+    color:#fff;
+}
+
+section{
+    padding:70px 10%;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+    margin-top:35px;
+}
+
+.card{
+    background:#111827;
+    padding:30px;
+    border-radius:18px;
+    border:1px solid #1e293b;
+}
+
+.card p{
+    color:#cbd5e1;
+    line-height:1.8;
+    margin-top:10px;
+}
+
+.steps{
+    background:#0f172a;
+}
+
+footer{
+    text-align:center;
+    padding:40px;
+    color:#94a3b8;
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<header class="hero">
+
+<h1>Kemet AI</h1>
+
+<p>
+منصة ذكاء اصطناعي للشركات لإدارة خدمة العملاء،
+التذاكر، قاعدة المعرفة، والأتمتة الذكية في مكان واحد.
+</p>
+
+<div class="buttons">
+<a class="btn primary" href="/register">
+ابدأ التجربة المجانية
+</a>
+
+<a class="btn secondary" href="/pricing">
+عرض الخطط
+</a>
+</div>
+
+</header>
+
+
+<section>
+
+<h2>لماذا Kemet AI؟</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>🤖 AI Customer Support</h3>
+<p>
+ردود ذكية واقتراحات تلقائية لفريق الدعم.
+</p>
+</div>
+
+<div class="card">
+<h3>🎫 Ticket Management</h3>
+<p>
+إدارة تذاكر العملاء ومتابعة الحالات بسهولة.
+</p>
+</div>
+
+<div class="card">
+<h3>📚 Knowledge Base + RAG</h3>
+<p>
+إجابات دقيقة اعتمادًا على ملفات ومعلومات شركتك.
+</p>
+</div>
+
+<div class="card">
+<h3>⚙️ Automation</h3>
+<p>
+أتمتة العمليات وربط الخدمات الخارجية.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="steps">
+
+<h2>كيف يعمل؟</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>1 - ارفع بياناتك</h3>
+<p>
+أضف ملفات الشركة وقاعدة المعرفة.
+</p>
+</div>
+
+<div class="card">
+<h3>2 - فعّل الذكاء الاصطناعي</h3>
+<p>
+دع Kemet AI يساعد فريق الدعم.
+</p>
+</div>
+
+<div class="card">
+<h3>3 - نمّي عملك</h3>
+<p>
+حل مشاكل العملاء أسرع وبكفاءة أعلى.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<footer>
+© 2026 Kemet AI
+</footer>
+
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

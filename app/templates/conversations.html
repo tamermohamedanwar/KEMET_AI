@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Kemet AI — Conversations</title>
+
+<style>
+:root{
+    --bg:#07111f;
+    --panel:#0d1a2b;
+    --border:rgba(255,255,255,.08);
+    --text:#f4f7fb;
+    --muted:#8fa2b8;
+    --primary:#6d5dfc;
+    --cyan:#19c8ff;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 80% 0%,rgba(109,93,252,.15),transparent 30%),
+        radial-gradient(circle at 10% 20%,rgba(25,200,255,.07),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:250px;
+    flex:0 0 250px;
+    background:rgba(13,26,43,.96);
+    border-left:1px solid var(--border);
+    padding:22px 16px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 10px 25px;
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-mark{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--primary),var(--cyan));
+}
+
+.section{
+    color:#64748b;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.08em;
+    margin:18px 10px 8px;
+}
+
+.nav a{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:11px 12px;
+    margin-bottom:5px;
+    border-radius:11px;
+    color:#aebdd0;
+    font-size:13px;
+}
+
+.nav a:hover,
+.nav a.active{
+    color:#fff;
+    background:rgba(109,93,252,.12);
+}
+
+.main{
+    flex:1;
+    min-width:0;
+    padding:28px;
+}
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin-bottom:24px;
+}
+
+h1{
+    margin:0;
+    font-size:29px;
+}
+
+.subtitle{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.actions{
+    display:flex;
+    gap:9px;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:9px 15px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.045);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.btn.primary{
+    border-color:transparent;
+    background:linear-gradient(135deg,var(--primary),#5143df);
+}
+
+.conversations{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.conversation{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+    transition:.18s ease;
+}
+
+.conversation:hover{
+    transform:translateY(-2px);
+    border-color:rgba(109,93,252,.35);
+}
+
+.chat-icon{
+    width:45px;
+    height:45px;
+    flex:0 0 45px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:rgba(109,93,252,.12);
+    font-size:20px;
+}
+
+.info{
+    flex:1;
+    min-width:0;
+}
+
+.name{
+    font-size:14px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.meta{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.open-chat{
+    padding:9px 13px;
+    border-radius:10px;
+    background:rgba(255,255,255,.05);
+    font-size:11px;
+    font-weight:700;
+}
+
+.empty{
+    padding:75px 20px;
+    text-align:center;
+    border:1px dashed var(--border);
+    border-radius:18px;
+    color:var(--muted);
+}
+
+.empty-icon{
+    font-size:40px;
+    margin-bottom:12px;
+}
+
+@media(max-width:900px){
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        padding:18px;
+    }
+}
+
+@media(max-width:600px){
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .actions,
+    .actions .btn{
+        width:100%;
+    }
+
+    .conversation{
+        align-items:flex-start;
+    }
+
+    .open-chat{
+        align-self:center;
+    }
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+{% include "partials/sidebar.html" %}
+
+
+<div class="layout">
+
+
+
+<main class="main">
+
+<div class="topbar">
+    <div>
+        <h1>📜 Conversations</h1>
+        <div class="subtitle">
+            Your AI conversations and workspace history.
+        </div>
+    </div>
+
+    <div class="actions">
+        <a class="btn" href="/dashboard">← Dashboard</a>
+        <a class="btn primary" href="{{ url_for('conversations.new_conversation') }}">
+            ✨ New Chat
+        </a>
+    </div>
+</div>
+
+<div class="conversations">
+
+{% for chat in conversations %}
+
+<a class="conversation" href="/chat?conversation_id={{ chat.id }}">
+
+    <div class="chat-icon">💬</div>
+
+    <div class="info">
+        <div class="name">
+            {{ chat.title }}
+        </div>
+
+        <div class="meta">
+            Conversation #{{ chat.id }}
+        </div>
+    </div>
+
+    <div class="open-chat">
+        Open →
+    </div>
+
+</a>
+
+{% else %}
+
+<div class="empty">
+    <div class="empty-icon">💬</div>
+
+    <h2>No conversations yet</h2>
+
+    <p>
+        Start your first AI conversation and it will appear here.
+    </p>
+
+    <br>
+
+    <a class="btn primary" href="{{ url_for('conversations.new_conversation') }}">
+        ✨ Start New Chat
+    </a>
+</div>
+
+{% endfor %}
+
+</div>
+
+</main>
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

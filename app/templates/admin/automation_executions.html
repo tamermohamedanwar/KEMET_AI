@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Execution History · Kemet AI</title>
+
+    <link rel="stylesheet" href="/static/css/kemet-v2.css">
+    <link rel="stylesheet" href="/static/css/kemet-v3.css">
+
+    <style>
+        body {
+            background: #080b12;
+        }
+
+        .kh-page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 34px 20px 60px;
+        }
+
+        .kh-hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 28px;
+            border-radius: 24px;
+            margin-bottom: 22px;
+            background: linear-gradient(145deg, #151b29, #0d111b);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .kh-eyebrow {
+            font-size: 11px;
+            letter-spacing: .16em;
+            font-weight: 800;
+            opacity: .5;
+        }
+
+        .kh-hero h1 {
+            margin: 7px 0;
+            font-size: 28px;
+        }
+
+        .kh-hero p {
+            margin: 0;
+            opacity: .6;
+        }
+
+        .kh-back {
+            padding: 11px 16px;
+            border-radius: 11px;
+            text-decoration: none;
+            color: inherit;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.08);
+            font-weight: 700;
+        }
+
+        .kh-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .kh-item {
+            display: grid;
+            grid-template-columns: 90px 1fr auto;
+            gap: 18px;
+            align-items: center;
+            padding: 19px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.035);
+            border: 1px solid rgba(255,255,255,.07);
+        }
+
+        .kh-id {
+            font-weight: 900;
+            opacity: .55;
+        }
+
+        .kh-main strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .kh-meta {
+            font-size: 12px;
+            opacity: .55;
+        }
+
+        .kh-status {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            margin-right: 8px;
+        }
+
+        .kh-completed {
+            color: #35d07f;
+            background: rgba(53,208,127,.1);
+        }
+
+        .kh-failed {
+            color: #ff6875;
+            background: rgba(255,104,117,.1);
+        }
+
+        .kh-running {
+            color: #ffd166;
+            background: rgba(255,209,102,.1);
+        }
+
+        .kh-view {
+            padding: 9px 13px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: inherit;
+            background: rgba(255,255,255,.06);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .kh-empty {
+            text-align: center;
+            padding: 60px 20px;
+            opacity: .55;
+            border: 1px dashed rgba(255,255,255,.12);
+            border-radius: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .kh-hero {
+                flex-direction: column;
+            }
+
+            .kh-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="kh-page">
+
+    <section class="kh-hero">
+        <div>
+            <div class="kh-eyebrow">KEMET AI · AUTOMATION</div>
+            <h1>Execution History</h1>
+            <p>{{ workflow.name }} · Recent workflow activity</p>
+        </div>
+
+        <a
+            class="kh-back"
+            href="{{ url_for('admin_automation.edit_market_workflow', workflow_id=workflow.id) }}">
+            ← Builder
+        </a>
+    </section>
+
+    <section class="kh-list">
+
+        {% if executions %}
+
+            {% for execution in executions %}
+
+                <article class="kh-item">
+
+                    <div class="kh-id">
+                        #{{ execution.id }}
+                    </div>
+
+                    <div class="kh-main">
+
+                        {% set status = (execution.status or "unknown").lower() %}
+
+                        <strong>
+                            {% if status == "completed" %}
+                                <span class="kh-status kh-completed">COMPLETED</span>
+                            {% elif status == "failed" %}
+                                <span class="kh-status kh-failed">FAILED</span>
+                            {% else %}
+                                <span class="kh-status kh-running">
+                                    {{ status|upper }}
+                                </span>
+                            {% endif %}
+
+                            {{ execution.trigger_type or "manual" }}
+                        </strong>
+
+                        <div class="kh-meta">
+                            Started:
+                            {{ execution.started_at or "—" }}
+                            ·
+                            Completed:
+                            {{ execution.completed_at or "—" }}
+                        </div>
+
+                    </div>
+
+                    <a
+                        class="kh-view"
+                        href="{{ url_for(
+                            'admin_automation.execution_detail',
+                            workflow_id=workflow.id,
+                            execution_id=execution.id
+                        ) }}">
+                        View
+                    </a>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="kh-empty">
+                <h3>No executions yet</h3>
+                <p>Run this workflow from the Builder to create the first execution.</p>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+</body>
+</html>

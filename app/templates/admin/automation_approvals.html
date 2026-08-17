@@ -1,0 +1,182 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Approval Center</h1>
+            <p class="text-muted mb-0">
+                Review sensitive automation actions before execution.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_automation.automation_dashboard') }}"
+            class="btn btn-outline-secondary"
+        >
+            Automation Dashboard
+        </a>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body">
+                    <div class="text-muted small">Pending</div>
+                    <div class="display-6 fw-bold">
+                        {{ pending_count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-success">
+                <div class="card-body">
+                    <div class="text-muted small">Approved</div>
+                    <div class="display-6 fw-bold">
+                        {{ approved_count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <div class="text-muted small">Rejected</div>
+                    <div class="display-6 fw-bold">
+                        {{ rejected_count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-header d-flex justify-content-between">
+            <strong>Approval Requests</strong>
+
+            <span class="badge bg-warning text-dark">
+                {{ pending_count }} pending
+            </span>
+        </div>
+
+        <div class="card-body p-0">
+
+            {% if approvals %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                            <th>Reason</th>
+                            <th>Created</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for approval in approvals %}
+
+                        <tr>
+
+                            <td>
+                                <strong>#{{ approval.id }}</strong>
+                            </td>
+
+                            <td>
+                                <code>{{ approval.action_type }}</code>
+                            </td>
+
+                            <td>
+
+                                {% if approval.status == "pending" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+
+                                {% elif approval.status == "approved" %}
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+
+                                {% elif approval.status == "rejected" %}
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ approval.status }}
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                <span class="text-muted">
+                                    {{ approval.reason or "No reason provided." }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ approval.created_at.strftime("%Y-%m-%d %H:%M") }}
+                            </td>
+
+                            <td class="text-end">
+
+                                <a
+                                    href="{{ url_for(
+                                        'admin_automation.automation_approval_detail',
+                                        approval_id=approval.id
+                                    ) }}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Review
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5">
+
+                <h5>No approval requests</h5>
+
+                <p class="text-muted mb-0">
+                    Sensitive automation actions will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

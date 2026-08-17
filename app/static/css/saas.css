@@ -1,0 +1,659 @@
+
+/* =========================================================
+   KEMET AI - SAAS UI SYSTEM V1
+   ========================================================= */
+
+:root {
+    --kemet-bg: #f5f7fb;
+    --kemet-surface: #ffffff;
+    --kemet-surface-soft: #f8fafc;
+    --kemet-border: #e5e7eb;
+    --kemet-text: #111827;
+    --kemet-muted: #6b7280;
+    --kemet-primary: #2563eb;
+    --kemet-primary-dark: #1d4ed8;
+    --kemet-success: #16a34a;
+    --kemet-warning: #d97706;
+    --kemet-danger: #dc2626;
+    --kemet-sidebar: #0f172a;
+    --kemet-sidebar-text: #cbd5e1;
+    --kemet-radius: 16px;
+    --kemet-radius-sm: 10px;
+    --kemet-shadow: 0 8px 30px rgba(15, 23, 42, .07);
+    --kemet-shadow-hover: 0 14px 40px rgba(15, 23, 42, .11);
+    --kemet-transition: 180ms ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--kemet-bg);
+    color: var(--kemet-text);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.saas-layout,
+.app-layout,
+.dashboard-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.saas-main,
+.app-main,
+.dashboard-main,
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 28px;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar,
+.saas-sidebar,
+.app-sidebar {
+    width: 258px;
+    min-width: 258px;
+    min-height: 100vh;
+    background: var(--kemet-sidebar);
+    color: var(--kemet-sidebar-text);
+    padding: 20px 14px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.sidebar-brand,
+.saas-brand,
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px 22px;
+    margin-bottom: 10px;
+}
+
+.sidebar-brand .logo,
+.saas-brand .logo,
+.app-brand .logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(37,99,235,.28);
+}
+
+.sidebar-brand strong,
+.saas-brand strong,
+.app-brand strong {
+    color: #fff;
+    font-size: 17px;
+    letter-spacing: -.2px;
+}
+
+.sidebar-brand small,
+.saas-brand small,
+.app-brand small {
+    display: block;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.sidebar nav,
+.saas-sidebar nav,
+.app-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar a,
+.saas-sidebar a,
+.app-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 11px;
+    color: #cbd5e1;
+    font-size: 14px;
+    transition:
+        background var(--kemet-transition),
+        color var(--kemet-transition),
+        transform var(--kemet-transition);
+}
+
+.sidebar a:hover,
+.saas-sidebar a:hover,
+.app-sidebar a:hover {
+    background: rgba(255,255,255,.075);
+    color: #fff;
+    transform: translateX(2px);
+}
+
+.sidebar a.active,
+.saas-sidebar a.active,
+.app-sidebar a.active {
+    background: rgba(37,99,235,.20);
+    color: #fff;
+    box-shadow: inset 3px 0 0 #3b82f6;
+}
+
+.sidebar .section-title,
+.saas-sidebar .section-title,
+.app-sidebar .section-title {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 18px 12px 7px;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar,
+.saas-topbar,
+.app-topbar {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.2;
+    letter-spacing: -.6px;
+}
+
+.page-subtitle {
+    margin: 6px 0 0;
+    color: var(--kemet-muted);
+    font-size: 14px;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card,
+.saas-card,
+.dashboard-card,
+.stat-card,
+.kpi-card {
+    background: var(--kemet-surface);
+    border: 1px solid var(--kemet-border);
+    border-radius: var(--kemet-radius);
+    box-shadow: var(--kemet-shadow);
+    transition:
+        transform var(--kemet-transition),
+        box-shadow var(--kemet-transition),
+        border-color var(--kemet-transition);
+}
+
+.card:hover,
+.saas-card:hover,
+.dashboard-card:hover,
+.stat-card:hover,
+.kpi-card:hover {
+    box-shadow: var(--kemet-shadow-hover);
+}
+
+.card,
+.saas-card,
+.dashboard-card {
+    padding: 22px;
+}
+
+.stats-grid,
+.kpi-grid,
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.stat-card,
+.kpi-card {
+    padding: 20px;
+}
+
+.stat-card .label,
+.kpi-card .label {
+    color: var(--kemet-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stat-card .value,
+.kpi-card .value {
+    margin-top: 7px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn,
+button.btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 700;
+    transition:
+        transform var(--kemet-transition),
+        box-shadow var(--kemet-transition),
+        background var(--kemet-transition);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--kemet-primary);
+    color: #fff;
+    box-shadow: 0 7px 18px rgba(37,99,235,.20);
+}
+
+.btn-primary:hover {
+    background: var(--kemet-primary-dark);
+}
+
+.btn-secondary {
+    background: #fff;
+    border-color: var(--kemet-border);
+    color: var(--kemet-text);
+}
+
+.btn-success {
+    background: var(--kemet-success);
+    color: #fff;
+}
+
+.btn-danger {
+    background: var(--kemet-danger);
+    color: #fff;
+}
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+.form-group,
+.form-field {
+    margin-bottom: 17px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    border: 1px solid #dbe1ea;
+    background: #fff;
+    color: var(--kemet-text);
+    border-radius: 11px;
+    padding: 11px 13px;
+    outline: none;
+    transition:
+        border-color var(--kemet-transition),
+        box-shadow var(--kemet-transition);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge,
+.status-badge,
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.badge-success,
+.status-open {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-warning,
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-danger,
+.status-closed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-primary {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--kemet-border);
+    border-radius: var(--kemet-radius);
+    background: #fff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+th,
+td {
+    padding: 13px 15px;
+    text-align: start;
+    border-bottom: 1px solid #eef1f5;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.alert {
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+.chat-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.chat-message {
+    display: flex;
+    gap: 11px;
+    margin-bottom: 18px;
+}
+
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+.chat-bubble {
+    max-width: min(760px, 85%);
+    padding: 13px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--kemet-border);
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(15,23,42,.04);
+}
+
+.chat-message.user .chat-bubble {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.chat-input-area {
+    position: sticky;
+    bottom: 12px;
+    background: rgba(245,247,251,.90);
+    backdrop-filter: blur(14px);
+    padding: 10px;
+    border: 1px solid rgba(229,231,235,.9);
+    border-radius: 16px;
+}
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.empty-state {
+    text-align: center;
+    padding: 55px 20px;
+    color: var(--kemet-muted);
+}
+
+.empty-state h3 {
+    margin: 0 0 7px;
+    color: var(--kemet-text);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .stats-grid,
+    .kpi-grid,
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .saas-layout,
+    .app-layout,
+    .dashboard-layout {
+        display: block;
+    }
+
+    .sidebar,
+    .saas-sidebar,
+    .app-sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        transition: left 220ms ease;
+    }
+
+    .sidebar.open,
+    .saas-sidebar.open,
+    .app-sidebar.open {
+        left: 0;
+    }
+
+    .saas-main,
+    .app-main,
+    .dashboard-main,
+    .main-content {
+        padding: 18px;
+    }
+
+    .stats-grid,
+    .kpi-grid,
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar,
+    .saas-topbar,
+    .app-topbar {
+        align-items: flex-start;
+    }
+
+    .card,
+    .saas-card,
+    .dashboard-card {
+        padding: 17px;
+    }
+}
+
+@media (max-width: 520px) {
+    .page-title {
+        font-size: 22px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .chat-bubble {
+        max-width: 92%;
+    }
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+    body.dark-mode {
+        --kemet-bg: #0b1120;
+        --kemet-surface: #111827;
+        --kemet-surface-soft: #172033;
+        --kemet-border: #263247;
+        --kemet-text: #f1f5f9;
+        --kemet-muted: #94a3b8;
+    }
+
+    body.dark-mode .card,
+    body.dark-mode .saas-card,
+    body.dark-mode .dashboard-card,
+    body.dark-mode .stat-card,
+    body.dark-mode .kpi-card,
+    body.dark-mode .table-wrapper,
+    body.dark-mode input,
+    body.dark-mode textarea,
+    body.dark-mode select {
+        background: var(--kemet-surface);
+        color: var(--kemet-text);
+        border-color: var(--kemet-border);
+    }
+
+    body.dark-mode th {
+        background: #172033;
+    }
+
+    body.dark-mode tbody tr:hover {
+        background: #172033;
+    }
+}

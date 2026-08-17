@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kemet AI • Execution Details</title>
+
+    <style>
+        :root{
+            --bg:#060b14;
+            --panel:#0d1625;
+            --panel2:#111c2d;
+            --border:#1e304b;
+            --text:#f8fafc;
+            --muted:#94a3b8;
+            --blue:#3b82f6;
+            --cyan:#06b6d4;
+            --green:#22c55e;
+            --red:#ef4444;
+        }
+
+        *{box-sizing:border-box}
+
+        body{
+            margin:0;
+            min-height:100vh;
+            background:
+                radial-gradient(circle at 15% 0%,#173568 0,#080d17 38%,#04070d 100%);
+            color:var(--text);
+            font-family:Inter,Tahoma,Arial,sans-serif;
+        }
+
+        .layout{
+            min-height:100vh;
+        }
+
+        .admin-sidebar{
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            width:270px;
+            background:rgba(7,13,24,.96);
+            border-right:1px solid var(--border);
+            padding:22px 15px;
+            overflow-y:auto;
+            backdrop-filter:blur(18px);
+        }
+
+        .admin-brand{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:8px 10px 28px;
+        }
+
+        .admin-logo{
+            width:45px;
+            height:45px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:14px;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            font-size:24px;
+            box-shadow:0 0 25px #2563eb66;
+        }
+
+        .admin-brand-name{
+            font-size:21px;
+            font-weight:900;
+        }
+
+        .admin-brand-sub{
+            color:#64748b;
+            font-size:9px;
+            letter-spacing:1px;
+            margin-top:3px;
+        }
+
+        .admin-section-title{
+            color:#64748b;
+            font-size:10px;
+            font-weight:800;
+            letter-spacing:1.5px;
+            padding:16px 12px 7px;
+        }
+
+        .admin-nav{
+            display:grid;
+            gap:5px;
+        }
+
+        .admin-nav a{
+            display:flex;
+            align-items:center;
+            gap:11px;
+            color:#cbd5e1;
+            text-decoration:none;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:14px;
+            transition:.2s;
+        }
+
+        .admin-nav a:hover{
+            color:white;
+            background:#16243a;
+            transform:translateX(3px);
+        }
+
+        .admin-main{
+            margin-left:270px;
+            min-height:100vh;
+        }
+
+        .kemet-exec-page{
+            max-width:1200px;
+            margin:0 auto;
+            padding:32px 24px 70px;
+        }
+
+        .kemet-exec-hero{
+            background:linear-gradient(135deg,#111827,#1f2937);
+            border:1px solid rgba(255,255,255,.08);
+            color:#fff;
+            border-radius:22px;
+            padding:28px;
+            margin-bottom:22px;
+            box-shadow:0 18px 45px rgba(0,0,0,.25);
+        }
+
+        .kemet-exec-hero-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:20px;
+        }
+
+        .kemet-exec-badge{
+            display:inline-flex;
+            padding:6px 11px;
+            border-radius:999px;
+            background:rgba(255,255,255,.12);
+            font-size:12px;
+            margin-bottom:12px;
+        }
+
+        .kemet-exec-hero h1{
+            margin:0 0 8px;
+            font-size:30px;
+        }
+
+        .kemet-exec-hero p{
+            margin:0;
+            opacity:.75;
+        }
+
+        .kemet-exec-status{
+            padding:10px 16px;
+            border-radius:999px;
+            background:#166534;
+            color:#fff;
+            font-weight:700;
+            white-space:nowrap;
+        }
+
+        .kemet-exec-grid{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:14px;
+            margin-bottom:22px;
+        }
+
+        .kemet-exec-stat,
+        .kemet-exec-card{
+            background:rgba(13,22,37,.92);
+            border:1px solid var(--border);
+            border-radius:18px;
+        }
+
+        .kemet-exec-stat{
+            padding:18px;
+        }
+
+        .kemet-exec-stat span{
+            display:block;
+            color:var(--muted);
+            font-size:12px;
+            margin-bottom:7px;
+        }
+
+        .kemet-exec-stat strong{
+            font-size:17px;
+            word-break:break-word;
+        }
+
+        .kemet-exec-card{
+            padding:22px;
+            margin-bottom:18px;
+        }
+
+        .kemet-exec-card h2{
+            margin:0 0 18px;
+            font-size:20px;
+        }
+
+        .kemet-exec-code{
+            background:#050b14;
+            color:#d1fae5;
+            border:1px solid #17263d;
+            border-radius:14px;
+            padding:18px;
+            overflow-x:auto;
+            font-size:13px;
+            line-height:1.65;
+            white-space:pre-wrap;
+            word-break:break-word;
+        }
+
+        .kemet-action{
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:18px;
+            margin-bottom:14px;
+        }
+
+        .kemet-action-head{
+            display:flex;
+            justify-content:space-between;
+            gap:15px;
+            align-items:center;
+            margin-bottom:14px;
+        }
+
+        .kemet-action-type{
+            font-weight:800;
+            font-size:17px;
+        }
+
+        .kemet-action-success{
+            color:#22c55e;
+            font-weight:700;
+        }
+
+        .kemet-final-reply{
+            background:rgba(59,130,246,.08);
+            border-left:4px solid #3b82f6;
+            padding:15px;
+            border-radius:10px;
+            line-height:1.8;
+            margin-top:10px;
+        }
+
+        .kemet-exec-actions{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .kemet-exec-actions a{
+            text-decoration:none;
+            padding:11px 17px;
+            border-radius:11px;
+            border:1px solid var(--border);
+            color:#cbd5e1;
+        }
+
+        .kemet-exec-primary{
+            background:#2563eb;
+            color:white !important;
+            border-color:#2563eb !important;
+        }
+
+        @media(max-width:900px){
+            .admin-sidebar{
+                width:220px;
+            }
+
+            .admin-main{
+                margin-left:220px;
+            }
+
+            .kemet-exec-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+        }
+
+        @media(max-width:650px){
+            .admin-sidebar{
+                display:none;
+            }
+
+            .admin-main{
+                margin-left:0;
+            }
+
+            .kemet-exec-page{
+                padding:20px 14px 50px;
+            }
+
+            .kemet-exec-grid{
+                grid-template-columns:1fr;
+            }
+
+            .kemet-exec-hero-top{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+            <div class="admin-logo">K</div>
+            <div>
+                <div class="admin-brand-name">Kemet AI</div>
+                <div class="admin-brand-sub">ADMIN CONTROL CENTER</div>
+            </div>
+        </div>
+
+        <div class="admin-section-title">AUTOMATION</div>
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin_automation.index') }}">
+                ⚡ Automation
+            </a>
+
+            <a href="{{ url_for('admin_automation.edit_market_workflow', workflow_id=execution.workflow_id) }}">
+                🧩 Workflow Builder
+            </a>
+
+            <a href="{{ url_for('admin_automation.execution_history', workflow_id=execution.workflow_id) }}">
+                📊 Execution History
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <div class="kemet-exec-page">
+
+            <div class="kemet-exec-hero">
+
+                <div class="kemet-exec-hero-top">
+
+                    <div>
+                        <div class="kemet-exec-badge">
+                            KEMET AI • AUTOMATION
+                        </div>
+
+                        <h1>Execution Details</h1>
+
+                        <p>
+                            Workflow execution #{{ execution.id }}
+                        </p>
+                    </div>
+
+                    <div class="kemet-exec-status">
+                        {{ execution.status|upper }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="kemet-exec-grid">
+
+                <div class="kemet-exec-stat">
+                    <span>Execution ID</span>
+                    <strong>#{{ execution.id }}</strong>
+                </div>
+
+                <div class="kemet-exec-stat">
+                    <span>Workflow</span>
+                    <strong>#{{ execution.workflow_id }}</strong>
+                </div>
+
+                <div class="kemet-exec-stat">
+                    <span>Trigger</span>
+                    <strong>{{ execution.trigger_type }}</strong>
+                </div>
+
+                <div class="kemet-exec-stat">
+                    <span>Duration</span>
+                    <strong>
+                        {% if execution.started_at and execution.completed_at %}
+                            {{ "%.2f"|format(
+                                (execution.completed_at - execution.started_at).total_seconds()
+                            ) }}s
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+            {% if execution.input_json %}
+
+            <div class="kemet-exec-card">
+
+                <h2>📥 Input Data</h2>
+
+                <div class="kemet-exec-code">
+                    {{ execution.input_json }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            <div class="kemet-exec-card">
+
+                <h2>⚙️ Action Results</h2>
+
+                {% if action_results %}
+
+                    {% for item in action_results %}
+
+                    <div class="kemet-action">
+
+                        <div class="kemet-action-head">
+
+                            <div class="kemet-action-type">
+                                {{ item.action_type }}
+                            </div>
+
+                            <div class="kemet-action-success">
+
+                                {% if item.status == "completed" %}
+                                    ✓ COMPLETED
+                                {% else %}
+                                    ✕ FAILED
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        <div class="kemet-exec-code">
+                            {{ item.result | tojson(indent=2) }}
+                        </div>
+
+                        {% if item.result and item.result.get("final_reply") %}
+
+                        <div>
+                            <strong>💬 Final AI Reply</strong>
+
+                            <div class="kemet-final-reply">
+                                {{ item.result.get("final_reply") }}
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>No action results recorded.</p>
+
+                {% endif %}
+
+            </div>
+
+            {% if execution.output_json %}
+
+            <div class="kemet-exec-card">
+
+                <h2>📤 Raw Execution Output</h2>
+
+                <div class="kemet-exec-code">
+                    {{ execution.output_json }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            {% if execution.error_message %}
+
+            <div class="kemet-exec-card">
+
+                <h2>❌ Error</h2>
+
+                <div class="kemet-exec-code">
+                    {{ execution.error_message }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            <div class="kemet-exec-actions">
+
+                <a
+                    class="kemet-exec-primary"
+                    href="{{ url_for(
+                        'admin_automation.execution_history',
+                        workflow_id=execution.workflow_id
+                    ) }}"
+                >
+                    ← Execution History
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'admin_automation.edit_market_workflow',
+                        workflow_id=execution.workflow_id
+                    ) }}"
+                >
+                    ⚙️ Edit Workflow
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

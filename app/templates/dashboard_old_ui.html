@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kemet AI</title>
+
+<style>
+body {
+    background:#0f172a;
+    color:#e5e7eb;
+    font-family:Arial, sans-serif;
+    margin:0;
+    padding:30px;
+}
+
+.container {
+    max-width:800px;
+    margin:auto;
+}
+
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+}
+
+.card {
+    background:#1e293b;
+    margin-top:20px;
+    padding:20px;
+    border-radius:15px;
+}
+
+#chat {
+    height:350px;
+    overflow-y:auto;
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+}
+
+.message {
+    margin:10px 0;
+    padding:10px;
+    border-radius:10px;
+}
+
+.user {
+    background:#334155;
+}
+
+.ai {
+    background:#1d4ed8;
+}
+
+.input-box {
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+input {
+    flex:1;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+}
+
+button {
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+a {
+    color:white;
+    text-decoration:none;
+}
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h1>Kemet AI</h1>
+
+    <div>
+        Welcome {{ user.full_name }}
+        |
+        <a href="{{ url_for('main.history') }}">History</a>
+        |
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+</div>
+
+
+<div class="card">
+
+<div id="chat"></div>
+
+<div class="input-box">
+
+</script>
+
+
+<a href="/chat" class="open-chat-btn">
+    💬 Chat
+</a>
+
+<style>
+.open-chat-btn {
+    display: inline-block;
+    margin: 15px;
+    padding: 12px 25px;
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+</style>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

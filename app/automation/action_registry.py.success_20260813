@@ -1,0 +1,89 @@
+from app.services.automation_service import automation_service
+
+
+class ActionRegistry:
+    def __init__(self):
+        self._actions = {}
+
+    def register(self, name, handler):
+        self._actions[name] = handler
+
+    def exists(self, name):
+        return name in self._actions
+
+    def get(self, name):
+        return self._actions.get(name)
+
+    def execute(self, name, parameters=None, user_id=None):
+        handler = self.get(name)
+
+        if not handler:
+            return {
+                "success": False,
+                "message": f"Unknown automation action: {name}",
+            }
+
+        try:
+            return handler(parameters or {}, user_id=user_id)
+        except Exception as exc:
+            return {
+                "success": False,
+                "message": str(exc),
+            }
+
+
+registry = ActionRegistry()
+
+
+def _create_ticket(parameters, user_id=None):
+    return automation_service.create_ticket(
+        parameters,
+        user_id=user_id,
+    )
+
+
+def _check_order(parameters, user_id=None):
+    return automation_service.check_order(parameters)
+
+
+def _generate_ai_reply(parameters, user_id=None):
+    from app.services.ai_service import ask_ai
+
+    message = parameters.get("message", "").strip()
+
+    if not message:
+        return {
+            "success": False,
+            "message": "Message is required",
+        }
+
+    reply = ask_ai(
+        prompt=message,
+        context=parameters.get("context", ""),
+    )
+
+    return {
+        "success": True,
+        "action": "generate_ai_reply",
+        "reply": reply,
+    }
+
+
+def _send_notification(parameters, user_id=None):
+    message = parameters.get(
+        "message",
+        "Kemet AI automation notification",
+    )
+
+    return {
+        "success": True,
+        "action": "send_notification",
+        "message": message,
+        "status": "sent",
+    }
+
+
+registry.register("create_ticket", _create_ticket)
+registry.register("check_order", _check_order)
+registry.register("generate_ai_reply", _generate_ai_reply)
+registry.register("send_notification", _send_notification)

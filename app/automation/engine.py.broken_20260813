@@ -1,0 +1,106 @@
+import json
+from datetime import datetime
+
+from app import db
+from app.models.automation import (
+    AutomationWorkflow,
+    AutomationAction,
+    AutomationExecution,
+)
+
+
+class AutomationEngine:
+
+    def execute(self, event=None, data=None, organization_id=None):
+        data = data or {}
+        results = []
+
+        if not organization_id:
+            return results
+
+        workflows = (
+            AutomationWorkflow.query
+            .filter_by(
+                organization_id=organization_id,
+                trigger_type=event,
+                is_active=True,
+            )
+            .order_by(AutomationWorkflow.id.asc())
+            .all()
+        )
+
+        for workflow in workflows:
+            execution = AutomationExecution(
+                workflow_id=workflow.id,
+                trigger_type=event or "unknown",
+                status="running",
+                input_json=json.dumps(data, ensure_ascii=False, default=str),
+                started_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+            )
+
+            db.session.add(execution)
+            db.session.flush()
+
+            try:
+                actions = (
+                    AutomationAction.query
+                    .filter_by(
+                        workflow_id=workflow.id,
+                        is_active=True,
+                    )
+                    .order_by(AutomationAction.position.asc())
+                    .all()
+                )
+
+                action_results = []
+
+                for action in actions:
+                    config = {}
+
+                    if action.config_json:
+                        try:
+                            config = json.loads(action.config_json)
+                        except Exception:
+                            config = {}
+
+                    action_results.append({
+                        "action_id": action.id,
+                        "action_type": action.action_type,
+                        "config": config,
+                        "status": "queued",
+                    })
+
+                execution.status = "completed"
+                execution.output_json = json.dumps(
+                    action_results,
+                    ensure_ascii=False,
+                    default=str,
+                )
+                execution.completed_at = datetime.utcnow()
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "completed",
+                    "actions": action_results,
+                })
+
+            except Exception as exc:
+                execution.status = "failed"
+                execution.error_message = str(exc)
+                execution.completed_at = datetime.utcnow()
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "failed",
+                    "error": str(exc),
+                })
+
+        db.session.commit()
+
+        return results
+
+
+engine = AutomationEngine()

@@ -1,0 +1,307 @@
+from app.automation.action_registry import registry
+import json
+from datetime import datetime
+
+from app import db
+from app.models.automation import (
+    AutomationWorkflow,
+    AutomationAction,
+    AutomationExecution,
+)
+from app.services.automation_service import automation_service
+from app.services.ai_usage_service import check_limit, record_usage
+from app.automation.router import AutomationRouter
+
+
+
+# ============================================================
+# KEMET AI AUTOMATION PLAN LIMITS
+# ============================================================
+
+AUTOMATION_PLAN_LIMITS = {
+    "free": 100,
+    "starter": 1000,
+    "business": 5000,
+    "enterprise": 50000,
+}
+
+class AutomationEngine:
+    def __init__(self):
+        self.workflows = []
+        self.router = AutomationRouter()
+
+    def register(self, workflow):
+        self.workflows.append(workflow)
+
+    def _execute_action(self, action, config, data):
+        action_type = action.action_type
+
+        parameters = {}
+
+        if isinstance(config, dict):
+            parameters.update(config)
+
+        if isinstance(data, dict):
+            for key, value in data.items():
+                parameters.setdefault(key, value)
+
+        user_id = parameters.get("user_id")
+
+        result = registry.execute(
+            action_type,
+            parameters,
+            user_id=user_id,
+        )
+
+        if isinstance(result, dict):
+            return result
+
+        return {
+            "success": True,
+            "action": action_type,
+            "result": result,
+        }
+
+    def execute(self, event=None, data=None, organization_id=None, workflow_id=None):
+        data = data or {}
+        results = []
+
+        # Resolve organization from an explicitly selected database workflow.
+        # This allows direct workflow execution while preserving tenant isolation.
+        if workflow_id is not None and organization_id is None:
+            selected_workflow = AutomationWorkflow.query.filter_by(
+                id=workflow_id
+            ).first()
+
+            if selected_workflow is not None:
+                organization_id = selected_workflow.organization_id
+
+        # Propagate tenant context into action parameters.
+        # Preserve an explicitly supplied user_id.
+        if organization_id is not None:
+            data.setdefault("organization_id", organization_id)
+
+        # Legacy workflows
+        for workflow in self.workflows:
+            if workflow.get("event") == event:
+                results.append({
+                    "workflow": workflow.get("name"),
+                    "action": workflow.get("action"),
+                    "status": "queued",
+                    "source": "legacy",
+                })
+
+        # Database workflows require organization
+        if not organization_id:
+            return results
+
+        workflow_query = AutomationWorkflow.query.filter_by(
+            organization_id=organization_id,
+            is_active=True,
+        )
+
+        # Billing / usage guard:
+        # Do not execute paid AI automation when the organization
+        # has exhausted its current plan allowance.
+        try:
+            usage_limit = check_limit(organization_id)
+        except Exception as exc:
+            return [{
+                "status": "failed",
+                "source": "billing",
+                "error": f"Usage check failed: {exc}",
+            }]
+
+        if not usage_limit.get("allowed", False):
+            return [{
+                "status": "blocked",
+                "source": "billing",
+                "organization_id": organization_id,
+                "plan": usage_limit.get("plan"),
+                "limit": usage_limit.get("limit"),
+                "used": usage_limit.get("used"),
+                "remaining": usage_limit.get("remaining"),
+                "error": "Automation usage limit reached.",
+            }]
+
+        if workflow_id is not None:
+            workflow_query = workflow_query.filter_by(id=workflow_id)
+        elif event == "ticket_message_created":
+            routed_action = self.router.route(data.get("message"))
+
+            workflow_ids = [
+                action.workflow_id
+                for action in AutomationAction.query
+                .filter_by(
+                    action_type=routed_action,
+                    is_active=True,
+                )
+                .all()
+            ]
+
+            if workflow_ids:
+                workflow_query = workflow_query.filter(
+                    AutomationWorkflow.id.in_(workflow_ids)
+                )
+            else:
+                workflow_query = workflow_query.filter(
+                    AutomationWorkflow.id == -1
+                )
+        else:
+            workflow_query = workflow_query.filter_by(trigger_type=event)
+
+        workflows = (
+            workflow_query
+            .order_by(AutomationWorkflow.id.asc())
+            .all()
+        )
+
+        for workflow in workflows:
+            # ------------------------------------------------------------
+        # Automation usage gate
+        # ------------------------------------------------------------
+        organization_id = getattr(workflow, "organization_id", None)
+
+        if organization_id:
+            try:
+                from app.services.ai_usage_service import get_plan
+
+                current_plan = get_plan(organization_id)
+
+                if isinstance(current_plan, dict):
+                    current_plan = current_plan.get("plan", "free")
+
+                limit = AUTOMATION_PLAN_LIMITS.get(
+                    current_plan,
+                    AUTOMATION_PLAN_LIMITS["free"],
+                )
+
+                usage_count = (
+                    AutomationExecution.query
+                    .join(
+                        AutomationWorkflow,
+                        AutomationExecution.workflow_id
+                        == AutomationWorkflow.id,
+                    )
+                    .filter(
+                        AutomationWorkflow.organization_id
+                        == organization_id
+                    )
+                    .count()
+                )
+
+                if usage_count >= limit:
+                    raise RuntimeError(
+                        "AUTOMATION_USAGE_LIMIT_REACHED"
+                    )
+
+            except RuntimeError:
+                raise
+            except Exception:
+                # Never block automation because the usage service
+                # itself is temporarily unavailable.
+                pass
+
+        execution = AutomationExecution(
+                workflow_id=workflow.id,
+                trigger_type=event or "unknown",
+                status="running",
+                input_json=json.dumps(
+                    data,
+                    ensure_ascii=False,
+                    default=str,
+                ),
+                started_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+            )
+
+            db.session.add(execution)
+            db.session.flush()
+
+            try:
+                actions = (
+                    AutomationAction.query
+                    .filter_by(
+                        workflow_id=workflow.id,
+                        is_active=True,
+                    )
+                    .order_by(AutomationAction.position.asc())
+                    .all()
+                )
+
+                action_results = []
+
+                for action in actions:
+                    config = {}
+
+                    if action.config_json:
+                        try:
+                            config = json.loads(action.config_json)
+                        except Exception:
+                            config = {}
+
+                    action_result = self._execute_action(
+                        action,
+                        config,
+                        data,
+                    )
+
+                    action_results.append({
+                        "action_id": action.id,
+                        "action_type": action.action_type,
+                        "config": config,
+                        "result": action_result,
+                        "status": (
+                            "completed"
+                            if action_result.get("success")
+                            else "failed"
+                        ),
+                    })
+
+                    if not action_result.get("success"):
+                        raise RuntimeError(
+                            action_result.get(
+                                "message",
+                                "Automation action failed",
+                            )
+                        )
+
+                execution.status = "completed"
+                execution.output_json = json.dumps(
+                    action_results,
+                    ensure_ascii=False,
+                    default=str,
+                )
+                execution.completed_at = datetime.utcnow()
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "completed",
+                    "actions": action_results,
+                    "source": "database",
+                })
+
+            except Exception as exc:
+                db.session.rollback()
+
+                execution.status = "failed"
+                execution.error_message = str(exc)
+                execution.completed_at = datetime.utcnow()
+
+                db.session.add(execution)
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "failed",
+                    "error": str(exc),
+                    "source": "database",
+                })
+
+        db.session.commit()
+
+        return results
+
+
+engine = AutomationEngine()

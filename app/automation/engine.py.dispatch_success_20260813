@@ -1,0 +1,178 @@
+import json
+from datetime import datetime
+
+from app import db
+from app.models.automation import (
+    AutomationWorkflow,
+    AutomationAction,
+    AutomationExecution,
+)
+from app.services.automation_service import automation_service
+
+
+class AutomationEngine:
+    def __init__(self):
+        self.workflows = []
+
+    def register(self, workflow):
+        self.workflows.append(workflow)
+
+    def _execute_action(self, action, config, data):
+        action_type = action.action_type
+
+        if action_type == "create_ticket":
+            user_id = data.get("user_id")
+
+            result = automation_service.execute(
+                action="create_ticket",
+                parameters=config,
+                user_id=user_id,
+            )
+
+            return result
+
+        if action_type == "check_order":
+            return automation_service.execute(
+                action="check_order",
+                parameters=config,
+                user_id=data.get("user_id"),
+            )
+
+        return {
+            "success": False,
+            "message": f"Unsupported automation action: {action_type}",
+        }
+
+    def execute(self, event=None, data=None, organization_id=None):
+        data = data or {}
+        results = []
+
+        # Legacy workflows
+        for workflow in self.workflows:
+            if workflow.get("event") == event:
+                results.append({
+                    "workflow": workflow.get("name"),
+                    "action": workflow.get("action"),
+                    "status": "queued",
+                    "source": "legacy",
+                })
+
+        # Database workflows require organization
+        if not organization_id:
+            return results
+
+        workflows = (
+            AutomationWorkflow.query
+            .filter_by(
+                organization_id=organization_id,
+                trigger_type=event,
+                is_active=True,
+            )
+            .order_by(AutomationWorkflow.id.asc())
+            .all()
+        )
+
+        for workflow in workflows:
+            execution = AutomationExecution(
+                workflow_id=workflow.id,
+                trigger_type=event or "unknown",
+                status="running",
+                input_json=json.dumps(
+                    data,
+                    ensure_ascii=False,
+                    default=str,
+                ),
+                started_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+            )
+
+            db.session.add(execution)
+            db.session.flush()
+
+            try:
+                actions = (
+                    AutomationAction.query
+                    .filter_by(
+                        workflow_id=workflow.id,
+                        is_active=True,
+                    )
+                    .order_by(AutomationAction.position.asc())
+                    .all()
+                )
+
+                action_results = []
+
+                for action in actions:
+                    config = {}
+
+                    if action.config_json:
+                        try:
+                            config = json.loads(action.config_json)
+                        except Exception:
+                            config = {}
+
+                    action_result = self._execute_action(
+                        action,
+                        config,
+                        data,
+                    )
+
+                    action_results.append({
+                        "action_id": action.id,
+                        "action_type": action.action_type,
+                        "config": config,
+                        "result": action_result,
+                        "status": (
+                            "completed"
+                            if action_result.get("success")
+                            else "failed"
+                        ),
+                    })
+
+                    if not action_result.get("success"):
+                        raise RuntimeError(
+                            action_result.get(
+                                "message",
+                                "Automation action failed",
+                            )
+                        )
+
+                execution.status = "completed"
+                execution.output_json = json.dumps(
+                    action_results,
+                    ensure_ascii=False,
+                    default=str,
+                )
+                execution.completed_at = datetime.utcnow()
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "completed",
+                    "actions": action_results,
+                    "source": "database",
+                })
+
+            except Exception as exc:
+                db.session.rollback()
+
+                execution.status = "failed"
+                execution.error_message = str(exc)
+                execution.completed_at = datetime.utcnow()
+
+                db.session.add(execution)
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "failed",
+                    "error": str(exc),
+                    "source": "database",
+                })
+
+        db.session.commit()
+
+        return results
+
+
+engine = AutomationEngine()

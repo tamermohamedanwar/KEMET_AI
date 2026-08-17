@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kemet AI History</title>
+
+<style>
+body {
+    background:#0f172a;
+    color:white;
+    font-family:Arial, sans-serif;
+    margin:40px;
+}
+
+.container {
+    max-width:800px;
+    margin:auto;
+}
+
+.card {
+    background:#1e293b;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:15px;
+}
+
+.question {
+    background:#334155;
+    padding:15px;
+    border-radius:10px;
+}
+
+.answer {
+    background:#1d4ed8;
+    padding:15px;
+    border-radius:10px;
+}
+
+a {
+    color:white;
+    text-decoration:none;
+}
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Kemet AI History</h1>
+
+<a href="{{ url_for('dashboard.index') }}">
+← Back to Chat
+</a>
+
+<hr>
+
+{% for message in messages %}
+
+<div class="card">
+
+<h3>You</h3>
+<div class="question">
+{{ message.question }}
+</div>
+
+<br>
+
+<h3>Kemet AI</h3>
+<div class="answer">
+{{ message.answer }}
+</div>
+
+</div>
+
+{% else %}
+
+<div class="card">
+No conversations yet.
+</div>
+
+{% endfor %}
+
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

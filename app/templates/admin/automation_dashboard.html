@@ -1,0 +1,276 @@
+<a href="{{ url_for('admin_automation.automation_approvals') }}"
+   class="btn btn-outline-warning">
+    Approval Center
+</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemet AI Automation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .header a {
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            background: #111827;
+            color: white;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .active {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .inactive {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .actions a {
+            padding: 11px 16px;
+            background: white;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #111827;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        }
+
+        @media (max-width: 800px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h1>Kemet AI Automation</h1>
+            <p>Automation control center</p>
+        </div>
+
+        <a href="{{ url_for('admin_automation.automation_templates') }}">
+            Marketplace
+        </a>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('admin_automation.automation_analytics') }}">
+            Analytics
+        </a>
+
+        <a href="{{ url_for('admin_automation.automation_templates') }}">
+            Automation Marketplace
+        </a>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="label">Active Automations</div>
+            <div class="value">{{ active }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Executions</div>
+            <div class="value">{{ total }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Successful</div>
+            <div class="value">{{ successful }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Failed</div>
+            <div class="value">{{ failed }}</div>
+        </div>
+
+    </div>
+
+    <div class="section" style="margin-bottom:25px;">
+        <h2>Automation Usage</h2>
+
+        <p>
+            Plan:
+            <strong>{{ current_plan|capitalize }}</strong>
+        </p>
+
+        <p>
+            {{ automation_usage }} / {{ usage_limit }} executions
+        </p>
+
+        <div style="
+            width:100%;
+            height:12px;
+            background:#e5e7eb;
+            border-radius:10px;
+            overflow:hidden;
+        ">
+            <div style="
+                width:{{ ((automation_usage / usage_limit) * 100)
+                    if usage_limit else 0 }}%;
+                height:100%;
+                background:#111827;
+            "></div>
+        </div>
+
+        <p style="color:#6b7280;">
+            {{ usage_remaining }} executions remaining
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Installed Automations</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Trigger</th>
+                    <th>Status</th><th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for workflow in workflows %}
+                <tr>
+                    <td>{{ workflow.name }}</td>
+                    <td>{{ workflow.trigger_type }}</td>
+
+                    <td>
+                        {% if workflow.is_active %}
+                            <span class="active">Active</span>
+                        {% else %}
+                            <span class="inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin_automation.toggle_automation',
+                                workflow_id=workflow.id
+                            ) }}"
+                            style="margin:0;"
+                        >
+                            <button
+                                type="submit"
+                                style="
+                                    padding:8px 14px;
+                                    border:0;
+                                    border-radius:7px;
+                                    cursor:pointer;
+                                "
+                            >
+                                {% if workflow.is_active %}
+                                    Pause
+                                {% else %}
+                                    Activate
+                                {% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">
+                        No automations installed yet.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

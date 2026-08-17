@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Kemet AI Checkout</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial;
+            background: #08111f;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .checkout {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #111827;
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        .price {
+            font-size: 42px;
+            color: #60a5fa;
+            margin: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            border: 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+<body>
+
+<div class="checkout">
+    <h1>Kemet AI</h1>
+
+    <h2>الخطة: {{ plan|capitalize }}</h2>
+
+    <div class="price">
+        ${{ price }}
+    </div>
+
+    <p>
+        أنت على وشك الاشتراك في خطة {{ plan|capitalize }}.
+    </p>
+
+    <p>
+        سيتم تحويلك إلى بوابة الدفع لإتمام العملية.
+    </p>
+
+    <button class="btn" disabled>
+        الدفع سيتم ربطه في الخطوة التالية
+    </button>
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

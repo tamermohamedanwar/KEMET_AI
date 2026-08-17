@@ -1,0 +1,257 @@
+import os
+from decimal import Decimal
+
+import requests
+
+from app import db
+from app.models.payment import Payment
+from app.models.subscription import Subscription
+
+
+PLAN_PRICES = {
+    "starter": Decimal("9.00"),
+    "business": Decimal("29.00"),
+    "enterprise": None,
+}
+
+PAYMOB_API_URL = "https://accept.paymob.com/v1/intention/"
+PAYMOB_CHECKOUT_URL = "https://accept.paymob.com/unifiedcheckout/"
+
+
+def get_plan_price(plan):
+    return PLAN_PRICES.get((plan or "").lower())
+
+
+def get_paymob_integration_id():
+    value = os.getenv("PAYMOB_INTEGRATION_ID", "").strip()
+
+    if not value:
+        raise RuntimeError(
+            "PAYMOB_INTEGRATION_ID is missing"
+        )
+
+    try:
+        integration_id = int(value)
+    except ValueError as exc:
+        raise RuntimeError(
+            "PAYMOB_INTEGRATION_ID must be numeric"
+        ) from exc
+
+    if integration_id <= 0:
+        raise RuntimeError(
+            "PAYMOB_INTEGRATION_ID must be greater than zero"
+        )
+
+    return integration_id
+
+
+def paymob_configured():
+    required = [
+        "PAYMOB_API_KEY",
+        "PAYMOB_SECRET_KEY",
+        "PAYMOB_PUBLIC_KEY",
+        "PAYMOB_INTEGRATION_ID",
+    ]
+
+    return all(os.getenv(name, "").strip() for name in required)
+
+
+def create_checkout(organization_id, plan):
+    plan = (plan or "").lower()
+
+    if plan not in PLAN_PRICES:
+        raise ValueError("Invalid plan")
+
+    price = get_plan_price(plan)
+
+    if price is None:
+        return {
+            "status": "contact_sales",
+            "plan": plan,
+            "price": None,
+        }
+
+    if os.getenv("PAYMENT_MODE", "mock").lower() == "mock":
+        payment = Payment(
+            organization_id=organization_id,
+            plan=plan,
+            amount=price,
+            currency="USD",
+            status="pending",
+            provider="mock",
+        )
+        db.session.add(payment)
+        db.session.commit()
+
+        return {
+            "status": "mock",
+            "payment_id": payment.id,
+            "plan": plan,
+            "price": str(price),
+            "checkout_url": f"/payment/mock/{payment.id}",
+        }
+
+    if not paymob_configured():
+        raise RuntimeError("Paymob is not configured")
+
+    integration_id = get_paymob_integration_id()
+
+    payment = Payment(
+        organization_id=organization_id,
+        plan=plan,
+        amount=price,
+        currency="EGP",
+        status="pending",
+        provider="paymob",
+    )
+
+    db.session.add(payment)
+    db.session.flush()
+
+    amount_cents = int(price * 100)
+
+    api_key = os.getenv("PAYMOB_API_KEY", "").strip()
+
+    try:
+        auth_response = requests.post(
+            "https://accept.paymob.com/api/auth/tokens",
+            json={"api_key": api_key},
+            timeout=20,
+        )
+
+        if auth_response.status_code != 201:
+            raise RuntimeError(
+                f"Paymob authentication failed ({auth_response.status_code}): "
+                f"{auth_response.text[:500]}"
+            )
+
+        auth_data = auth_response.json()
+        token = auth_data.get("token")
+
+        if not token:
+            raise RuntimeError("Paymob did not return auth token")
+
+        order_response = requests.post(
+            "https://accept.paymob.com/api/ecommerce/orders",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "auth_token": token,
+                "delivery_needed": False,
+                "amount_cents": amount_cents,
+                "currency": "EGP",
+                "items": [
+                    {
+                        "name": f"Kemet AI {plan.capitalize()}",
+                        "amount_cents": amount_cents,
+                        "description": f"Kemet AI {plan} subscription",
+                        "quantity": 1,
+                    }
+                ],
+            },
+            timeout=20,
+        )
+
+        if order_response.status_code not in (200, 201):
+            raise RuntimeError(
+                f"Paymob order failed ({order_response.status_code}): "
+                f"{order_response.text[:500]}"
+            )
+
+        order_data = order_response.json()
+        order_id = order_data.get("id")
+
+        if not order_id:
+            raise RuntimeError("Paymob did not return order ID")
+
+        payment_response = requests.post(
+            "https://accept.paymob.com/api/acceptance/payment_keys",
+            json={
+                "auth_token": token,
+                "amount_cents": amount_cents,
+                "expiration": 3600,
+                "order_id": order_id,
+                "billing_data": {
+                    "apartment": "NA",
+                    "email": "customer@example.com",
+                    "floor": "NA",
+                    "first_name": "Kemet",
+                    "street": "NA",
+                    "building": "NA",
+                    "phone_number": "NA",
+                    "shipping_method": "NA",
+                    "postal_code": "NA",
+                    "city": "Cairo",
+                    "country": "EG",
+                    "last_name": "AI",
+                    "state": "Cairo",
+                },
+                "currency": "EGP",
+                "integration_id": integration_id,
+            },
+            timeout=20,
+        )
+
+        if payment_response.status_code not in (200, 201):
+            raise RuntimeError(
+                f"Paymob payment key failed "
+                f"({payment_response.status_code}): "
+                f"{payment_response.text[:500]}"
+            )
+
+        payment_data = payment_response.json()
+        payment_token = payment_data.get("token")
+
+        if not payment_token:
+            raise RuntimeError("Paymob did not return payment token")
+
+    except requests.RequestException as exc:
+        db.session.rollback()
+        raise RuntimeError(
+            f"Paymob connection failed: {exc}"
+        ) from exc
+    except Exception:
+        db.session.rollback()
+        raise
+
+    payment.checkout_id = str(order_id)
+
+    checkout_url = (
+        f"https://accept.paymob.com/api/acceptance/iframes/"
+        f"{integration_id}?payment_token={payment_token}"
+    )
+
+    db.session.commit()
+
+    return {
+        "status": "ready",
+        "plan": plan,
+        "price": price,
+        "organization_id": organization_id,
+        "payment_id": payment.id,
+        "checkout_id": payment.checkout_id,
+        "client_secret": payment_token,
+        "checkout_url": checkout_url,
+    }
+
+def activate_subscription(organization_id, plan):
+    plan = (plan or "").lower()
+
+    if plan not in PLAN_PRICES:
+        raise ValueError("Invalid plan")
+
+    subscription = Subscription.query.filter_by(
+        organization_id=organization_id
+    ).first()
+
+    if not subscription:
+        raise ValueError("Subscription not found")
+
+    subscription.plan = plan
+    subscription.status = "active"
+
+    db.session.commit()
+
+    return subscription

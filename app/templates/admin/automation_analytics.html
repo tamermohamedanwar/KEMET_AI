@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Analytics - Kemet AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .success {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .failed {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Automation Analytics</h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="label">Total Executions</div>
+            <div class="value">{{ total }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Successful</div>
+            <div class="value success">{{ successful }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Failed</div>
+            <div class="value failed">{{ failed }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Success Rate</div>
+            <div class="value">{{ success_rate }}%</div>
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>Automation Usage</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Automation</th>
+                    <th>Executions</th>
+                    <th>Successful</th>
+                    <th>Failed</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for item in workflow_stats %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.total }}</td>
+                    <td class="success">{{ item.successful }}</td>
+                    <td class="failed">{{ item.failed }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No automation executions yet.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+</body>
+</html>

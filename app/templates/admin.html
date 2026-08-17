@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kemet AI Admin</title>
+
+<style>
+body{
+    margin:0;
+    background:#0f172a;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
+}
+h1{
+    margin-bottom:10px;
+}
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+.btn{
+    background:#2563eb;
+    color:#fff;
+    padding:10px 18px;
+    text-decoration:none;
+    border-radius:8px;
+}
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:25px;
+}
+.stat{
+    padding:20px;
+    border-radius:14px;
+}
+.stat h2{
+    margin:0;
+    font-size:34px;
+}
+.stat p{
+    margin-top:8px;
+    opacity:.9;
+}
+.blue{background:#2563eb;}
+.green{background:#16a34a;}
+.orange{background:#ea580c;}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #475569;
+    text-align:left;
+    vertical-align:top;
+}
+
+th{
+    background:#334155;
+}
+
+.question{
+    color:#93c5fd;
+    max-width:260px;
+}
+
+.answer{
+    color:#bbf7d0;
+    max-width:420px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.date{
+    white-space:nowrap;
+    color:#cbd5e1;
+}
+
+.empty{
+    text-align:center;
+    color:#94a3b8;
+    padding:20px;
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topbar">
+<div>
+<h1>Kemet AI Admin Dashboard</h1>
+<p>System Overview</p>
+</div>
+
+<div>
+<a class="btn" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a class="btn" href="{{ url_for('admin.dashboard') }}">Refresh</a>
+</div>
+</div>
+
+<div class="stats">
+
+<div class="stat blue">
+<h2>{{ users_count }}</h2>
+<p>Total Users</p>
+</div>
+
+<div class="stat green">
+<h2>{{ chats_count }}</h2>
+<p>Total Chats</p>
+</div>
+
+<div class="stat orange">
+<h2>{{ admins_count }}</h2>
+<p>Administrators</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Latest Users</h2>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Role</th>
+</tr>
+
+{% if users %}
+{% for user in users %}
+<tr>
+<td>{{ user.full_name }}</td>
+<td>{{ user.email }}</td>
+<td>{{ user.role }}</td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+<td colspan="3" class="empty">No users found.</td>
+</tr>
+{% endif %}
+
+</table>
+
+</div>
+
+<div class="card">
+
+<h2>Latest Chats</h2>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Question</th>
+<th>Answer</th>
+<th>Date</th>
+</tr>
+
+{% if chats %}
+{% for chat in chats %}
+<tr>
+<td>{{ chat.user_id }}</td>
+<td class="question">{{ chat.question }}</td>
+<td class="answer">{{ chat.answer }}</td>
+<td class="date">{{ chat.created_at }}</td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+<td colspan="4" class="empty">No chat history found.</td>
+</tr>
+{% endif %}
+
+</table>
+
+</div>
+
+<a class="btn" href="/admin/support">
+🎫 Support Dashboard
+</a>
+
+</div>
+
+
+
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

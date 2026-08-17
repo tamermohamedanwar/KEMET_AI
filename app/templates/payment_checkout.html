@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kemet AI Checkout</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fb;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            min-height: 750px;
+            border: 0;
+            border-radius: 12px;
+        }
+    </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Kemet AI</h1>
+
+    <div class="info">
+        <strong>Plan:</strong> {{ payment.plan }}<br>
+        <strong>Amount:</strong> {{ payment.amount }} {{ payment.currency }}
+    </div>
+
+    <a href="{{ checkout_url }}" target="_blank"
+       style="display:inline-block;padding:14px 24px;background:#111;color:#fff;
+              text-decoration:none;border-radius:10px;">
+        Continue to Paymob
+    </a>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</body>
+</html>

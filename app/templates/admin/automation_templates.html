@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemet AI - Automation Templates</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #f5f7fb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .meta {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 8px;
+            padding: 12px;
+            background: #111827;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Automation Templates</h1>
+
+    <div class="subtitle">
+        Install ready-to-use AI automations for your business.
+    </div>
+
+    <div class="grid">
+
+        {% for key, template in templates.items() %}
+
+        <div class="card">
+
+            <h2>{{ template.name }}</h2>
+
+            <div class="meta">
+                Trigger: {{ template.trigger_type }}
+            </div>
+
+            <div class="meta">
+                Action: {{ template.action_type }}
+            </div>
+
+            <div class="meta">
+                Condition: {{ template.condition }}
+            </div>
+
+            <div class="meta">
+                Plan: <strong>{{ template.plan }}</strong>
+            </div>
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'admin_automation.install_marketplace_automation',
+                    key=template.key
+                ) }}"
+            >
+                {% set current_plan = current_plan|default("free") %}
+                {% set plan_order = {
+                    "free": 0,
+                    "starter": 1,
+                    "business": 2,
+                    "enterprise": 3
+                } %}
+
+                {% if plan_order.get(current_plan, 0) >=
+                      plan_order.get(template.plan, 0) %}
+
+                    <button type="submit">
+                        Install Template
+                    </button>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('main.pricing') }}"
+                        style="
+                            display:block;
+                            text-align:center;
+                            padding:12px;
+                            border-radius:8px;
+                            background:#374151;
+                            color:white;
+                            text-decoration:none;
+                            font-weight:bold;
+                        "
+                    >
+                        Upgrade to {{ template.plan }}
+                    </a>
+
+                {% endif %}
+            </form>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

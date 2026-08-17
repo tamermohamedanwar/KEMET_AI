@@ -1,0 +1,1342 @@
+
+<!-- KEMET-AUTOMATION-TEMPLATES-V1 -->
+
+<!-- KEMET AUTOMATION PRO HERO V1 -->
+<section class="kemet-auto-hero">
+    <div class="kemet-auto-hero-main">
+        <div class="kemet-auto-eyebrow">
+            KEMET AI AUTOMATION
+        </div>
+
+        <h1>Build smarter business workflows</h1>
+
+        <p>
+            Turn customer events into real AI-powered actions.
+            Install a template, customize it, and run it immediately.
+        </p>
+
+        <div class="kemet-auto-hero-actions">
+            <a href="#automation-templates" class="kemet-auto-primary">
+                Explore Templates
+            </a>
+
+            <a href="#automation-builder" class="kemet-auto-secondary">
+                Create Workflow
+            </a>
+        </div>
+    </div>
+
+    <div class="kemet-auto-orbit">
+        <div class="kemet-auto-orbit-core">AI</div>
+
+        <div class="kemet-auto-orbit-node node-1">TRIGGER</div>
+        <div class="kemet-auto-orbit-node node-2">AI</div>
+        <div class="kemet-auto-orbit-node node-3">ACTION</div>
+    </div>
+</section>
+
+<section class="kemet-auto-stats">
+    <div class="kemet-auto-stat">
+        <span class="kemet-auto-stat-icon">⚡</span>
+        <div>
+            <strong>Real Workflows</strong>
+            <small>Database-backed automation</small>
+        </div>
+    </div>
+
+    <div class="kemet-auto-stat">
+        <span class="kemet-auto-stat-icon">🤖</span>
+        <div>
+            <strong>AI Actions</strong>
+            <small>Automated intelligent responses</small>
+        </div>
+    </div>
+
+    <div class="kemet-auto-stat">
+        <span class="kemet-auto-stat-icon">🔗</span>
+        <div>
+            <strong>Event Driven</strong>
+            <small>Triggers connected to actions</small>
+        </div>
+    </div>
+
+    <div class="kemet-auto-stat">
+        <span class="kemet-auto-stat-icon">🚀</span>
+        <div>
+            <strong>Ready to Run</strong>
+            <small>Install and customize instantly</small>
+        </div>
+    </div>
+</section>
+
+<div id="automation-templates" class="kemet-auto-section-heading">
+    <div>
+        <span>READY-MADE AUTOMATIONS</span>
+        <h2>Launch in minutes</h2>
+    </div>
+
+    <p>
+        Start with a proven workflow and customize it for your business.
+    </p>
+</div>
+<!-- /KEMET AUTOMATION PRO HERO V1 -->
+
+<section class="kemet-automation-market">
+    <div class="kemet-market-head">
+        <div>
+            <div class="kemet-market-badge">Kemet AI</div>
+            <h2>جاهز للأتمتة</h2>
+            <p>ابدأ بقالب جاهز ثم عدّله حسب نشاطك.</p>
+        </div>
+    </div>
+
+    <div class="kemet-template-grid">
+
+        <article class="kemet-template-card">
+            <div class="kemet-template-icon">🤖</div>
+            <h3>AI Customer Support</h3>
+            <p>يفهم رسالة العميل، ينفذ الإجراء المناسب ويرسل الرد تلقائيًا.</p>
+            <div class="kemet-template-flow">
+                رسالة العميل → AI → إجراء → رد
+            </div>
+            <form method="POST" action="{{ url_for('admin_automation.use_template', template_type='ai_customer_support') }}" class="kemet-template-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="kemet-template-btn">
+                    استخدام القالب
+                </button>
+            </form>
+        </article>
+
+        <article class="kemet-template-card">
+            <div class="kemet-template-icon">📦</div>
+            <h3>Order Tracking</h3>
+            <p>العميل يسأل عن طلبه، وKemet AI يفحص الحالة ويرد فورًا.</p>
+            <div class="kemet-template-flow">
+                Order ID → Check Order → AI Reply
+            </div>
+            <form method="POST" action="{{ url_for('admin_automation.use_template', template_type='order_tracking') }}" class="kemet-template-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="kemet-template-btn">
+                    استخدام القالب
+                </button>
+            </form>
+        </article>
+
+        <article class="kemet-template-card">
+            <div class="kemet-template-icon">🎫</div>
+            <h3>Smart Ticket</h3>
+            <p>إنشاء تذكرة تلقائيًا عند وصول طلب يحتاج تدخل فريق الدعم.</p>
+            <div class="kemet-template-flow">
+                Message → AI → Create Ticket
+            </div>
+            <form method="POST" action="{{ url_for('admin_automation.use_template', template_type='smart_ticket') }}" class="kemet-template-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="kemet-template-btn">
+                    استخدام القالب
+                </button>
+            </form>
+        </article>
+
+        <article class="kemet-template-card">
+            <div class="kemet-template-icon">🔔</div>
+            <h3>Business Notification</h3>
+            <p>إرسال إشعار عند حدوث حدث مهم داخل النظام.</p>
+            <div class="kemet-template-flow">
+                Event → Automation → Notification
+            </div>
+            <form method="POST" action="{{ url_for('admin_automation.use_template', template_type='business_notification') }}" class="kemet-template-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="kemet-template-btn">
+                    استخدام القالب
+                </button>
+            </form>
+        </article>
+
+    </div>
+</section>
+
+<style id="KEMET-AUTOMATION-TEMPLATES-V1">
+.kemet-automation-market {
+    width: 100%;
+    margin: 24px 0;
+}
+
+.kemet-market-head {
+    margin-bottom: 18px;
+}
+
+.kemet-market-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: rgba(99, 102, 241, .12);
+}
+
+.kemet-market-head h2 {
+    margin: 0 0 6px;
+    font-size: clamp(22px, 3vw, 30px);
+}
+
+.kemet-market-head p {
+    margin: 0;
+    opacity: .72;
+}
+
+.kemet-template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.kemet-template-card {
+    border: 1px solid rgba(128, 128, 128, .22);
+    border-radius: 18px;
+    padding: 20px;
+    background: rgba(128, 128, 128, .05);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.kemet-template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+.kemet-template-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.kemet-template-card h3 {
+    margin: 0 0 8px;
+    font-size: 19px;
+}
+
+.kemet-template-card p {
+    margin: 0;
+    line-height: 1.65;
+    opacity: .78;
+}
+
+.kemet-template-flow {
+    margin: 16px 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(99, 102, 241, .08);
+    overflow-wrap: anywhere;
+}
+
+.kemet-template-btn {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 11px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+@media (max-width: 700px) {
+    .kemet-automation-market {
+        margin: 18px 0;
+    }
+
+    .kemet-template-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .kemet-template-card {
+        padding: 16px;
+        border-radius: 15px;
+    }
+
+    .kemet-template-card h3 {
+        font-size: 17px;
+    }
+
+    .kemet-template-flow {
+        margin: 13px 0;
+    }
+
+    .kemet-template-btn {
+        min-height: 48px;
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .kemet-template-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.kemet-template-form {
+    width: 100%;
+    margin-top: auto;
+}
+
+.kemet-template-form .kemet-template-btn {
+    display: block;
+}
+\n</style>
+
+
+<!-- /KEMET-AUTOMATION-TEMPLATES-V1 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kemet AI Automation</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .topbar {
+            background: #111827;
+            color: white;
+            padding: 18px 25px;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .card {
+            border: 0;
+            border-radius: 14px;
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        .stat-card {
+            padding: 22px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .action-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            background: white;
+        }
+    </style>
+
+<style id="KEMET-TEMPLATE-BUTTON-FIX">
+.kemet-template-form {
+    position: relative;
+    z-index: 100;
+    display: block;
+    width: 100%;
+    margin: 0;
+    pointer-events: auto;
+}
+
+.kemet-template-btn {
+    position: relative;
+    z-index: 101;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    width: 100%;
+    min-height: 46px;
+    display: block;
+}
+
+.kemet-template-form button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="topbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="brand">
+            <i class="bi bi-robot"></i>
+            Kemet AI
+        </div>
+
+        <div>
+            <span class="me-3">
+                <i class="bi bi-lightning-charge"></i>
+                Automation
+            </span>
+
+            <a
+                href="/dashboard"
+                class="btn btn-sm btn-outline-light"
+            >
+                Dashboard
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            <i class="bi bi-robot"></i>
+            Kemet AI Automation
+        </h2>
+
+        <p class="text-muted">
+            Create and manage AI-powered workflows and business automation.
+        </p>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm stat-card">
+
+                <div class="text-muted">
+                    Workflows
+                </div>
+
+                <div class="stat-number">
+                    {{ workflows|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm stat-card">
+
+                <div class="text-muted">
+                    Executions
+                </div>
+
+                <div class="stat-number">
+                    {{ executions|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm stat-card">
+
+                <div class="text-muted">
+                    AI Actions
+                </div>
+
+                <div class="stat-number">
+                    4
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATE WORKFLOW -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header p-3">
+
+            <i class="bi bi-plus-circle"></i>
+            Create Workflow
+
+        </div>
+
+        <div class="card-body">
+
+            <form
+                method="POST"
+                action="{{ url_for('admin_automation.create') }}"
+            >
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Workflow Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            placeholder="AI Order Assistant"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Trigger
+                        </label>
+
+                        <select
+                            name="trigger_type"
+                            class="form-select"
+                        >
+
+                            <option value="ticket_created">
+                                Ticket Created
+                            </option>
+
+                            <option value="order_question">
+                                Order Question
+                            </option>
+
+                            <option value="customer_message">
+                                Customer Message
+                            </option>
+
+                            <option value="manual_test">
+                                Manual Test
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="description"
+                            class="form-control"
+                            rows="2"
+                            placeholder="Describe what this automation should do..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Action
+                        </label>
+
+                        <select
+                            name="action_type"
+                            id="action_type"
+                            class="form-select"
+                            required
+                            onchange="updateFields()"
+                        >
+
+                            <option value="">
+                                Select Action
+                            </option>
+
+                            <option value="generate_ai_reply">
+                                Generate AI Reply
+                            </option>
+
+                            <option value="check_order">
+                                Check Order
+                            </option>
+
+                            <option value="create_ticket">
+                                Create Ticket
+                            </option>
+
+                            <option value="send_notification">
+                                Send Notification
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ORDER -->
+
+                    <div
+                        class="col-md-6"
+                        id="order_field"
+                        style="display:none"
+                    >
+
+                        <label class="form-label">
+                            Order ID
+                        </label>
+
+                        <input
+                            type="text"
+                            name="order_id"
+                            class="form-control"
+                            placeholder="KEMET-1001"
+                        >
+
+                    </div>
+
+
+                    <!-- MESSAGE -->
+
+                    <div
+                        class="col-12"
+                        id="message_field"
+                        style="display:none"
+                    >
+
+                        <label class="form-label">
+                            Message
+                        </label>
+
+                        <textarea
+                            name="message"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Customer asks about an order..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- NOTIFICATION -->
+
+                    <div
+                        class="col-md-6"
+                        id="title_field"
+                        style="display:none"
+                    >
+
+                        <label class="form-label">
+                            Notification Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            placeholder="Kemet AI Notification"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="action-card">
+
+                            <div class="fw-semibold mb-2">
+                                Available Actions
+                            </div>
+
+                            <div class="small text-muted">
+
+                                <div>
+                                    <i class="bi bi-check-circle"></i>
+                                    Check Order
+                                </div>
+
+                                <div>
+                                    <i class="bi bi-ticket"></i>
+                                    Create Ticket
+                                </div>
+
+                                <div>
+                                    <i class="bi bi-stars"></i>
+                                    Generate AI Reply
+                                </div>
+
+                                <div>
+                                    <i class="bi bi-bell"></i>
+                                    Send Notification
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                        >
+
+                            <i class="bi bi-plus-lg"></i>
+                            Create Workflow
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- WORKFLOWS -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header p-3">
+
+            <i class="bi bi-diagram-3"></i>
+            Workflows
+
+        </div>
+
+        <div class="card-body">
+
+            {% if workflows %}
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Trigger</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for workflow in workflows %}
+
+                        <tr>
+
+                            <td>
+                                #{{ workflow.id }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    {{ workflow.name }}
+                                </strong>
+
+                                {% if workflow.description %}
+
+                                <div class="small text-muted">
+                                    {{ workflow.description }}
+                                </div>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+                                    {{ workflow.trigger_type }}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {% if workflow.is_active %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Disabled
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <div class="d-flex gap-2">
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'admin_automation.toggle',
+                                            workflow_id=workflow.id
+                                        ) }}"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-secondary"
+                                        >
+
+                                            {% if workflow.is_active %}
+                                                Disable
+                                            {% else %}
+                                                Enable
+                                            {% endif %}
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'admin_automation.run',
+                                            workflow_id=workflow.id
+                                        ) }}"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="message"
+                                            value="عميل يسأل عن حالة الطلب KEMET-LIVE-001"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="order_id"
+                                            value="KEMET-LIVE-001"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-primary"
+                                        >
+
+                                            <i class="bi bi-play-fill"></i>
+                                            Run
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5 text-muted">
+
+                <i class="bi bi-diagram-3 fs-1"></i>
+
+                <h5 class="mt-3">
+                    No workflows yet
+                </h5>
+
+                <p>
+                    Create your first automation workflow above.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- EXECUTION HISTORY -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header p-3">
+
+            <i class="bi bi-clock-history"></i>
+            Execution History
+
+        </div>
+
+        <div class="card-body">
+
+            {% if executions %}
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Workflow</th>
+                            <th>Status</th>
+                            <th>Started</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for execution in executions %}
+
+                        <tr>
+
+                            <td>
+                                #{{ execution.id }}
+                            </td>
+
+                            <td>
+                                Workflow #{{ execution.workflow_id }}
+                            </td>
+
+                            <td>
+
+                                {% if execution.status == "completed" %}
+
+                                <span class="badge bg-success">
+                                    Completed
+                                </span>
+
+                                {% elif execution.status == "failed" %}
+
+                                <span class="badge bg-danger">
+                                    Failed
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    {{ execution.status }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ execution.started_at }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-muted">
+                No executions yet.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function updateFields() {
+
+    const action =
+        document.getElementById("action_type").value;
+
+    document.getElementById("order_field").style.display = "none";
+    document.getElementById("message_field").style.display = "none";
+    document.getElementById("title_field").style.display = "none";
+
+    if (action === "check_order") {
+        document.getElementById("order_field").style.display = "block";
+    }
+
+    if (action === "generate_ai_reply") {
+        document.getElementById("message_field").style.display = "block";
+    }
+
+    if (action === "create_ticket") {
+        document.getElementById("message_field").style.display = "block";
+    }
+
+    if (action === "send_notification") {
+        document.getElementById("title_field").style.display = "block";
+        document.getElementById("message_field").style.display = "block";
+    }
+}
+
+</script>
+
+
+<style id="KEMET-AUTOMATION-PRO-V1">
+.kemet-auto-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, .8fr);
+    gap: 30px;
+    margin: 0 0 22px;
+    padding: 34px;
+    border-radius: 28px;
+    border: 1px solid rgba(99,102,241,.22);
+    background:
+        radial-gradient(circle at 85% 25%, rgba(99,102,241,.22), transparent 32%),
+        radial-gradient(circle at 15% 100%, rgba(16,185,129,.13), transparent 34%),
+        rgba(99,102,241,.055);
+    box-shadow: 0 20px 60px rgba(0,0,0,.08);
+}
+
+.kemet-auto-hero-main {
+    position: relative;
+    z-index: 2;
+}
+
+.kemet-auto-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    background: rgba(99,102,241,.12);
+}
+
+.kemet-auto-hero h1 {
+    margin: 14px 0 10px;
+    max-width: 720px;
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -.035em;
+}
+
+.kemet-auto-hero p {
+    max-width: 680px;
+    margin: 0;
+    opacity: .72;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.kemet-auto-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 23px;
+}
+
+.kemet-auto-primary,
+.kemet-auto-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    padding: 0 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    transition: .2s ease;
+}
+
+.kemet-auto-primary {
+    background: #6366f1;
+    color: #fff !important;
+    box-shadow: 0 10px 24px rgba(99,102,241,.25);
+}
+
+.kemet-auto-secondary {
+    border: 1px solid rgba(128,128,128,.25);
+    background: rgba(128,128,128,.06);
+}
+
+.kemet-auto-primary:hover,
+.kemet-auto-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.kemet-auto-orbit {
+    position: relative;
+    min-height: 240px;
+    display: grid;
+    place-items: center;
+}
+
+.kemet-auto-orbit-core {
+    width: 105px;
+    height: 105px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg,#6366f1,#8b5cf6);
+    box-shadow:
+        0 0 0 14px rgba(99,102,241,.08),
+        0 0 0 28px rgba(99,102,241,.035),
+        0 20px 55px rgba(99,102,241,.32);
+}
+
+.kemet-auto-orbit-node {
+    position: absolute;
+    padding: 8px 11px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    border: 1px solid rgba(128,128,128,.2);
+    background: rgba(255,255,255,.8);
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.node-1 {
+    top: 20px;
+    left: 5%;
+}
+
+.node-2 {
+    top: 50%;
+    right: 0;
+}
+
+.node-3 {
+    bottom: 20px;
+    left: 15%;
+}
+
+.kemet-auto-stats {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.kemet-auto-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 72px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(128,128,128,.18);
+    background: rgba(128,128,128,.035);
+}
+
+.kemet-auto-stat-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(99,102,241,.11);
+    font-size: 18px;
+}
+
+.kemet-auto-stat strong,
+.kemet-auto-stat small {
+    display: block;
+}
+
+.kemet-auto-stat strong {
+    font-size: 13px;
+}
+
+.kemet-auto-stat small {
+    margin-top: 3px;
+    font-size: 10px;
+    opacity: .58;
+}
+
+.kemet-auto-section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 10px 0 17px;
+}
+
+.kemet-auto-section-heading span {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    opacity: .55;
+}
+
+.kemet-auto-section-heading h2 {
+    margin: 5px 0 0;
+    font-size: clamp(22px,4vw,31px);
+}
+
+.kemet-auto-section-heading p {
+    max-width: 420px;
+    margin: 0;
+    opacity: .6;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: right;
+}
+
+.kemet-template-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.kemet-template-card::after {
+    content: "";
+    position: absolute;
+    inset: auto -30% -65px -30%;
+    height: 100px;
+    background: radial-gradient(circle,rgba(99,102,241,.12),transparent 65%);
+    pointer-events: none;
+}
+
+.kemet-template-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 45px rgba(0,0,0,.11);
+    border-color: rgba(99,102,241,.3);
+}
+
+.kemet-template-flow {
+    position: relative;
+    z-index: 1;
+}
+
+.kemet-template-btn {
+    position: relative;
+    z-index: 2;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.kemet-template-btn:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 850px) {
+    .kemet-auto-hero {
+        grid-template-columns: 1fr;
+        padding: 25px;
+    }
+
+    .kemet-auto-orbit {
+        min-height: 190px;
+    }
+
+    .kemet-auto-stats {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+
+    .kemet-auto-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kemet-auto-section-heading p {
+        text-align: left;
+    }
+}
+
+@media (max-width: 520px) {
+    .kemet-auto-hero {
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .kemet-auto-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .kemet-auto-hero-actions {
+        flex-direction: column;
+    }
+
+    .kemet-auto-primary,
+    .kemet-auto-secondary {
+        width: 100%;
+    }
+
+    .kemet-auto-orbit {
+        transform: scale(.88);
+    }
+}
+</style>
+
+</body>
+</html>
