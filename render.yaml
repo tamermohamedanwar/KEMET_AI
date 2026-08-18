@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: kemet-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 1 -b 0.0.0.0:$PORT "app:create_app()"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.15
+      - key: PAYMENT_MODE
+        value: paymob
