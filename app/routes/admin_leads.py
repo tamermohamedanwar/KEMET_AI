@@ -573,6 +573,203 @@ def execute_due_follow_ups():
     )
 
 
+
+@admin_leads.route(
+    "/admin/follow-ups/review",
+    methods=["GET"],
+)
+@login_required
+def human_review_queue():
+    from datetime import datetime
+
+    now = datetime.utcnow()
+
+    query = (
+        LeadActivity.query
+        .join(
+            DemoLead,
+            DemoLead.id == LeadActivity.lead_id,
+        )
+        .filter(
+            LeadActivity.organization_id == DemoLead.organization_id,
+            LeadActivity.activity_type == "follow_up",
+            LeadActivity.completed_at.is_(None),
+        )
+    )
+
+    due = (
+        query
+        .filter(LeadActivity.due_at.isnot(None))
+        .filter(LeadActivity.due_at <= now)
+        .order_by(LeadActivity.due_at.asc())
+        .limit(100)
+        .all()
+    )
+
+    upcoming = (
+        query
+        .filter(
+            (LeadActivity.due_at.is_(None))
+            | (LeadActivity.due_at > now)
+        )
+        .order_by(LeadActivity.due_at.asc())
+        .limit(100)
+        .all()
+    )
+
+    return render_template(
+        "admin/human_review_queue.html",
+        due=due,
+        upcoming=upcoming,
+        now=now,
+    )
+
+
+@admin_leads.route(
+    "/admin/follow-ups/<int:activity_id>/approve",
+    methods=["POST"],
+)
+@login_required
+def approve_follow_up(activity_id):
+    activity = (
+        LeadActivity.query
+        .join(
+            DemoLead,
+            DemoLead.id == LeadActivity.lead_id,
+        )
+        .filter(
+            LeadActivity.id == activity_id,
+            LeadActivity.organization_id == DemoLead.organization_id,
+            LeadActivity.activity_type == "follow_up",
+            LeadActivity.completed_at.is_(None),
+        )
+        .first_or_404()
+    )
+
+    if not activity.due_at:
+        flash(
+            "Follow-up has no execution time.",
+            "error",
+        )
+        return redirect(
+            url_for("admin_leads.human_review_queue")
+        )
+
+    # V4.5 safety gate:
+    # Human approval records the decision but does not
+    # send email, WhatsApp, SMS, or payment requests.
+    content = (activity.content or "").strip()
+
+    approval_marker = "[HUMAN_APPROVED]"
+
+    if approval_marker not in content:
+        activity.content = (
+            f"{content}\n{approval_marker}".strip()
+        )
+
+    db.session.commit()
+
+    flash(
+        "Follow-up approved. No external message was sent.",
+        "success",
+    )
+
+    return redirect(
+        url_for("admin_leads.human_review_queue")
+    )
+
+
+@admin_leads.route(
+    "/admin/follow-ups/<int:activity_id>/complete-review",
+    methods=["POST"],
+)
+@login_required
+def complete_review_follow_up(activity_id):
+    activity = (
+        LeadActivity.query
+        .join(
+            DemoLead,
+            DemoLead.id == LeadActivity.lead_id,
+        )
+        .filter(
+            LeadActivity.id == activity_id,
+            LeadActivity.organization_id == DemoLead.organization_id,
+            LeadActivity.activity_type == "follow_up",
+        )
+        .first_or_404()
+    )
+
+    if activity.completed_at is None:
+        activity.completed_at = datetime.utcnow()
+
+    db.session.commit()
+
+    flash(
+        "Follow-up marked as completed.",
+        "success",
+    )
+
+    return redirect(
+        url_for("admin_leads.human_review_queue")
+    )
+
+
+@admin_leads.route(
+    "/admin/follow-ups/<int:activity_id>/skip",
+    methods=["POST"],
+)
+@login_required
+def skip_follow_up(activity_id):
+    activity = (
+        LeadActivity.query
+        .join(
+            DemoLead,
+            DemoLead.id == LeadActivity.lead_id,
+        )
+        .filter(
+            LeadActivity.id == activity_id,
+            LeadActivity.organization_id == DemoLead.organization_id,
+            LeadActivity.activity_type == "follow_up",
+            LeadActivity.completed_at.is_(None),
+        )
+        .first_or_404()
+    )
+
+    content = (activity.content or "").strip()
+
+    skip_marker = "[HUMAN_SKIPPED]"
+
+    if skip_marker not in content:
+        activity.content = (
+            f"{content}\n{skip_marker}".strip()
+        )
+
+    activity.completed_at = datetime.utcnow()
+
+    lead = DemoLead.query.filter(
+        DemoLead.id == activity.lead_id,
+        DemoLead.organization_id == activity.organization_id,
+    ).first()
+
+    if (
+        lead is not None
+        and lead.next_follow_up_at
+        and activity.due_at
+        and lead.next_follow_up_at == activity.due_at
+    ):
+        lead.next_follow_up_at = None
+
+    db.session.commit()
+
+    flash(
+        "Follow-up skipped by human review.",
+        "success",
+    )
+
+    return redirect(
+        url_for("admin_leads.human_review_queue")
+    )
+
 @admin_leads.route(
     "/admin/follow-ups",
     methods=["GET"],
