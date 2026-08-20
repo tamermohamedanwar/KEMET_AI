@@ -950,22 +950,77 @@ JSON:
 
     def sales_follow_up(self, parameters, user_id=None):
         """
-        Prepare a sales follow-up based on lead qualification.
-        Does not send messages or modify customer records.
+        Create a CRM sales follow-up activity.
+
+        This action does not send email, WhatsApp, SMS, or payment requests.
+        It creates a follow-up task for the sales team.
         """
+        from datetime import datetime, timedelta
+
+        from app import db
+        from app.models.demo_lead import DemoLead
+        from app.models.lead_activity import LeadActivity
+
+        parameters = parameters or {}
+
+        lead_id = parameters.get("lead_id")
+
+        if not lead_id:
+            return {
+                "success": False,
+                "action": "sales_follow_up",
+                "status": "missing_lead",
+                "message": "lead_id is required",
+                "user_id": user_id,
+            }
+
+        try:
+            lead_id = int(lead_id)
+        except (TypeError, ValueError):
+            return {
+                "success": False,
+                "action": "sales_follow_up",
+                "status": "invalid_lead",
+                "message": "Invalid lead_id",
+                "user_id": user_id,
+            }
+
+        lead = DemoLead.query.filter(
+            DemoLead.id == lead_id
+        ).first()
+
+        if lead is None:
+            return {
+                "success": False,
+                "action": "sales_follow_up",
+                "status": "lead_not_found",
+                "message": "Lead not found",
+                "lead_id": lead_id,
+                "user_id": user_id,
+            }
+
         lead_status = (
             parameters.get("lead_status")
             or parameters.get("status")
+            or getattr(lead, "status", None)
             or "warm"
         ).strip().lower()
 
-        score = parameters.get("score", 0)
-        message = (parameters.get("message") or "").strip()
+        score = parameters.get(
+            "score",
+            getattr(lead, "lead_score", 0) or 0,
+        )
 
         try:
             score = int(score or 0)
         except (TypeError, ValueError):
             score = 0
+
+        message = (
+            parameters.get("message")
+            or parameters.get("content")
+            or ""
+        ).strip()
 
         follow_up_plan = {
             "qualified": {
@@ -973,24 +1028,28 @@ JSON:
                 "channel": "sales_team",
                 "timing": "immediate",
                 "action": "contact_lead",
+                "hours": 0,
             },
             "hot": {
                 "priority": "high",
                 "channel": "sales_team",
                 "timing": "within_1_hour",
                 "action": "contact_lead",
+                "hours": 1,
             },
             "warm": {
                 "priority": "medium",
                 "channel": "sales_nurturing",
                 "timing": "within_24_hours",
                 "action": "nurture_lead",
+                "hours": 24,
             },
             "cold": {
                 "priority": "low",
                 "channel": "marketing",
                 "timing": "scheduled",
                 "action": "monitor_lead",
+                "hours": 72,
             },
         }
 
@@ -999,10 +1058,65 @@ JSON:
             follow_up_plan["warm"],
         )
 
+        now = datetime.utcnow()
+
+        if plan["hours"] == 0:
+            due_at = now
+        else:
+            due_at = now + timedelta(hours=plan["hours"])
+
+        existing = LeadActivity.query.filter(
+            LeadActivity.lead_id == lead.id,
+            LeadActivity.activity_type == "follow_up",
+            LeadActivity.completed_at.is_(None),
+            LeadActivity.due_at.isnot(None),
+        ).first()
+
+        if existing:
+            return {
+                "success": True,
+                "action": "sales_follow_up",
+                "status": "already_scheduled",
+                "lead_id": lead.id,
+                "activity_id": existing.id,
+                "due_at": existing.due_at.isoformat(),
+                "lead_status": lead_status,
+                "score": score,
+                "priority": plan["priority"],
+                "channel": plan["channel"],
+                "timing": plan["timing"],
+                "next_action": plan["action"],
+                "message_sent": False,
+                "requires_human": True,
+                "user_id": user_id,
+            }
+
+        activity = LeadActivity(
+            organization_id=lead.organization_id,
+            lead_id=lead.id,
+            user_id=user_id,
+            activity_type="follow_up",
+            subject="Sales follow-up",
+            content=message or (
+                f"Sales follow-up for {lead.company_name} "
+                f"({lead_status}, score {score})"
+            ),
+            due_at=due_at,
+        )
+
+        db.session.add(activity)
+
+        lead.next_follow_up_at = due_at
+
+        db.session.commit()
+
         return {
             "success": True,
             "action": "sales_follow_up",
-            "status": "follow_up_prepared",
+            "status": "follow_up_scheduled",
+            "lead_id": lead.id,
+            "activity_id": activity.id,
+            "due_at": due_at.isoformat(),
             "lead_status": lead_status,
             "score": score,
             "priority": plan["priority"],
@@ -1010,9 +1124,9 @@ JSON:
             "timing": plan["timing"],
             "next_action": plan["action"],
             "message": message,
-            "user_id": user_id,
             "message_sent": False,
-            "requires_human": lead_status == "qualified",
+            "requires_human": True,
+            "user_id": user_id,
         }
 
     def lead_scoring(self, parameters, user_id=None):
