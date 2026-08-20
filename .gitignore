@@ -41,3 +41,12 @@ logs/
 # Python cache
 __pycache__/
 *.pyc
+
+# Local safety backups
+backups/
+*.backup
+*.refund_backup
+*.paymob_backup_*
+*.before_kashier_*
+*.before_paymob_return_*
+*.before_checkout_ui_*

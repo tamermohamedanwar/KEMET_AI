@@ -639,6 +639,75 @@ and subscription from one intelligent workspace.
 
 </section>
 
+
+<section class="kpi-section" id="kemet-kpi-section">
+<div class="kpi-toolbar">
+<div>
+<h2>Business KPIs</h2>
+<p>Live performance metrics</p>
+</div>
+<select id="kpi-period">
+<option value="7d">7 days</option>
+<option value="30d" selected>30 days</option>
+<option value="90d">90 days</option>
+</select>
+</div>
+
+<div class="kpi-grid">
+
+<div class="kpi-card">
+<span>Automation Success</span>
+<strong id="kpi-automation-success">—</strong>
+<small id="kpi-automation-executions">— executions</small>
+</div>
+
+<div class="kpi-card">
+<span>Support Tickets</span>
+<strong id="kpi-tickets-total">—</strong>
+<small id="kpi-tickets-open">— open</small>
+</div>
+
+<div class="kpi-card">
+<span>Revenue</span>
+<strong id="kpi-revenue">—</strong>
+<small id="kpi-payments-paid">— paid</small>
+</div>
+
+<div class="kpi-card">
+<span>Sales Leads</span>
+<strong id="kpi-leads">—</strong>
+<small id="kpi-converted-leads">— converted</small>
+</div>
+
+<div class="kpi-card">
+<span>AI Requests</span>
+<strong id="kpi-ai-requests">—</strong>
+<small id="kpi-ai-tokens">— tokens</small>
+</div>
+
+<div class="kpi-card">
+<span>Active Workflows</span>
+<strong id="kpi-active-workflows">—</strong>
+<small id="kpi-total-workflows">— total</small>
+</div>
+
+</div>
+</section>
+
+<style>
+.kpi-section{margin-bottom:22px}
+.kpi-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:15px}
+.kpi-toolbar h2{margin:0;font-size:20px}
+.kpi-toolbar p{margin:5px 0 0;color:var(--muted);font-size:12px}
+#kpi-period{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kpi-card{border:1px solid var(--border);background:rgba(255,255,255,.035);border-radius:18px;padding:18px}
+.kpi-card span{display:block;color:var(--muted);font-size:12px}
+.kpi-card strong{display:block;margin-top:10px;font-size:26px;font-weight:800}
+.kpi-card small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kpi-toolbar{flex-direction:column;align-items:flex-start}.kpi-grid{grid-template-columns:1fr}}
+</style>
 <section class="content-grid">
 
 <div>
@@ -779,6 +848,78 @@ document.querySelector(".status").innerHTML=
 checkHealth();
 </script>
 
+
+<script>
+async function loadKPI(period) {
+    try {
+        const response = await fetch(
+            "/dashboard/api/kpis?period=" + encodeURIComponent(period),
+            {credentials:"same-origin"}
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || data.error || "KPI request failed");
+        }
+
+        const k = data.data;
+        const a = k.automation || {};
+        const sp = k.support || {};
+        const sa = k.sales || {};
+        const r = k.revenue || {};
+        const ai = k.ai || {};
+
+        document.getElementById("kpi-automation-success").textContent =
+            (a.success_rate ?? 0) + "%";
+
+        document.getElementById("kpi-automation-executions").textContent =
+            (a.total_executions ?? 0) + " executions";
+
+        document.getElementById("kpi-tickets-total").textContent =
+            sp.tickets_total ?? 0;
+
+        document.getElementById("kpi-tickets-open").textContent =
+            (sp.tickets_open ?? 0) + " open";
+
+        document.getElementById("kpi-revenue").textContent =
+            Number(r.paid_amount ?? 0).toFixed(2);
+
+        document.getElementById("kpi-payments-paid").textContent =
+            (r.payments_paid ?? 0) + " paid";
+
+        document.getElementById("kpi-leads").textContent =
+            sa.leads_total ?? 0;
+
+        document.getElementById("kpi-converted-leads").textContent =
+            ((sa.leads_by_status || {}).converted ?? 0) + " converted";
+
+        document.getElementById("kpi-ai-requests").textContent =
+            ai.requests ?? 0;
+
+        document.getElementById("kpi-ai-tokens").textContent =
+            (ai.tokens ?? 0) + " tokens";
+
+        document.getElementById("kpi-active-workflows").textContent =
+            a.active_workflows ?? 0;
+
+        document.getElementById("kpi-total-workflows").textContent =
+            (a.total_workflows ?? 0) + " total";
+
+    } catch (error) {
+        console.error("KPI dashboard error:", error);
+    }
+}
+
+document.getElementById("kpi-period").addEventListener(
+    "change",
+    function () {
+        loadKPI(this.value);
+    }
+);
+
+loadKPI("30d");
+</script>
 <!-- dashboard-shell-end -->
 </div>
 <script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>

@@ -9,6 +9,7 @@ class AutomationService:
         Central dispatcher for automation actions.
         """
         handlers = {
+            "check_order": self.check_order,
             "generate_ai_reply": self.generate_ai_reply,
             "smart_ticket_ai": self.smart_ticket_ai,
             "send_notification": self.send_notification,
@@ -38,7 +39,7 @@ class AutomationService:
 
         return handler(parameters or {}, user_id)
 
-    def check_order(self, parameters):
+    def check_order(self, parameters, user_id=None):
         order_id = parameters.get("order_id")
 
         return {
@@ -1438,30 +1439,39 @@ JSON:
     def order_tracking(self, parameters, user_id=None):
         """
         Track an order/payment-related request using existing Kemet AI data.
-        No Order model is assumed.
+        Payment records are tenant-scoped by organization_id.
         """
         from app.models import Payment
 
-        message = (parameters.get("message") or "").strip()
+        parameters = parameters or {}
+
+        organization_id = parameters.get("organization_id")
+        message = str(parameters.get("message") or "").strip()
         payment_id = parameters.get("payment_id")
         transaction_id = parameters.get("transaction_id")
 
         query = Payment.query
 
+        if organization_id is not None:
+            query = query.filter_by(
+                organization_id=organization_id
+            )
+
         payment = None
 
         if payment_id:
-            payment = query.filter_by(id=payment_id).first()
+            payment = query.filter_by(
+                id=payment_id
+            ).first()
 
         if payment is None and transaction_id:
             payment = query.filter_by(
-                transaction_id=str(transaction_id)
+                provider_transaction_id=str(transaction_id)
             ).first()
 
-        if payment is None and user_id:
+        if payment is None and organization_id is not None:
             payment = (
                 query
-                .filter_by(user_id=user_id)
                 .order_by(Payment.id.desc())
                 .first()
             )
@@ -1482,10 +1492,26 @@ JSON:
             "action": "order_tracking",
             "status": "found",
             "payment_id": payment.id,
-            "transaction_id": getattr(payment, "transaction_id", None),
-            "payment_status": getattr(payment, "status", None),
-            "amount": getattr(payment, "amount", None),
-            "currency": getattr(payment, "currency", None),
+            "transaction_id": getattr(
+                payment,
+                "provider_transaction_id",
+                None,
+            ),
+            "payment_status": getattr(
+                payment,
+                "status",
+                None,
+            ),
+            "amount": getattr(
+                payment,
+                "amount",
+                None,
+            ),
+            "currency": getattr(
+                payment,
+                "currency",
+                None,
+            ),
             "message": message,
         }
 
@@ -1544,9 +1570,11 @@ JSON:
         }
 
     def refund_request(self, parameters, user_id=None):
-        """Create a structured refund review request."""
+        """Create or execute a refund request with explicit approval."""
         parameters = parameters or {}
-        approved_execution = parameters.get("_approved_execution") is True
+        approved_execution = (
+            parameters.get("_approved_execution") is True
+        )
 
         message = (parameters.get("message") or "").strip()
         payment_id = parameters.get("payment_id")
@@ -1557,7 +1585,9 @@ JSON:
         payment = None
 
         if payment_id:
-            payment = Payment.query.filter_by(id=payment_id).first()
+            payment = Payment.query.filter_by(
+                id=payment_id
+            ).first()
 
         if payment is None and transaction_id:
             payment = Payment.query.filter_by(
@@ -1565,12 +1595,15 @@ JSON:
             ).first()
 
         if payment is None:
-            payment = (
-                Payment.query
-                .filter_by(organization_id=parameters.get("organization_id"))
-                .order_by(Payment.id.desc())
-                .first()
-            )
+            organization_id = parameters.get("organization_id")
+
+            if organization_id:
+                payment = (
+                    Payment.query
+                    .filter_by(organization_id=organization_id)
+                    .order_by(Payment.id.desc())
+                    .first()
+                )
 
         if payment is None:
             return {
@@ -1585,42 +1618,148 @@ JSON:
                 "recommended_action": "refund_review",
             }
 
-        if approved_execution:
+        if not approved_execution:
+            return {
+                "success": True,
+                "action": "refund_request",
+                "status": "manual_review_required",
+                "payment_id": payment.id,
+                "transaction_id": getattr(
+                    payment,
+                    "provider_transaction_id",
+                    None,
+                ),
+                "payment_status": getattr(
+                    payment,
+                    "status",
+                    None,
+                ),
+                "amount": getattr(
+                    payment,
+                    "amount",
+                    None,
+                ),
+                "currency": getattr(
+                    payment,
+                    "currency",
+                    None,
+                ),
+                "message": message,
+                "approval_required": True,
+                "financial_action_executed": False,
+                "requires_human": True,
+                "recommended_action": "refund_review",
+            }
+
+        # Production-safe dry run: never contacts Paymob.
+        if parameters.get("_dry_run") is True:
+            return {
+                "success": True,
+                "action": "refund_request",
+                "status": "dry_run_completed",
+                "payment_id": payment.id,
+                "transaction_id": getattr(
+                    payment,
+                    "provider_transaction_id",
+                    None,
+                ),
+                "payment_status": getattr(
+                    payment,
+                    "status",
+                    None,
+                ),
+                "amount": getattr(
+                    payment,
+                    "amount",
+                    None,
+                ),
+                "currency": getattr(
+                    payment,
+                    "currency",
+                    None,
+                ),
+                "message": message,
+                "approval_required": False,
+                "financial_action_executed": False,
+                "requires_human": False,
+                "recommended_action": "refund_would_be_processed",
+                "dry_run": True,
+            }
+
+        from app.services.payment_service import refund_payment
+
+        try:
+            refund_result = refund_payment(
+                payment,
+                amount=parameters.get("amount"),
+            )
+
             return {
                 "success": True,
                 "action": "refund_request",
                 "status": "completed",
                 "payment_id": payment.id,
                 "transaction_id": getattr(
-                    payment, "provider_transaction_id", None
+                    payment,
+                    "provider_transaction_id",
+                    None,
                 ),
-                "payment_status": getattr(payment, "status", None),
-                "amount": getattr(payment, "amount", None),
-                "currency": getattr(payment, "currency", None),
+                "payment_status": getattr(
+                    payment,
+                    "status",
+                    None,
+                ),
+                "amount": getattr(
+                    payment,
+                    "amount",
+                    None,
+                ),
+                "currency": getattr(
+                    payment,
+                    "currency",
+                    None,
+                ),
                 "message": message,
                 "approval_required": False,
                 "financial_action_executed": True,
                 "requires_human": False,
                 "recommended_action": "refund_processed",
+                "provider_response": refund_result,
             }
 
-        return {
-            "success": True,
-            "action": "refund_request",
-            "status": "manual_review_required",
-            "payment_id": payment.id,
-            "transaction_id": getattr(
-                payment, "provider_transaction_id", None
-            ),
-            "payment_status": getattr(payment, "status", None),
-            "amount": getattr(payment, "amount", None),
-            "currency": getattr(payment, "currency", None),
-            "message": message,
-            "approval_required": True,
-            "financial_action_executed": False,
-            "requires_human": True,
-            "recommended_action": "refund_review",
-        }
+        except Exception as exc:
+            return {
+                "success": False,
+                "action": "refund_request",
+                "status": "refund_failed",
+                "payment_id": payment.id,
+                "transaction_id": getattr(
+                    payment,
+                    "provider_transaction_id",
+                    None,
+                ),
+                "payment_status": getattr(
+                    payment,
+                    "status",
+                    None,
+                ),
+                "amount": getattr(
+                    payment,
+                    "amount",
+                    None,
+                ),
+                "currency": getattr(
+                    payment,
+                    "currency",
+                    None,
+                ),
+                "message": message,
+                "approval_required": False,
+                "financial_action_executed": False,
+                "requires_human": True,
+                "recommended_action": "refund_retry_or_review",
+                "error": str(exc),
+            }
 
     def account_help(self, parameters, user_id=None):
         """Inspect the user account without modifying credentials."""

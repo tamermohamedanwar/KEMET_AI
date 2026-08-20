@@ -197,9 +197,14 @@ def demo():
         message = request.form.get("message")
 
         lead = DemoLead(
-            company=company,
+            company_name=company,
             email=email,
-            message=message
+            message=message,
+            organization_id=(
+                getattr(current_user, "organization_id", None)
+                if current_user.is_authenticated
+                else None
+            ),
         )
 
         db.session.add(lead)
@@ -282,6 +287,11 @@ def mock_payment(payment_id):
 
     if payment.organization_id != current_user.organization_id:
         return jsonify({"error": "unauthorized"}), 403
+
+    # Mock payments must still have a transaction identifier.
+    # This keeps payment-state invariants identical to provider payments.
+    if not payment.provider_transaction_id:
+        payment.provider_transaction_id = f"MOCK_TX_{payment.id}"
 
     payment.status = "paid"
 
@@ -411,6 +421,7 @@ def paymob_callback():
         and obj.get("is_voided") is False
         and amount_cents == expected_amount_cents
         and currency == expected_currency
+        and bool(str(transaction_id).strip())
     ):
         payment.status = "paid"
 

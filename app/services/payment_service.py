@@ -226,6 +226,7 @@ def create_checkout(organization_id, plan):
         raise
 
     payment.checkout_id = str(order_id)
+    payment.provider_order_id = str(order_id)
     payment.client_secret = payment_token
 
     checkout_url = (
@@ -272,3 +273,87 @@ def activate_subscription(organization_id, plan):
     db.session.commit()
 
     return subscription
+
+
+def refund_payment(payment, amount=None):
+    """
+    Execute a real Paymob refund for an existing paid payment.
+
+    This function performs the financial action only after the caller
+    has explicitly approved the refund.
+    """
+    if payment is None:
+        raise ValueError("Payment not found")
+
+    if str(getattr(payment, "provider", "")).lower() != "paymob":
+        raise ValueError("Refund is supported only for Paymob payments")
+
+    if str(getattr(payment, "status", "")).lower() != "paid":
+        raise ValueError("Only paid payments can be refunded")
+
+    transaction_id = getattr(payment, "provider_transaction_id", None)
+    if not transaction_id:
+        raise ValueError("Paymob transaction ID is missing")
+
+    secret_key = os.getenv("PAYMOB_SECRET_KEY", "").strip()
+    if not secret_key:
+        raise RuntimeError("PAYMOB_SECRET_KEY is missing")
+
+    refund_amount = (
+        Decimal(str(amount))
+        if amount is not None
+        else Decimal(str(payment.amount))
+    )
+
+    original_amount = Decimal(str(payment.amount))
+
+    if refund_amount <= 0:
+        raise ValueError("Refund amount must be greater than zero")
+
+    if refund_amount > original_amount:
+        raise ValueError("Refund amount cannot exceed payment amount")
+
+    amount_cents = int(refund_amount * 100)
+
+    try:
+        response = requests.post(
+            "https://accept.paymob.com/api/acceptance/void_refund/refund",
+            headers={
+                "Authorization": f"Token {secret_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "transaction_id": int(transaction_id),
+                "amount_cents": amount_cents,
+            },
+            timeout=20,
+        )
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            f"Paymob refund connection failed: {exc}"
+        ) from exc
+
+    if response.status_code not in (200, 201):
+        raise RuntimeError(
+            f"Paymob refund failed ({response.status_code}): "
+            f"{response.text[:500]}"
+        )
+
+    try:
+        refund_data = response.json()
+    except ValueError:
+        refund_data = {"raw_response": response.text[:500]}
+
+    payment.status = "refunded"
+    db.session.commit()
+
+    return {
+        "success": True,
+        "status": "refunded",
+        "payment_id": payment.id,
+        "transaction_id": str(transaction_id),
+        "amount": str(refund_amount),
+        "currency": payment.currency,
+        "provider": "paymob",
+        "provider_response": refund_data,
+    }

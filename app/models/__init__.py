@@ -20,3 +20,5 @@ from app.models.payment import Payment
 from app.models.automation import AutomationWorkflow, AutomationAction, AutomationExecution
 from app.models.notification import Notification
 from app.models.automation import AutomationApproval
+
+from app.models.lead_activity import LeadActivity

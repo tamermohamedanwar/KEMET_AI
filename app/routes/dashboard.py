@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify, request
 from flask_login import login_required, current_user
 
 from app import db
+from app.services.kpi_service import KPIService
 from app.models import (
     AIUsage,
     Ticket,
@@ -86,6 +87,40 @@ def _current_plan(organization_id):
     return subscription.plan or "free"
 
 
+@dashboard.route('/dashboard/api/kpis')
+@login_required
+def kpis():
+    organization_id = _current_organization_id()
+
+    period = request.args.get("period", "30d")
+
+    if period not in KPIService.PERIODS:
+        return jsonify({
+            "success": False,
+            "error": "Invalid period",
+            "allowed_periods": list(KPIService.PERIODS.keys()),
+        }), 400
+
+    try:
+        data = KPIService.get_kpis(
+            organization_id=organization_id,
+            period=period,
+        )
+
+        return jsonify({
+            "success": True,
+            "organization_id": organization_id,
+            "data": data,
+        })
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+
 @dashboard.route('/dashboard')
 @login_required
 def index():
@@ -115,9 +150,14 @@ def index():
             .count()
         )
 
-    # Document لا يحتوي organization_id في الـschema الحالي.
-    # لذلك نحسب إجمالي المستندات بدون JOIN غير صحيح.
-    document_count = Document.query.count()
+    document_query = Document.query
+
+    if organization_id is not None:
+        document_query = document_query.filter(
+            Document.organization_id == organization_id
+        )
+
+    document_count = document_query.count()
 
     plan_name = _current_plan(organization_id)
 

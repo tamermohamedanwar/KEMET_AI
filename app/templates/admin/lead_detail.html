@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Kemet AI — Lead</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<style>
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    background: #08111f;
+    color: #fff;
+    padding: 24px;
+}
+
+.container {
+    max-width: 1300px;
+    margin: auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid #243244;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.muted {
+    color: #94a3b8;
+}
+
+.score {
+    font-size: 42px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0b1220;
+    color: #fff;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 6px 0 12px;
+}
+
+textarea {
+    min-height: 100px;
+}
+
+button {
+    background: #2563eb;
+    color: #fff;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.activity {
+    border-bottom: 1px solid #243244;
+    padding: 14px 0;
+}
+
+.badge {
+    display: inline-block;
+    background: #334155;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+a {
+    color: #60a5fa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+    <a href="{{ url_for('admin_leads.leads') }}">
+        ← Leads
+    </a>
+
+    <h1>{{ lead.company_name }}</h1>
+
+    <div class="muted">
+        {{ lead.email }}
+        {% if lead.phone %}
+        · {{ lead.phone }}
+        {% endif %}
+    </div>
+</div>
+
+<br>
+
+<div class="grid">
+
+<div class="card">
+    <div class="muted">Lead Score</div>
+    <div class="score">{{ score }}</div>
+    <div class="badge">{{ temperature }}</div>
+</div>
+
+<div class="card">
+    <div class="muted">Estimated Value</div>
+    <div class="score">
+        {{ lead.estimated_value or 0 }}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Lead Information</h2>
+
+    <p>
+        <strong>Status:</strong>
+        {{ pipeline_statuses.get(lead.status, lead.status) }}
+    </p>
+
+    <p>
+        <strong>Source:</strong>
+        {{ lead.source or "-" }}
+    </p>
+
+    <p>
+        <strong>Last contact:</strong>
+        {{ lead.last_contact_at or "-" }}
+    </p>
+
+    <p>
+        <strong>Next follow-up:</strong>
+        {{ lead.next_follow_up_at or "-" }}
+    </p>
+
+    <p>
+        <strong>Created:</strong>
+        {{ lead.created_at }}
+    </p>
+</div>
+
+<div class="card">
+
+<h2>Schedule Follow-up</h2>
+
+<form method="POST"
+      action="{{ url_for(
+          'admin_leads.schedule_follow_up',
+          lead_id=lead.id
+      ) }}">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<input type="datetime-local"
+       name="due_at"
+       required>
+
+<textarea
+    name="content"
+    placeholder="Follow-up notes"></textarea>
+
+<button type="submit">
+    Schedule
+</button>
+
+</form>
+
+</div>
+
+<div class="card full">
+
+<h2>Add Activity</h2>
+
+<form method="POST"
+      action="{{ url_for(
+          'admin_leads.add_activity',
+          lead_id=lead.id
+      ) }}">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<select name="activity_type">
+    <option value="note">Note</option>
+    <option value="call">Call</option>
+    <option value="email">Email</option>
+    <option value="whatsapp">WhatsApp</option>
+    <option value="meeting">Meeting</option>
+    <option value="follow_up">Follow-up</option>
+</select>
+
+<input
+    name="subject"
+    placeholder="Subject">
+
+<textarea
+    name="content"
+    placeholder="Activity details"></textarea>
+
+<button type="submit">
+    Add Activity
+</button>
+
+</form>
+
+</div>
+
+<div class="card full">
+
+<h2>Sales Timeline</h2>
+
+{% for activity in activities %}
+
+<div class="activity">
+
+<strong>
+    {{ activity.activity_type }}
+</strong>
+
+{% if activity.subject %}
+    — {{ activity.subject }}
+{% endif %}
+
+<div class="muted">
+    {{ activity.created_at }}
+</div>
+
+{% if activity.content %}
+<p>
+    {{ activity.content }}
+</p>
+{% endif %}
+
+{% if activity.due_at %}
+<p>
+    Follow-up:
+    {{ activity.due_at }}
+</p>
+{% endif %}
+
+{% if not activity.completed_at and activity.due_at %}
+
+<form method="POST"
+      action="{{ url_for(
+          'admin_leads.complete_activity',
+          lead_id=lead.id,
+          activity_id=activity.id
+      ) }}">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<button type="submit">
+    Complete
+</button>
+
+</form>
+
+{% elif activity.completed_at %}
+
+<span class="badge">
+    Completed
+</span>
+
+{% endif %}
+
+</div>
+
+{% else %}
+
+<div class="muted">
+    No activities yet.
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -2,8 +2,11 @@ from app.services.automation_service import automation_service
 
 
 class ActionRegistry:
-    def __init__(self):
-        self._actions = {}
+    def __init__(self, actions=None):
+        if actions is not None:
+            self._actions = actions
+        else:
+            self._actions = registry._actions if "registry" in globals() else {}
 
     def register(self, name, handler):
         self._actions[name] = handler

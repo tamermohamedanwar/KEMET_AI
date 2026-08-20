@@ -67,11 +67,6 @@ class AutomationApprovalService:
         approval.decided_by = decided_by
         approval.decided_at = datetime.utcnow()
 
-        db.session.flush()
-
-        # ---------------------------------------------------------
-        # Resume the paused automation execution.
-        # ---------------------------------------------------------
         execution_result = None
 
         if approval.execution_id:
@@ -91,6 +86,25 @@ class AutomationApprovalService:
                         ensure_ascii=False,
                         default=str,
                     )
+                else:
+                    approval.decision_json = json.dumps(
+                        {
+                            "success": True,
+                            "execution": execution_result,
+                        },
+                        ensure_ascii=False,
+                        default=str,
+                    )
+
+                db.session.commit()
+
+                return {
+                    "success": True,
+                    "approval_id": approval.id,
+                    "status": "approved",
+                    "action": approval.action_type,
+                    "execution": execution_result,
+                }
 
             except Exception as exc:
                 db.session.rollback()
@@ -117,7 +131,10 @@ class AutomationApprovalService:
                     "success": False,
                     "approval_id": approval_id,
                     "status": "approved",
-                    "message": f"Approval granted, but automation resume failed: {exc}",
+                    "message": (
+                        "Approval granted, but automation resume failed: "
+                        f"{exc}"
+                    ),
                 }
 
         db.session.commit()

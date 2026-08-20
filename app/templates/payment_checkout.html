@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Kemet AI Checkout</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
     <style>
         body {
             margin: 0;
@@ -14,10 +18,11 @@
 
         .container {
             max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 24px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 28px;
             border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
         }
 
         h1 {
@@ -25,39 +30,89 @@
         }
 
         .info {
-            margin-bottom: 20px;
+            margin: 20px 0;
+            padding: 18px;
+            background: #f7f8fa;
+            border-radius: 12px;
+            line-height: 1.8;
         }
 
-        iframe {
-            width: 100%;
-            min-height: 750px;
-            border: 0;
-            border-radius: 12px;
+        .checkout-button {
+            display: inline-block;
+            padding: 14px 24px;
+            background: #111;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .checkout-button:hover {
+            opacity: .9;
+        }
+
+        .error {
+            padding: 16px;
+            background: #fff1f1;
+            color: #a00000;
+            border-radius: 10px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            text-decoration: none;
         }
     </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>Kemet AI</h1>
+    <h1>Kemet AI Checkout</h1>
 
     <div class="info">
         <strong>Plan:</strong> {{ payment.plan }}<br>
-        <strong>Amount:</strong> {{ payment.amount }} {{ payment.currency }}
+        <strong>Amount:</strong> {{ payment.amount }} {{ payment.currency }}<br>
+        <strong>Payment ID:</strong> {{ payment.id }}
     </div>
 
-    <a href="{{ checkout_url }}" target="_blank"
-       style="display:inline-block;padding:14px 24px;background:#111;color:#fff;
-              text-decoration:none;border-radius:10px;">
-        Continue to Paymob
+    {% if checkout_url %}
+
+        <p>
+            Your payment session is ready.
+        </p>
+
+        <a
+            href="{{ checkout_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="checkout-button"
+        >
+            Continue to Paymob
+        </a>
+
+    {% else %}
+
+        <div class="error">
+            Payment checkout is currently unavailable.
+            Please try again later.
+        </div>
+
+    {% endif %}
+
+    <a
+        href="{{ url_for('main.pricing') }}"
+        class="back"
+    >
+        Back to Pricing
     </a>
 
 </div>
 
 <script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
 <script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+
 </body>
 </html>

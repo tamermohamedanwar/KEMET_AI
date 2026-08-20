@@ -156,7 +156,10 @@ class ChatService:
         )
 
         if user and user.organization_id:
-            record_usage(user.organization_id)
+            record_usage(
+                user.organization_id,
+                tokens=getattr(raw_answer, "tokens", 0),
+            )
 
         automation_data = parse_automation_response(raw_answer)
 
