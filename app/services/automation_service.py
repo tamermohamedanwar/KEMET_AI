@@ -931,7 +931,70 @@ JSON:
             sales_stage = "unknown"
             next_action = "request_information"
 
-        return {
+        # ============================================================
+        # V4.3 CRM SALES INTEGRATION
+        # ============================================================
+        # Qualification prepares CRM follow-up only.
+        # It does NOT send email, WhatsApp, SMS, or payment requests.
+
+        crm_updated = False
+        crm_follow_up = None
+
+        lead_id = parameters.get("lead_id")
+
+        if lead_id:
+            try:
+                lead_id = int(lead_id)
+            except (TypeError, ValueError):
+                lead_id = None
+
+        if lead_id:
+            from app.models.demo_lead import DemoLead
+
+            lead = DemoLead.query.filter(
+                DemoLead.id == lead_id
+            ).first()
+
+            if lead is not None:
+                purchase_intent_detected = bool(
+                    purchase_intent
+                    or sales_stage == "qualified"
+                )
+
+                if purchase_intent_detected:
+                    lead.status = "qualified"
+
+                try:
+                    current_score = int(
+                        getattr(lead, "lead_score", 0) or 0
+                    )
+                except (TypeError, ValueError):
+                    current_score = 0
+
+                if purchase_intent_detected:
+                    lead.lead_score = max(current_score, 80)
+
+                from app import db
+
+                db.session.commit()
+
+                follow_up_result = self.sales_follow_up(
+                    {
+                        "lead_id": lead.id,
+                        "lead_status": "qualified"
+                        if purchase_intent_detected
+                        else (lead.status or "warm"),
+                        "score": lead.lead_score or 0,
+                        "message": message,
+                    },
+                    user_id=user_id,
+                )
+
+                if follow_up_result.get("success"):
+                    crm_updated = True
+                    crm_follow_up = follow_up_result
+
+                return {
             "success": True,
             "action": "ai_sales_qualification",
             "status": "sales_qualification_completed",
@@ -944,7 +1007,8 @@ JSON:
             "next_action": next_action,
             "message": message,
             "user_id": user_id,
-            "crm_updated": False,
+            "crm_updated": crm_updated,
+            "crm_follow_up": crm_follow_up,
             "requires_human": sales_stage == "qualified",
         }
 
@@ -1029,6 +1093,13 @@ JSON:
                 "timing": "immediate",
                 "action": "contact_lead",
                 "hours": 0,
+            },
+            "new": {
+                "priority": "high",
+                "channel": "sales_team",
+                "timing": "within_4_hours",
+                "action": "contact_lead",
+                "hours": 4,
             },
             "hot": {
                 "priority": "high",
