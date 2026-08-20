@@ -2118,3 +2118,112 @@ JSON:
 
 
 automation_service = AutomationService()
+
+# ============================================================
+# V4.4 FOLLOW-UP EXECUTION ENGINE
+# ============================================================
+
+# ============================================================
+# V4.4 FOLLOW-UP EXECUTION ENGINE
+# ============================================================
+# This engine prepares due CRM follow-ups for human review.
+# It does NOT send email, WhatsApp, SMS, or payment requests.
+
+def execute_due_follow_ups(self, limit=50):
+    from datetime import datetime
+    from app import db
+    from app.models.lead_activity import LeadActivity
+
+    now = datetime.utcnow()
+
+    try:
+        limit = int(limit)
+    except (TypeError, ValueError):
+        limit = 50
+
+    limit = max(1, min(limit, 200))
+
+    activities = (
+        LeadActivity.query
+        .filter(
+            LeadActivity.activity_type == "follow_up",
+            LeadActivity.completed_at.is_(None),
+            LeadActivity.due_at.isnot(None),
+            LeadActivity.due_at <= now,
+        )
+        .order_by(LeadActivity.due_at.asc())
+        .limit(limit)
+        .all()
+    )
+
+    processed = []
+    skipped = []
+
+    for activity in activities:
+        try:
+            if activity.completed_at is not None:
+                skipped.append(activity.id)
+                continue
+
+            activity.subject = (
+                activity.subject
+                if activity.subject
+                else "Follow-up ready for human review"
+            )
+
+            existing_content = (activity.content or "").strip()
+
+            review_marker = "[HUMAN_REVIEW_REQUIRED]"
+
+            if review_marker not in existing_content:
+                if existing_content:
+                    activity.content = (
+                        f"{existing_content}\n\n{review_marker}"
+                    )
+                else:
+                    activity.content = review_marker
+
+            processed.append({
+                "activity_id": activity.id,
+                "lead_id": activity.lead_id,
+                "organization_id": activity.organization_id,
+                "due_at": (
+                    activity.due_at.isoformat()
+                    if activity.due_at
+                    else None
+                ),
+                "requires_human": True,
+                "message_sent": False,
+            })
+
+        except Exception as exc:
+            skipped.append({
+                "activity_id": activity.id,
+                "error": str(exc),
+            })
+
+    db.session.commit()
+
+    return {
+        "success": True,
+        "action": "execute_due_follow_ups",
+        "status": "human_review_queue_prepared",
+        "checked": len(activities),
+        "processed": len(processed),
+        "skipped": len(skipped),
+        "items": processed,
+        "skipped_items": skipped,
+        "requires_human": True,
+        "message_sent": False,
+    }
+
+
+try:
+    automation_service.execute_due_follow_ups = (
+        execute_due_follow_ups.__get__(
+            automation_service,
+            type(automation_service),
+        )
+    )
+except NameError:
+    pass

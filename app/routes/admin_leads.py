@@ -547,6 +547,33 @@ def complete_activity(lead_id, activity_id):
 
 
 @admin_leads.route(
+    "/admin/follow-ups/execute-due",
+    methods=["POST"],
+)
+@login_required
+def execute_due_follow_ups():
+    from app.services.automation_service import automation_service
+
+    result = automation_service.execute_due_follow_ups(limit=50)
+
+    if result.get("success"):
+        flash(
+            f"Follow-up queue prepared: "
+            f"{result.get('processed', 0)} item(s).",
+            "success",
+        )
+    else:
+        flash(
+            "Follow-up execution failed.",
+            "error",
+        )
+
+    return redirect(
+        url_for("admin_leads.follow_ups")
+    )
+
+
+@admin_leads.route(
     "/admin/follow-ups",
     methods=["GET"],
 )
