@@ -7,18 +7,19 @@ from app import db
 from app.models.payment import Payment
 from app.models.subscription import Subscription
 from app.services.exchange_rate_service import convert_usd_to_egp
+from app.config.plans import PLAN_DETAILS, PAID_PLANS
+
 
 
 PLAN_PRICES = {
-    "starter": Decimal("9.00"),
-    "business": Decimal("29.00"),
-    "enterprise": Decimal("79.00"),
+    plan: PLAN_DETAILS[plan]["price_usd"]
+    for plan in PAID_PLANS
 }
 
 
-
 def get_plan_price(plan):
-    return PLAN_PRICES.get((plan or "").lower())
+    plan = (plan or "").strip().lower()
+    return PLAN_PRICES.get(plan)
 
 
 def get_paymob_integration_id():

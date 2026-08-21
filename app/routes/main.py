@@ -1,6 +1,6 @@
 from decimal import Decimal
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.models.chat import ChatMessage
 from app.models.conversation import Conversation
@@ -100,6 +100,7 @@ def profile():
 
 
 from flask import render_template
+from app.config.plans import PLAN_DETAILS, PAID_PLANS, is_paid_plan
 
 @main.route("/landing")
 def landing():

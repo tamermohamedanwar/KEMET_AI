@@ -1,38 +1,362 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Kemet AI Billing</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Kemet AI — الاشتراك والفوترة</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            background: #08111f;
+            color: #fff;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        .billing-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .billing-header {
+            margin-bottom: 30px;
+        }
+
+        .billing-header h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+        }
+
+        .billing-header p {
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        .usage-card,
+        .status-card,
+        .plan-card {
+            background: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 18px;
+        }
+
+        .usage-card,
+        .status-card {
+            padding: 28px;
+            margin-bottom: 28px;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+            gap: 18px;
+        }
+
+        .metric {
+            background: #0f172a;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .status-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #14532d;
+            color: #bbf7d0;
+            font-size: 13px;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 18px;
+        }
+
+        .plan-card {
+            padding: 24px;
+            position: relative;
+        }
+
+        .plan-card.current {
+            border: 2px solid #2563eb;
+        }
+
+        .plan-card h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .plan-price {
+            font-size: 27px;
+            font-weight: bold;
+            margin: 14px 0;
+        }
+
+        .plan-description {
+            color: #94a3b8;
+            line-height: 1.8;
+            min-height: 58px;
+        }
+
+        .current-label {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: #1d4ed8;
+            font-size: 12px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn.secondary {
+            background: #334155;
+        }
+
+        .btn.disabled {
+            background: #1e293b;
+            color: #64748b;
+            cursor: default;
+        }
+
+        .section-title {
+            margin: 30px 0 16px;
+        }
+
+        .commercial-note {
+            margin-top: 28px;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>الاشتراك والفوترة</h1>
+<div class="billing-page">
 
-<h2>الخطة الحالية</h2>
-<p>{{ usage.plan }}</p>
+    <div class="billing-header">
+        <h1>الاشتراك والفوترة</h1>
+        <p>
+            إدارة خطتك واستخدام Kemet AI من مكان واحد.
+        </p>
+    </div>
 
-<h2>الاستخدام الشهري</h2>
+    <div class="status-card">
 
-<ul>
-    <li>الحد: {{ usage.limit }}</li>
-    <li>المستخدم: {{ usage.used }}</li>
-    <li>المتبقي: {{ usage.remaining }}</li>
-</ul>
+        <div class="status-row">
 
-<h2>الترقية</h2>
+            <div>
+                <div class="metric-label">
+                    خطتك الحالية
+                </div>
 
-<ul>
-    <li>Starter - 1000 طلب</li>
-    <li>Business - 5000 طلب</li>
-    <li>Enterprise - 50000 طلب</li>
-</ul>
+                <div class="status-name">
+                    {{ current_plan_details.name }}
+                </div>
+            </div>
 
-<a href="/pricing">عرض الأسعار</a>
+            <div>
+                <span class="status-badge">
+                    {{ subscription_status }}
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="usage-card">
+
+        <h2>الاستخدام الحالي</h2>
+
+        <div class="usage-grid">
+
+            <div class="metric">
+                <div class="metric-label">
+                    الخطة الحالية
+                </div>
+
+                <div class="metric-value">
+                    {{ usage.plan }}
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    الحد الشهري
+                </div>
+
+                <div class="metric-value">
+                    {{ usage.limit }}
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    المستخدم
+                </div>
+
+                <div class="metric-value">
+                    {{ usage.used }}
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    المتبقي
+                </div>
+
+                <div class="metric-value">
+                    {{ usage.remaining }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <h2 class="section-title">
+        الخطط
+    </h2>
+
+    <div class="plans">
+
+        {% for plan in plans %}
+
+            <div class="plan-card {% if plan.current %}current{% endif %}">
+
+                {% if plan.current %}
+                    <div class="current-label">
+                        خطتك الحالية
+                    </div>
+                {% endif %}
+
+                <h3>
+                    {{ plan.name }}
+                </h3>
+
+                <div class="plan-price">
+                    {% if plan.key == "free" %}
+                        مجاني
+                    {% else %}
+                        {{ plan.price }} {{ plan.currency }}
+                    {% endif %}
+                </div>
+
+                <div class="plan-description">
+                    {{ plan.description }}
+                </div>
+
+                <p>
+                    حتى {{ plan.limit }} استخدام AI شهريًا.
+                </p>
+
+                {% if plan.current %}
+
+                    <span class="btn disabled">
+                        الخطة الحالية
+                    </span>
+
+                {% elif plan.key == "starter" %}
+
+                    <a
+                        class="btn"
+                        href="/payment/start/starter"
+                    >
+                        الترقية إلى Starter
+                    </a>
+
+                {% elif plan.key == "business" %}
+
+                    <a
+                        class="btn"
+                        href="/payment/start/business"
+                    >
+                        الترقية إلى Business
+                    </a>
+
+                {% elif plan.key == "enterprise" %}
+
+                    <a
+                        class="btn secondary"
+                        href="/pricing/select/enterprise"
+                    >
+                        تواصل معنا
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <h2 class="section-title">
+        خيارات إضافية
+    </h2>
+
+    <a
+        class="btn secondary"
+        href="/pricing"
+    >
+        عرض جميع الخطط والأسعار
+    </a>
+
+    <div class="commercial-note">
+        لن يتم تفعيل أي اشتراك مدفوع إلا بعد تأكيد عملية الدفع من مزود الدفع والتحقق من callback الموثق.
+    </div>
+
+</div>
 
 <script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
 <script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+
 </body>
 </html>
