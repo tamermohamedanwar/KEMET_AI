@@ -597,6 +597,444 @@ and subscription from one intelligent workspace.
 </div>
 </section>
 
+<section class="bos-command-center" id="bos-command-center">
+
+    <div class="bos-header">
+        <div>
+            <span class="bos-kicker">KEMET AI BOS</span>
+            <h2>Business Command Center</h2>
+            <p id="bos-summary">
+                Reading your business signals...
+            </p>
+        </div>
+
+        <div class="bos-health">
+            <div class="bos-health-label">BUSINESS HEALTH</div>
+            <div class="bos-health-score" id="bos-health-score">—</div>
+            <div class="bos-health-bar">
+                <span id="bos-health-fill"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bos-metrics">
+
+        <div class="bos-metric">
+            <span>⚡ PRIORITY</span>
+            <strong id="bos-high">—</strong>
+            <small>high priority actions</small>
+        </div>
+
+        <div class="bos-metric">
+            <span>💰 SALES</span>
+            <strong id="bos-sales">—</strong>
+            <small>sales signals</small>
+        </div>
+
+        <div class="bos-metric">
+            <span>🎫 SUPPORT</span>
+            <strong id="bos-support">—</strong>
+            <small>support signals</small>
+        </div>
+
+        <div class="bos-metric">
+            <span>🤖 AUTOMATION</span>
+            <strong id="bos-automation">—</strong>
+            <small>automation signals</small>
+        </div>
+
+    </div>
+
+    <div class="bos-actions-panel">
+
+        <div class="bos-actions-title">
+            <div>
+                <h3>Priority Actions</h3>
+                <span>What needs attention now</span>
+            </div>
+
+            <button
+                type="button"
+                class="bos-refresh"
+                onclick="loadBOSCommandCenter()">
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div id="bos-actions">
+            <div class="bos-loading">
+                Loading business intelligence...
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+.bos-command-center{
+    position:relative;
+    overflow:hidden;
+    margin-bottom:24px;
+    padding:25px;
+    border-radius:24px;
+    border:1px solid rgba(99,102,241,.20);
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(99,102,241,.16),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        );
+}
+
+.bos-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    margin-bottom:22px;
+}
+
+.bos-kicker{
+    display:inline-block;
+    margin-bottom:7px;
+    color:#8b8cf8;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+}
+
+.bos-header h2{
+    margin:0;
+    font-size:24px;
+    letter-spacing:-.5px;
+}
+
+.bos-header p{
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.bos-health{
+    min-width:190px;
+    padding:16px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,.12);
+}
+
+.bos-health-label{
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.8px;
+}
+
+.bos-health-score{
+    margin:5px 0 8px;
+    font-size:32px;
+    font-weight:900;
+}
+
+.bos-health-bar{
+    height:7px;
+    overflow:hidden;
+    border-radius:999px;
+    background:rgba(255,255,255,.07);
+}
+
+.bos-health-bar span{
+    display:block;
+    width:0;
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#6366f1,#22d3ee);
+    transition:width .5s ease;
+}
+
+.bos-metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.bos-metric{
+    padding:16px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.025);
+}
+
+.bos-metric span{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+}
+
+.bos-metric strong{
+    display:block;
+    margin-top:8px;
+    font-size:27px;
+}
+
+.bos-metric small{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.bos-actions-panel{
+    padding:18px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,.10);
+}
+
+.bos-actions-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:14px;
+}
+
+.bos-actions-title h3{
+    margin:0;
+    font-size:15px;
+}
+
+.bos-actions-title span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.bos-refresh{
+    cursor:pointer;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:8px 11px;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    font-size:11px;
+    font-weight:700;
+}
+
+.bos-action{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:13px;
+    margin-top:9px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:rgba(255,255,255,.025);
+}
+
+.bos-priority{
+    width:8px;
+    height:38px;
+    flex-shrink:0;
+    border-radius:999px;
+    background:#64748b;
+}
+
+.bos-priority.high{
+    background:#ef4444;
+}
+
+.bos-priority.medium{
+    background:#f59e0b;
+}
+
+.bos-priority.low{
+    background:#22c55e;
+}
+
+.bos-action-content{
+    min-width:0;
+    flex:1;
+}
+
+.bos-action-content strong{
+    display:block;
+    font-size:12px;
+}
+
+.bos-action-content small{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.bos-action-type{
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.bos-empty,
+.bos-loading,
+.bos-error{
+    padding:18px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+@media(max-width:900px){
+    .bos-header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .bos-health{
+        width:100%;
+    }
+
+    .bos-metrics{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .bos-command-center{
+        padding:18px;
+        border-radius:18px;
+    }
+
+    .bos-metrics{
+        grid-template-columns:1fr;
+    }
+
+    .bos-actions-title{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+}
+</style>
+
+<script>
+async function loadBOSCommandCenter() {
+    const actions = document.getElementById("bos-actions");
+
+    try {
+        actions.innerHTML =
+            '<div class="bos-loading">Analyzing business signals...</div>';
+
+        const response = await fetch(
+            "{{ url_for('dashboard.bos_intelligence') }}",
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                },
+                credentials: "same-origin"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message || data.error || "BOS request failed"
+            );
+        }
+
+        document.getElementById("bos-health-score").textContent =
+            `${data.health_score}/100`;
+
+        document.getElementById("bos-health-fill").style.width =
+            `${data.health_score}%`;
+
+        document.getElementById("bos-summary").textContent =
+            data.summary || "Business intelligence is ready.";
+
+        const counts = data.counts || {};
+
+        document.getElementById("bos-high").textContent =
+            counts.high ?? 0;
+
+        document.getElementById("bos-sales").textContent =
+            counts.sales ?? 0;
+
+        document.getElementById("bos-support").textContent =
+            counts.support ?? 0;
+
+        document.getElementById("bos-automation").textContent =
+            counts.automation ?? 0;
+
+        const priorityActions =
+            data.priority_actions || [];
+
+        if (!priorityActions.length) {
+            actions.innerHTML =
+                '<div class="bos-empty">' +
+                '✓ No priority actions require attention right now.' +
+                '</div>';
+
+            return;
+        }
+
+        actions.innerHTML = priorityActions.map(item => {
+            const priority =
+                String(item.priority || "low").toLowerCase();
+
+            return `
+                <div class="bos-action">
+                    <div class="bos-priority ${priority}"></div>
+
+                    <div class="bos-action-content">
+                        <strong>
+                            ${escapeBOSHtml(item.title || "Business action")}
+                        </strong>
+
+                        <small>
+                            ${escapeBOSHtml(item.message || "")}
+                        </small>
+                    </div>
+
+                    <div class="bos-action-type">
+                        ${escapeBOSHtml(item.type || "signal")}
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Kemet BOS:", error);
+
+        actions.innerHTML =
+            '<div class="bos-error">' +
+            'Business intelligence could not be loaded.' +
+            '</div>';
+    }
+}
+
+function escapeBOSHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = String(value);
+    return div.innerHTML;
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadBOSCommandCenter
+);
+</script>
+
+
 <section class="cards">
 
 <div class="card">
@@ -639,6 +1077,513 @@ and subscription from one intelligent workspace.
 
 </section>
 
+
+
+<section id="bos-executive-center" class="bos-executive">
+
+    <div class="bos-executive-head">
+        <div>
+            <div class="bos-eyebrow">KEMET AI BOS INTELLIGENCE</div>
+            <h2>Executive Command Center</h2>
+            <p id="bos-summary">
+                Analyzing your business operations...
+            </p>
+        </div>
+
+        <div class="bos-health">
+            <div class="bos-health-ring">
+                <span id="bos-health-score">—</span>
+            </div>
+            <div>
+                <strong>Business Health</strong>
+                <small id="bos-health-label">Analyzing</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="bos-command-grid">
+
+        <div class="bos-command-card bos-command-main">
+            <div class="bos-card-head">
+                <div>
+                    <span class="bos-card-kicker">PRIORITY ACTIONS</span>
+                    <h3>What needs attention now</h3>
+                </div>
+                <span id="bos-action-count" class="bos-count">0</span>
+            </div>
+
+            <div id="bos-actions-list" class="bos-actions-list">
+                <div class="bos-loading">
+                    Loading business intelligence...
+                </div>
+            </div>
+        </div>
+
+        <div class="bos-command-card">
+            <div class="bos-card-head">
+                <div>
+                    <span class="bos-card-kicker">OPERATIONS</span>
+                    <h3>Business Pulse</h3>
+                </div>
+            </div>
+
+            <div class="bos-pulse-list">
+
+                <div class="bos-pulse">
+                    <span>Sales</span>
+                    <strong id="bos-sales-count">—</strong>
+                </div>
+
+                <div class="bos-pulse">
+                    <span>Support</span>
+                    <strong id="bos-support-count">—</strong>
+                </div>
+
+                <div class="bos-pulse">
+                    <span>Automation</span>
+                    <strong id="bos-automation-count">—</strong>
+                </div>
+
+            </div>
+
+            <div class="bos-divider"></div>
+
+            <div class="bos-command-links">
+                <a href="{{ url_for('admin_leads.leads') }}">
+                    <span>CRM</span>
+                    <small>Manage sales pipeline →</small>
+                </a>
+
+                <a href="{{ url_for('admin_support.support_dashboard') }}">
+                    <span>Support</span>
+                    <small>Resolve customer issues →</small>
+                </a>
+
+                <a href="{{ url_for('admin_automation.automation_dashboard') }}">
+                    <span>Automation</span>
+                    <small>Control workflows →</small>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.bos-executive{
+    position:relative;
+    overflow:hidden;
+    margin-bottom:24px;
+    padding:26px;
+    border-radius:24px;
+    border:1px solid rgba(99,102,241,.18);
+    background:
+        radial-gradient(circle at 90% 0%,
+            rgba(99,102,241,.16),
+            transparent 34%),
+        radial-gradient(circle at 0% 100%,
+            rgba(16,185,129,.08),
+            transparent 30%),
+        rgba(255,255,255,.025);
+}
+
+.bos-executive-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    margin-bottom:22px;
+}
+
+.bos-eyebrow{
+    color:#818cf8;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.4px;
+}
+
+.bos-executive h2{
+    margin:6px 0 5px;
+    font-size:25px;
+    letter-spacing:-.6px;
+}
+
+.bos-executive p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.bos-health{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    flex-shrink:0;
+}
+
+.bos-health strong{
+    display:block;
+    font-size:13px;
+}
+
+.bos-health small{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.bos-health-ring{
+    width:66px;
+    height:66px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:5px solid rgba(99,102,241,.18);
+    box-shadow:0 0 30px rgba(99,102,241,.12);
+}
+
+.bos-health-ring span{
+    font-size:19px;
+    font-weight:900;
+}
+
+.bos-command-grid{
+    display:grid;
+    grid-template-columns:1.45fr .75fr;
+    gap:16px;
+}
+
+.bos-command-card{
+    min-width:0;
+    padding:20px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.07);
+    background:rgba(0,0,0,.12);
+}
+
+.bos-card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:16px;
+}
+
+.bos-card-kicker{
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.bos-card-head h3{
+    margin:5px 0 0;
+    font-size:16px;
+}
+
+.bos-count{
+    min-width:28px;
+    height:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    background:rgba(99,102,241,.13);
+    color:#a5b4fc;
+    font-size:12px;
+    font-weight:800;
+}
+
+.bos-actions-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.bos-action{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px;
+    border-radius:13px;
+    border:1px solid rgba(255,255,255,.055);
+    background:rgba(255,255,255,.025);
+}
+
+.bos-priority{
+    width:4px;
+    align-self:stretch;
+    min-height:42px;
+    border-radius:8px;
+    background:#64748b;
+}
+
+.bos-priority.high{
+    background:#ef4444;
+}
+
+.bos-priority.medium{
+    background:#f59e0b;
+}
+
+.bos-priority.low{
+    background:#10b981;
+}
+
+.bos-action-content{
+    flex:1;
+    min-width:0;
+}
+
+.bos-action-content strong{
+    display:block;
+    font-size:12px;
+}
+
+.bos-action-content small{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+.bos-action-type{
+    padding:5px 8px;
+    border-radius:7px;
+    background:rgba(255,255,255,.05);
+    color:var(--muted);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.bos-pulse-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.bos-pulse{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 13px;
+    border-radius:11px;
+    background:rgba(255,255,255,.025);
+}
+
+.bos-pulse span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.bos-pulse strong{
+    font-size:17px;
+}
+
+.bos-divider{
+    height:1px;
+    margin:18px 0;
+    background:var(--border);
+}
+
+.bos-command-links{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.bos-command-links a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:11px 12px;
+    border-radius:10px;
+    transition:.18s ease;
+}
+
+.bos-command-links a:hover{
+    background:rgba(99,102,241,.08);
+}
+
+.bos-command-links span{
+    font-size:12px;
+    font-weight:800;
+}
+
+.bos-command-links small{
+    color:var(--muted);
+    font-size:10px;
+}
+
+.bos-loading,
+.bos-error{
+    padding:18px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+@media(max-width:900px){
+    .bos-command-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+    .bos-executive{
+        padding:19px;
+        border-radius:18px;
+    }
+
+    .bos-executive-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .bos-health{
+        width:100%;
+    }
+
+    .bos-command-card{
+        padding:15px;
+    }
+
+    .bos-action-type{
+        display:none;
+    }
+}
+</style>
+
+<script>
+async function loadBOSExecutiveCenter(){
+
+    const actions = document.getElementById("bos-actions-list");
+
+    try{
+
+        const response = await fetch(
+            "{{ url_for('dashboard.bos_actions') }}",
+            {
+                method:"GET",
+                headers:{
+                    "Accept":"application/json"
+                },
+                credentials:"same-origin"
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+            throw new Error(
+                data.message || "BOS intelligence unavailable"
+            );
+        }
+
+        const score = Number(data.health_score || 0);
+
+        document.getElementById("bos-health-score").textContent =
+            Math.round(score);
+
+        document.getElementById("bos-summary").textContent =
+            data.summary || "Business operations are stable.";
+
+        document.getElementById("bos-health-label").textContent =
+            score >= 80 ? "Healthy" :
+            score >= 60 ? "Needs attention" :
+            "Critical";
+
+        const counts = data.counts || {};
+
+        document.getElementById("bos-sales-count").textContent =
+            counts.sales ?? 0;
+
+        document.getElementById("bos-support-count").textContent =
+            counts.support ?? 0;
+
+        document.getElementById("bos-automation-count").textContent =
+            counts.automation ?? 0;
+
+        const items = Array.isArray(data.actions)
+            ? data.actions
+            : [];
+
+        document.getElementById("bos-action-count").textContent =
+            items.length;
+
+        if(!items.length){
+            actions.innerHTML =
+                '<div class="bos-loading">' +
+                'No priority actions detected. Operations look stable.' +
+                '</div>';
+
+            return;
+        }
+
+        actions.innerHTML = items.map(function(item){
+
+            const priority =
+                String(item.priority || "low").toLowerCase();
+
+            return `
+                <div class="bos-action">
+                    <div class="bos-priority ${escapeBOSHtml(priority)}"></div>
+
+                    <div class="bos-action-content">
+                        <strong>
+                            ${escapeBOSHtml(
+                                item.title || "Business action"
+                            )}
+                        </strong>
+
+                        <small>
+                            ${escapeBOSHtml(
+                                item.message || ""
+                            )}
+                        </small>
+                    </div>
+
+                    <div class="bos-action-type">
+                        ${escapeBOSHtml(
+                            item.type || "signal"
+                        )}
+                    </div>
+                </div>
+            `;
+
+        }).join("");
+
+    }catch(error){
+
+        console.error("Kemet BOS:", error);
+
+        actions.innerHTML =
+            '<div class="bos-error">' +
+            'Business intelligence could not be loaded.' +
+            '</div>';
+    }
+}
+
+function escapeBOSHtml(value){
+
+    const div = document.createElement("div");
+
+    div.textContent = String(value);
+
+    return div.innerHTML;
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadBOSExecutiveCenter
+);
+</script>
 
 <section class="kpi-section" id="kemet-kpi-section">
 <div class="kpi-toolbar">
@@ -708,6 +1653,332 @@ and subscription from one intelligent workspace.
 @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.kpi-toolbar{flex-direction:column;align-items:flex-start}.kpi-grid{grid-template-columns:1fr}}
 </style>
+
+<section id="bos-decision-board" class="bos-decision-board">
+
+    <div class="bos-decision-header">
+        <div>
+            <span class="bos-eyebrow">DECISION INTELLIGENCE</span>
+            <h2>What Kemet recommends</h2>
+            <p>
+                Business decisions generated from current operational signals.
+            </p>
+        </div>
+
+        <div class="bos-decision-status">
+            <span class="bos-decision-dot"></span>
+            Advisory mode
+        </div>
+    </div>
+
+    <div id="bos-decisions-list" class="bos-decisions-list">
+        <div class="bos-decision-loading">
+            Reading business signals...
+        </div>
+    </div>
+
+</section>
+
+<style>
+.bos-decision-board{
+    margin-bottom:22px;
+    padding:24px;
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.07);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,102,241,.07),
+            rgba(255,255,255,.018)
+        );
+}
+
+.bos-decision-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:18px;
+}
+
+.bos-decision-header h2{
+    margin:5px 0;
+    font-size:20px;
+}
+
+.bos-decision-header p{
+    margin:0;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.bos-decision-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 11px;
+    border-radius:999px;
+    border:1px solid rgba(99,102,241,.16);
+    background:rgba(99,102,241,.07);
+    color:#a5b4fc;
+    font-size:10px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.bos-decision-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#818cf8;
+    box-shadow:0 0 10px rgba(129,140,248,.7);
+}
+
+.bos-decisions-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:11px;
+}
+
+.bos-decision{
+    display:flex;
+    gap:13px;
+    padding:16px;
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,.055);
+    background:rgba(0,0,0,.12);
+}
+
+.bos-decision-marker{
+    width:4px;
+    min-height:70px;
+    flex-shrink:0;
+    border-radius:10px;
+    background:#64748b;
+}
+
+.bos-decision-marker.high{
+    background:#ef4444;
+    box-shadow:0 0 12px rgba(239,68,68,.25);
+}
+
+.bos-decision-marker.medium{
+    background:#f59e0b;
+}
+
+.bos-decision-marker.low{
+    background:#10b981;
+}
+
+.bos-decision-body{
+    flex:1;
+    min-width:0;
+}
+
+.bos-decision-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.bos-decision-top strong{
+    font-size:13px;
+}
+
+.bos-decision-priority{
+    color:var(--muted);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.bos-decision-reason{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.55;
+}
+
+.bos-decision-action{
+    margin-top:10px;
+    padding:10px 11px;
+    border-radius:10px;
+    background:rgba(99,102,241,.07);
+    border:1px solid rgba(99,102,241,.10);
+}
+
+.bos-decision-action span{
+    display:block;
+    margin-bottom:4px;
+    color:#818cf8;
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+.bos-decision-action p{
+    margin:0;
+    color:#cbd5e1;
+    font-size:11px;
+    line-height:1.5;
+}
+
+.bos-decision-empty,
+.bos-decision-loading,
+.bos-decision-error{
+    padding:20px;
+    border-radius:13px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    background:rgba(255,255,255,.02);
+}
+
+@media(max-width:800px){
+    .bos-decisions-list{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    .bos-decision-board{
+        padding:17px;
+        border-radius:18px;
+    }
+
+    .bos-decision-header{
+        flex-direction:column;
+    }
+}
+</style>
+
+<script>
+async function loadBOSDecisions(){
+
+    const container =
+        document.getElementById("bos-decisions-list");
+
+    try{
+
+        const response = await fetch(
+            "{{ url_for('dashboard.bos_decisions') }}",
+            {
+                method:"GET",
+                headers:{
+                    "Accept":"application/json"
+                },
+                credentials:"same-origin"
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+            throw new Error(
+                data.message || "Decision intelligence unavailable"
+            );
+        }
+
+        const decisions =
+            Array.isArray(data.decisions)
+                ? data.decisions
+                : [];
+
+        if(!decisions.length){
+
+            container.innerHTML =
+                '<div class="bos-decision-empty">' +
+                'No strategic decisions require attention right now.' +
+                '</div>';
+
+            return;
+        }
+
+        container.innerHTML = decisions.map(function(decision){
+
+            const priority =
+                String(
+                    decision.priority || "low"
+                ).toLowerCase();
+
+            return `
+                <article class="bos-decision">
+
+                    <div class="bos-decision-marker ${escapeBOSDecisionHtml(priority)}"></div>
+
+                    <div class="bos-decision-body">
+
+                        <div class="bos-decision-top">
+                            <strong>
+                                ${escapeBOSDecisionHtml(
+                                    decision.title ||
+                                    "Business decision"
+                                )}
+                            </strong>
+
+                            <span class="bos-decision-priority">
+                                ${escapeBOSDecisionHtml(priority)}
+                            </span>
+                        </div>
+
+                        <div class="bos-decision-reason">
+                            ${escapeBOSDecisionHtml(
+                                decision.reason || ""
+                            )}
+                        </div>
+
+                        <div class="bos-decision-action">
+
+                            <span>
+                                Recommended move
+                            </span>
+
+                            <p>
+                                ${escapeBOSDecisionHtml(
+                                    decision.recommended_action ||
+                                    "Review this decision."
+                                )}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            `;
+
+        }).join("");
+
+    }catch(error){
+
+        console.error(
+            "Kemet BOS Decision Intelligence:",
+            error
+        );
+
+        container.innerHTML =
+            '<div class="bos-decision-error">' +
+            'Decision intelligence could not be loaded.' +
+            '</div>';
+    }
+}
+
+function escapeBOSDecisionHtml(value){
+
+    const div = document.createElement("div");
+
+    div.textContent = String(value);
+
+    return div.innerHTML;
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadBOSDecisions
+);
+</script>
+
 <section class="content-grid">
 
 <div>
@@ -924,5 +2195,425 @@ loadKPI("30d");
 </div>
 <script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
 <script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+
+<!-- KEMET_AI_V59_EXECUTIVE_CONTROL_CENTER -->
+<section id="kemet-executive-control-center"
+         style="margin:24px 0;padding:24px;border:1px solid #e5e7eb;border-radius:16px;background:#ffffff;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div>
+            <h2 style="margin:0 0 6px;">Executive Control Center</h2>
+            <p id="kemet-executive-focus"
+               style="margin:0;color:#6b7280;">
+                Loading business intelligence...
+            </p>
+        </div>
+
+        <div id="kemet-governance-badge"
+             style="padding:8px 12px;border-radius:999px;background:#f3f4f6;font-size:13px;">
+            ADVISORY
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:20px;">
+
+        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
+            <div style="font-size:13px;color:#6b7280;">Health Score</div>
+            <div id="kemet-health-score"
+                 style="font-size:32px;font-weight:700;margin-top:6px;">
+                —
+            </div>
+        </div>
+
+        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
+            <div style="font-size:13px;color:#6b7280;">Total Decisions</div>
+            <div id="kemet-total-decisions"
+                 style="font-size:32px;font-weight:700;margin-top:6px;">
+                —
+            </div>
+        </div>
+
+        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
+            <div style="font-size:13px;color:#6b7280;">High Priority</div>
+            <div id="kemet-high-decisions"
+                 style="font-size:32px;font-weight:700;margin-top:6px;">
+                —
+            </div>
+        </div>
+
+        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
+            <div style="font-size:13px;color:#6b7280;">Medium Priority</div>
+            <div id="kemet-medium-decisions"
+                 style="font-size:32px;font-weight:700;margin-top:6px;">
+                —
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-top:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <h3 style="margin:0;">Top Decisions</h3>
+            <span id="kemet-approval-status"
+                  style="font-size:13px;color:#6b7280;">
+                Approval required
+            </span>
+        </div>
+
+        <div id="kemet-top-decisions">
+            <div style="padding:16px;color:#6b7280;">
+                Loading decisions...
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:24px;padding:16px;border-radius:12px;background:#f9fafb;">
+        <div style="font-weight:600;margin-bottom:8px;">
+            Governance
+        </div>
+
+        <div id="kemet-governance-details"
+             style="font-size:14px;color:#6b7280;">
+            Advisory mode. No external actions or database mutations are enabled.
+        </div>
+    </div>
+
+    <div id="kemet-control-center-error"
+         style="display:none;margin-top:16px;padding:12px;border-radius:10px;background:#fef2f2;color:#991b1b;">
+    </div>
+</section>
+
+<script>
+(function () {
+    "use strict";
+
+    const endpoint = "/dashboard/api/bos/control-center";
+
+    function setText(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function renderDecisions(decisions) {
+        const container = document.getElementById(
+            "kemet-top-decisions"
+        );
+
+        if (!container) {
+            return;
+        }
+
+        if (!decisions || decisions.length === 0) {
+            container.innerHTML =
+                '<div style="padding:16px;color:#6b7280;">No strategic decisions currently require attention.</div>';
+            return;
+        }
+
+        container.innerHTML = decisions.map(function (item) {
+            const title = escapeHtml(
+                item.title || item.name || "Business decision"
+            );
+
+            const priority = escapeHtml(
+                item.priority || "unknown"
+            );
+
+            const priorityClass =
+                priority === "high"
+                    ? "color:#b91c1c;"
+                    : priority === "medium"
+                        ? "color:#92400e;"
+                        : "color:#374151;";
+
+            return `
+                <div style="padding:16px;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:10px;">
+                    <div style="display:flex;justify-content:space-between;gap:12px;">
+                        <strong>${title}</strong>
+                        <span style="${priorityClass}font-size:12px;font-weight:700;text-transform:uppercase;">
+                            ${priority}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    async function loadControlCenter() {
+        try {
+            const response = await fetch(endpoint, {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.success !== true) {
+                throw new Error(
+                    data.message || "Executive control center unavailable"
+                );
+            }
+
+            const counts = data.counts || {};
+            const governance = data.governance || {};
+
+            setText(
+                "kemet-executive-focus",
+                data.focus || "No executive focus available."
+            );
+
+            setText(
+                "kemet-health-score",
+                data.health_score ?? 0
+            );
+
+            setText(
+                "kemet-total-decisions",
+                counts.total ?? 0
+            );
+
+            setText(
+                "kemet-high-decisions",
+                counts.high ?? 0
+            );
+
+            setText(
+                "kemet-medium-decisions",
+                counts.medium ?? 0
+            );
+
+            setText(
+                "kemet-approval-status",
+                data.approval_required === true
+                    ? "Approval required"
+                    : "Approval not required"
+            );
+
+            setText(
+                "kemet-governance-badge",
+                governance.mode
+                    ? String(governance.mode).toUpperCase()
+                    : "ADVISORY"
+            );
+
+            setText(
+                "kemet-governance-details",
+                [
+                    "Mode: " + (governance.mode || "advisory"),
+                    "Approval required: " + (
+                        governance.approval_required === true
+                            ? "Yes"
+                            : "No"
+                    ),
+                    "External execution: " + (
+                        data.external_execution === true
+                            ? "Enabled"
+                            : "Disabled"
+                    ),
+                    "Database mutation: " + (
+                        data.database_mutation === true
+                            ? "Enabled"
+                            : "Disabled"
+                    )
+                ].join(" | ")
+            );
+
+            renderDecisions(
+                data.top_decisions || []
+            );
+
+        } catch (error) {
+            const box = document.getElementById(
+                "kemet-control-center-error"
+            );
+
+            if (box) {
+                box.style.display = "block";
+                box.textContent =
+                    error.message || "Unable to load executive data.";
+            }
+        }
+    }
+
+    loadControlCenter();
+})();
+</script>
+
+
+<!-- KEMET_AI_V515_ENTITLEMENT_UI -->
+<section id="kemet-entitlement-panel"
+         style="margin:24px 0;padding:24px;border:1px solid #e5e7eb;border-radius:16px;background:#ffffff;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div>
+            <h2 style="margin:0 0 6px;">Your Kemet AI Plan</h2>
+            <p id="kemet-entitlement-subtitle"
+               style="margin:0;color:#6b7280;">
+                Loading subscription features...
+            </p>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;">
+            <span id="kemet-current-plan"
+                  style="padding:8px 14px;border-radius:999px;background:#111827;color:#ffffff;font-size:13px;font-weight:700;text-transform:uppercase;">
+                LOADING
+            </span>
+
+            <a href="/pricing"
+               style="display:inline-block;padding:9px 14px;border-radius:9px;background:#111827;color:#ffffff;text-decoration:none;font-weight:600;">
+                Upgrade
+            </a>
+        </div>
+    </div>
+
+    <div id="kemet-entitlement-features"
+         style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:20px;">
+        <div style="padding:14px;border:1px solid #e5e7eb;border-radius:10px;color:#6b7280;">
+            Loading features...
+        </div>
+    </div>
+
+    <div id="kemet-entitlement-error"
+         style="display:none;margin-top:16px;padding:12px;border-radius:10px;background:#fef2f2;color:#991b1b;">
+    </div>
+</section>
+
+<script>
+(function () {
+    "use strict";
+
+    const endpoint = "/dashboard/api/entitlement";
+
+    const labels = {
+        ai: "AI Assistant",
+        crm: "CRM",
+        support: "Customer Support",
+        automation: "Automation",
+        bos: "Business Intelligence",
+        executive_control_center: "Executive Control Center",
+        governance: "Governance",
+        advanced_analytics: "Advanced Analytics",
+        api_access: "API Access"
+    };
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function renderFeatures(features) {
+        const container = document.getElementById(
+            "kemet-entitlement-features"
+        );
+
+        if (!container) {
+            return;
+        }
+
+        container.innerHTML = Object.keys(labels).map(function (key) {
+            const enabled = features[key] === true;
+            const label = escapeHtml(labels[key]);
+
+            if (enabled) {
+                return `
+                    <div style="padding:14px;border:1px solid #d1d5db;border-radius:10px;">
+                        <div style="font-weight:700;">✓ ${label}</div>
+                        <div style="margin-top:5px;font-size:12px;color:#6b7280;">
+                            Included in your plan
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div style="padding:14px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;">
+                    <div style="font-weight:700;color:#6b7280;">
+                        ${label}
+                    </div>
+                    <div style="margin-top:5px;font-size:12px;color:#9ca3af;">
+                        Upgrade required
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    async function loadEntitlement() {
+        try {
+            const response = await fetch(endpoint, {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.success !== true) {
+                throw new Error(
+                    data.message || "Unable to load plan information."
+                );
+            }
+
+            const plan = String(
+                data.plan || "free"
+            );
+
+            const planElement = document.getElementById(
+                "kemet-current-plan"
+            );
+
+            if (planElement) {
+                planElement.textContent = plan.toUpperCase();
+            }
+
+            const subtitle = document.getElementById(
+                "kemet-entitlement-subtitle"
+            );
+
+            if (subtitle) {
+                subtitle.textContent =
+                    "Your current subscription and available product capabilities.";
+            }
+
+            renderFeatures(
+                data.features || {}
+            );
+
+        } catch (error) {
+            const box = document.getElementById(
+                "kemet-entitlement-error"
+            );
+
+            if (box) {
+                box.style.display = "block";
+                box.textContent =
+                    error.message || "Unable to load subscription information.";
+            }
+        }
+    }
+
+    loadEntitlement();
+})();
+</script>
+
 </body>
 </html>

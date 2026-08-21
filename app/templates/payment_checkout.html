@@ -1,66 +1,99 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Kemet AI Checkout</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+    <title>Kemet AI — إتمام الدفع</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/kemet-v2.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/kemet-v3.css') }}">
 
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            background: #f5f7fb;
-            font-family: Arial, sans-serif;
+            background: #08111f;
+            color: #fff;
+            font-family: Tahoma, Arial, sans-serif;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 28px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        .checkout-page {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .checkout-card {
+            background: #111827;
+            border: 1px solid #1e293b;
+            border-radius: 20px;
+            padding: 32px;
         }
 
         h1 {
             margin-top: 0;
         }
 
-        .info {
-            margin: 20px 0;
-            padding: 18px;
-            background: #f7f8fa;
-            border-radius: 12px;
+        .subtitle {
+            color: #94a3b8;
             line-height: 1.8;
         }
 
-        .checkout-button {
-            display: inline-block;
-            padding: 14px 24px;
-            background: #111;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
+        .summary {
+            background: #0f172a;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 25px 0;
+            line-height: 2;
         }
 
-        .checkout-button:hover {
-            opacity: .9;
+        .summary strong {
+            color: #60a5fa;
+        }
+
+        .pay-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .pay-button:hover {
+            background: #1d4ed8;
+        }
+
+        .notice {
+            margin-top: 18px;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: center;
         }
 
         .error {
-            padding: 16px;
-            background: #fff1f1;
-            color: #a00000;
-            border-radius: 10px;
+            padding: 18px;
+            background: #451a1a;
+            border: 1px solid #7f1d1d;
+            border-radius: 12px;
+            color: #fecaca;
         }
 
         .back {
-            display: inline-block;
-            margin-top: 18px;
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #94a3b8;
             text-decoration: none;
         }
     </style>
@@ -68,46 +101,75 @@
 
 <body>
 
-<div class="container">
+<div class="checkout-page">
 
-    <h1>Kemet AI Checkout</h1>
+    <div class="checkout-card">
 
-    <div class="info">
-        <strong>Plan:</strong> {{ payment.plan }}<br>
-        <strong>Amount:</strong> {{ payment.amount }} {{ payment.currency }}<br>
-        <strong>Payment ID:</strong> {{ payment.id }}
-    </div>
+        <h1>إتمام الاشتراك</h1>
 
-    {% if checkout_url %}
-
-        <p>
-            Your payment session is ready.
+        <p class="subtitle">
+            أنت على وشك إتمام اشتراك Kemet AI.
+            سيتم تحويلك إلى بوابة Paymob الآمنة لإتمام عملية الدفع.
         </p>
 
-        <a
-            href="{{ checkout_url }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="checkout-button"
-        >
-            Continue to Paymob
-        </a>
+        <div class="summary">
 
-    {% else %}
+            <div>
+                <strong>الخطة:</strong>
+                {{ payment.plan }}
+            </div>
 
-        <div class="error">
-            Payment checkout is currently unavailable.
-            Please try again later.
+            <div>
+                <strong>المبلغ:</strong>
+                {{ payment.amount }}
+                {{ payment.currency }}
+            </div>
+
+            <div>
+                <strong>حالة الدفع:</strong>
+                {{ payment.status }}
+            </div>
+
+            <div>
+                <strong>رقم العملية:</strong>
+                {{ payment.id }}
+            </div>
+
         </div>
 
-    {% endif %}
+        {% if checkout_url %}
 
-    <a
-        href="{{ url_for('main.pricing') }}"
-        class="back"
-    >
-        Back to Pricing
-    </a>
+            <a
+                href="{{ checkout_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="pay-button"
+            >
+                الانتقال إلى Paymob وإتمام الدفع
+            </a>
+
+            <div class="notice">
+                لا تعتبر العملية مكتملة إلا بعد تأكيد Paymob
+                ونجاح الـ callback الموثق.
+            </div>
+
+        {% else %}
+
+            <div class="error">
+                تعذر تجهيز جلسة الدفع حاليًا.
+                يرجى المحاولة مرة أخرى لاحقًا.
+            </div>
+
+        {% endif %}
+
+        <a
+            href="{{ url_for('main.pricing') }}"
+            class="back"
+        >
+            العودة إلى الأسعار
+        </a>
+
+    </div>
 
 </div>
 

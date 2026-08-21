@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.services.kpi_service import KPIService
+from app.services.bos_intelligence import BOSIntelligenceService
 from app.models import (
     AIUsage,
     Ticket,
@@ -172,3 +173,237 @@ def index():
         document_count=document_count,
         plan_name=plan_name,
     )
+
+
+
+
+@dashboard.route('/dashboard/api/bos/actions')
+@login_required
+def bos_actions():
+    organization_id = _current_organization_id()
+
+    try:
+        brief = BOSIntelligenceService.get_brief(
+            organization_id=organization_id
+        )
+
+        actions = brief.get("priority_actions", [])
+
+        normalized = []
+
+        for index, item in enumerate(actions[:12], start=1):
+            if not isinstance(item, dict):
+                continue
+
+            normalized.append({
+                "id": index,
+                "type": item.get("type", "signal"),
+                "priority": item.get("priority", "low"),
+                "title": item.get("title", "Business action"),
+                "message": item.get("message", ""),
+                "recommended_action": item.get(
+                    "recommended_action",
+                    "Review this business signal."
+                ),
+            })
+
+        return jsonify({
+            "success": True,
+            "organization_id": organization_id,
+            "health_score": brief.get("health_score", 0),
+            "summary": brief.get("summary", ""),
+            "actions": normalized,
+            "counts": brief.get("counts", {}),
+        })
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+@dashboard.route('/dashboard/api/bos')
+@login_required
+def bos_intelligence():
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.get_brief(
+            organization_id=organization_id
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+
+@dashboard.route('/dashboard/api/bos/decisions')
+@login_required
+def bos_decisions():
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.get_decisions(
+            organization_id=organization_id,
+            limit=10,
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+
+@dashboard.route('/dashboard/api/bos/decision-summary')
+@login_required
+def bos_decision_summary():
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.get_decision_summary(
+            organization_id=organization_id,
+            limit=10,
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+@dashboard.route("/dashboard/api/bos/executive-snapshot")
+@login_required
+def bos_executive_snapshot():
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.get_executive_snapshot(
+            organization_id=organization_id,
+            limit=10,
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+@dashboard.route("/dashboard/api/bos/governance")
+@login_required
+def bos_governance():
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.get_governance_options(
+            organization_id=organization_id,
+            limit=10,
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+@dashboard.route("/dashboard/api/bos/approval-preview/<int:decision_id>")
+@login_required
+def bos_approval_preview(decision_id):
+    organization_id = _current_organization_id()
+
+    try:
+        data = BOSIntelligenceService.build_approval_preview(
+            organization_id=organization_id,
+            decision_id=decision_id,
+        )
+
+        if not data.get("success"):
+            return jsonify(data), 404
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+@dashboard.route("/dashboard/api/bos/control-center")
+@login_required
+def bos_control_center():
+    organization_id = _current_organization_id()
+
+    try:
+        snapshot = BOSIntelligenceService.get_executive_snapshot(
+            organization_id=organization_id,
+        )
+
+        governance = BOSIntelligenceService.get_governance_options(
+            organization_id=organization_id,
+            limit=10,
+        )
+
+        return jsonify({
+            "success": True,
+            "organization_id": organization_id,
+            "health_score": snapshot.get("health_score", 0),
+            "focus": snapshot.get("focus", ""),
+            "counts": snapshot.get("counts", {}),
+            "top_decisions": snapshot.get("top_decisions", []),
+            "governance": governance.get(
+                "governance",
+                {},
+            ),
+            "mode": "advisory",
+            "approval_required": True,
+            "external_execution": False,
+            "database_mutation": False,
+        })
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+# V5.14_ENTITLEMENT_OVERVIEW_API
+@dashboard.route("/dashboard/api/entitlement")
+@login_required
+def entitlement_overview():
+    organization_id = _current_organization_id()
+
+    try:
+        from app.services.entitlement_service import EntitlementService
+
+        data = EntitlementService.overview(
+            organization_id=organization_id,
+        )
+
+        return jsonify(data)
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
