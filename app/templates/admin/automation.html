@@ -296,6 +296,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{% include "partials/kemet-white-ui.html" %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -381,6 +382,12 @@
 }
 </style>
 
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>

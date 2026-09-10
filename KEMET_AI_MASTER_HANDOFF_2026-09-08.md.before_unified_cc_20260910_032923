@@ -1,0 +1,533 @@
+# KEMET AI — MASTER PROJECT HANDOFF
+
+Date: 2026-09-08
+
+## Project
+Kemet AI — AI Business Operating System
+
+## GitHub
+https://github.com/tamermohamedanwar/KEMET_AI.git
+
+## Product Vision
+Build Kemet AI as a globally competitive, monetizable AI Business Operating System.
+
+Core experience:
+
+User Goal
+→ AI Understanding
+→ Business Context
+→ Decision
+→ Plan
+→ Risk / Policy
+→ Approval when required
+→ Authorization
+→ Central Execution Gate
+→ Canonical Runtime
+→ Execution
+→ Verification
+→ Audit
+→ ROI / Business Outcome
+
+Primary UX:
+Kemet AI Unified Command Center
+
+## Current Architecture
+Unified Command Center
+→ BOS Command API
+→ AI Orchestrator
+→ Dispatcher
+→ Automation Workflow
+→ Action Registry
+→ Execution Engine
+→ Governance / Approval / Canonical Runtime
+
+## Current Verified State
+
+Business Insights action:
+PASS
+
+Business Intelligence workflow:
+PASS
+
+Workflow ID:
+36
+
+Workflow name:
+Business Intelligence
+
+Workflow action:
+business_insights
+
+Workflow trigger:
+command_center
+
+Business Intelligence Dispatcher:
+PASS
+
+Dispatcher status:
+completed
+
+## Current Business Intelligence Capability
+
+Read-only organization-scoped business intelligence using live business data.
+
+Produces:
+- KPIs
+- Sales analysis
+- Revenue analysis
+- ROI analysis
+- Executive snapshot
+
+No external business-side execution is intended for this capability.
+
+## Existing Security Baseline
+
+Security architecture is already established and tested.
+
+Do NOT repeat completed security audits unless a future code change directly affects them.
+
+Important components:
+- Central Execution Gate
+- Execution Boundary
+- Authorization Service
+- Canonical Runtime
+- Approval Services
+- Execution Service
+
+## Product Direction
+
+Kemet is NOT being built as a simple chatbot.
+
+Target:
+Universal AI Automation / Business Operating System.
+
+Major future capabilities:
+- AI Goal Engine
+- Universal Automation Planner
+- Automation Graph
+- Multi-Agent Orchestration
+- Sales Agent
+- Support Agent
+- Marketing Agent
+- Finance Agent
+- Operations Agent
+- Retention Agent
+- Research Agent
+- CRM
+- Omnichannel / WhatsApp
+- Knowledge / RAG
+- Analytics / ROI
+- Integrations
+- Webhooks / Events
+- Marketplace
+- Billing
+- Agency / Enterprise
+- Business Intelligence Graph
+- Autonomous Business Operations
+
+## External Reference Library
+
+The project has an active external reference library:
+
+KEMET_AI_REFERENCE_LIBRARY_2026-09-08.md
+
+The library follows the Kemet AI Best-in-Class Research Rule.
+
+There is no permanent base framework, repository, vendor, or technology.
+
+For every strategic milestone, Kemet should search for the best available
+solutions at that time, compare them, evaluate them, and select the strongest
+approach for the specific requirement.
+
+Evaluation includes:
+- architecture
+- production maturity
+- reliability
+- security
+- scalability
+- agent capabilities
+- orchestration
+- automation
+- integrations
+- UX
+- observability
+- testing
+- performance
+- cost
+- licensing
+- ecosystem
+- maintainability
+- business value
+
+External references are benchmarks and sources of ideas.
+They are not automatically dependencies and must not bypass Kemet governance.
+
+Confirmed reference:
+
+Public APIs
+https://github.com/public-apis/public-apis
+
+Purpose:
+A curated catalog of publicly available APIs.
+
+Individual APIs must be independently evaluated for authentication, licensing,
+terms of service, reliability, rate limits, privacy, security, cost,
+availability, and production suitability.
+
+Important rule:
+If a better reference is discovered later, it may replace an existing
+reference. Kemet is not permanently tied to any external project.
+
+## Engineering Rules
+
+- Treat Kemet AI as one coherent engineering/product program.
+- Do not restart from scratch.
+- Do not reset or delete local work.
+- Do not repeat completed audits unnecessarily.
+- Preserve working architecture.
+- Prefer targeted additive changes.
+- Compile and test after meaningful changes.
+- Keep code in English.
+- Explanations can be Arabic.
+- Prioritize security, reliability, UX, monetization and global competitiveness.
+
+## Current Milestone
+
+UNIVERSAL PLANNER + GOVERNED COMMAND CENTER
+
+Confirmed:
+
+Command
+→ Intent
+→ Action
+→ Confidence
+→ Risk
+→ Approval Requirement
+→ Authorization / Governance boundary
+
+Full project test baseline: 73 passed.
+
+Additional hardening completed after this handoff was created:
+- Automation execution now persists its computed idempotency key.
+- KemetCore typing imports are explicit so the orchestration module can be imported safely.
+
+## Immediate Next Milestone
+
+UNIVERSAL AUTOMATION ENGINE
+
+Target:
+
+Natural-language command
+→ governed plan
+→ workflow/step graph
+→ per-step policy
+→ approval checkpoint when required
+→ canonical execution
+→ result propagation
+→ audit / ROI
+
+Do not bypass the existing Governance, Central Execution Gate, Canonical Runtime, tenant isolation, or approval controls.
+
+## Resume Instruction
+
+When this file is uploaded in a future ChatGPT session:
+
+1. Read this handoff first.
+2. Treat it as the current project state.
+3. Do not restart the project.
+4. Do not repeat completed audits.
+5. Preserve existing architecture.
+6. Continue from the Immediate Next Milestone.
+7. If the external developer repository URL is provided, inspect it before integration.
+8. Continue toward the Kemet AI Universal AI Business Operating System.
+
+## Latest Confirmed Milestone
+
+UNIVERSAL_PLANNER_GOVERNANCE_FOUNDATION_READY
+
+END OF HANDOFF
+
+
+## Deep Execution Layer Update — 2026-09-09
+
+The Universal Automation Engine milestone has now advanced from workflow metadata to governed execution state.
+
+Implemented:
+- Deterministic transient-error retry policy with bounded attempts.
+- Durable execution checkpoints stored in `AutomationExecution.output_json`.
+- Current workflow position and completed positions are persisted.
+- Structured step history is retained for completed, waiting, and failed states.
+- Command Center approval executions now retain the exact originating command and idempotency key.
+- Approval resume validates organization/workflow/execution/action identity before the Central Execution Gate.
+- Approved actions execute through the Canonical Runtime and then continue eligible downstream steps.
+- Downstream steps receive prior results and accumulated workflow context.
+- A downstream approval can pause the same execution without losing prior step state.
+- Failures are persisted as governed execution outcomes rather than silently discarded.
+
+Validation:
+Full pytest suite: 88 passed, 0 failed.
+
+Current Milestone:
+UNIVERSAL_AUTOMATION_ENGINE_DEEP_EXECUTION_READY
+
+Next strategic layer:
+Business Outcome Engine — convert workflow results into verified business outcomes, KPI deltas, ROI signals, and Command Center summaries without weakening governance.
+
+## Latest Milestone — BUSINESS_OUTCOME_ENGINE_READY
+
+Implemented on 2026-09-09:
+- Added `BusinessOutcomeService` as the executive outcome aggregation layer.
+- Combines organization-scoped KPIs, BOS executive decisions, automation reliability, revenue indicators, and next-best actions.
+- Added `GET /api/bos/outcome` for the Unified Command Center.
+- Kept the outcome layer strictly advisory: no external execution and no database mutation.
+- Avoided unsupported causal ROI claims; the layer reports observed metrics and operational health only.
+- Added regression tests for missing organization context and governed outcome structure.
+
+Validation:
+- Full `tests/kemet` suite: 87 passed, 0 failed.
+
+Next immediate milestone:
+COMMAND CENTER OUTCOME EXPERIENCE
+
+Target:
+Outcome Snapshot → Business Health → Automation Performance → Decisions → Next Best Actions → User-approved operation.
+
+Preserve:
+- no MCP
+- tenant isolation
+- billing/usage controls
+- Central Execution Gate
+- Canonical Runtime
+- human approval for side effects
+- advisory-only intelligence unless an explicitly governed operation is approved.
+
+
+## Latest Milestone — COMMAND_CENTER_OUTCOME_EXPERIENCE_READY
+
+Implemented 2026-09-09:
+- Unified Command Center now consumes the governed Business Outcome snapshot.
+- Business Health, observed revenue, automation execution reliability, open tickets, executive summary, and next-best actions are visible in one surface.
+- Next-best actions use Review & plan and return to the existing governed planner; recommendations do not execute autonomously.
+- Command Center POST operations now include the page CSRF token when available.
+- `/api/bos/operate` now preserves the real runtime success state and returns 422 for blocked/failed operations.
+- Approval requests remain organization-scoped and admin-controlled.
+- Outcome automation success-rate presentation matches KPIService percentage semantics.
+
+Preserved:
+- no MCP
+- tenant isolation
+- billing/usage controls
+- Central Execution Gate
+- Canonical Runtime
+- human approval for side effects
+- advisory-only outcome intelligence
+
+Validation target after this milestone: full `tests/kemet` regression suite.
+
+Next strategic layer:
+UNIVERSAL BUSINESS CAPABILITY EXPANSION — turn outcome recommendations into reusable governed playbooks across sales, support, operations, finance, marketing, and additional industry workflows.
+
+
+## UNIVERSAL_BUSINESS_CAPABILITY_EXPANSION — 2026-09-09
+
+1. Playbook catalog upgraded to version 2.0.
+2. Reusable named playbook definitions added for sales, customer, revenue, finance, operations, support, executive workflows.
+3. Catalog discovery endpoint added at /api/bos/playbooks.
+4. Individual playbook discovery endpoint added at /api/bos/playbooks/<action>.
+5. Outcome recommendations now expose matching playbook metadata.
+6. Marketing analysis mapped to safe read-only business insights.
+7. Finance analysis mapped to safe read-only business insights.
+8. Contracting analysis mapped to safe read-only business insights.
+9. Real-estate analysis mapped to safe read-only business insights.
+10. Media/sports analysis mapped to safe read-only business insights.
+11. Industry analysis mapped to safe read-only business insights.
+12. Business comparison mapped to safe read-only business insights.
+13. New domains do not create arbitrary executable actions.
+14. All generated playbooks remain governed sequential workflows.
+15. Every playbook step remains fail-closed.
+16. Side-effect actions remain approval-controlled.
+17. Added regression coverage for catalog/versioning.
+18. Added regression coverage for domain routing and governance.
+19. Added regression coverage for outcome/playbook integration.
+20. Final validation: 106 Kemet tests passed, 0 failed; compileall passed.
+
+Architectural rule: Kemet remains non-MCP. Remote Desktop Commander is development infrastructure only. No arbitrary command execution is introduced. Human approval, tenant isolation, Central Gate, and Canonical Runtime remain mandatory governance boundaries.
+
+NEXT MILESTONE: Business Outcome Attribution — connect capability execution records to measurable outcome signals without claiming unsupported causal ROI.
+
+## PRODUCTION_CAPABILITY_REGISTRY_ANALYTICS_READY — 2026-09-09
+
+Implemented:
+- Versioned CapabilityRegistry composed from governed playbooks.
+- Stable capability IDs, lifecycle metadata, tags, expected outcomes, metrics, governance, and execution profiles.
+- Read-only capability discovery and safe plan-only API.
+- Organization-scoped execution analytics with success/failure/approval counts and capability usage.
+- No autonomous execution, no MCP, no arbitrary commands, no external execution bypass.
+
+Validation: tests/kemet = 113 passed, 0 failed; compileall passed.
+
+Next layer: Business Outcome Attribution. Use observed execution records and business signals to measure outcome deltas conservatively; never claim unsupported causal ROI.
+
+
+## PRODUCTION_BUSINESS_CAPABILITY_REGISTRY_READY — 2026-09-09
+
+Implemented:
+- Read-only production `CapabilityRegistry` composed from governed playbooks.
+- Stable capability IDs, registry version, lifecycle metadata, domains, tags, expected outcomes, metrics, governance profile, and execution profile.
+- Capability catalog, single-capability discovery, and safe plan endpoints under `/api/bos/capabilities`.
+- Capability planning remains non-executing and uses the existing governed Playbook Engine.
+- Refund capability remains approval-controlled; all registry metadata remains non-external and fail-closed.
+- Organization-scoped capability analytics expose execution totals, reliability, approval waits, and capability usage.
+- Validation: `tests/kemet` = 113 passed, 0 failed; compileall passed.
+
+Next strategic layer: Business Outcome Attribution — connect observed capability execution to measurable business signals without unsupported causal ROI claims.
+- Added regression coverage for lifecycle/versioning/governance/metrics/unknown capabilities/planning/routes.
+
+Validation:
+- `tests/kemet`: 113 passed, 0 failed.
+- `python -m compileall -q app agent`: passed.
+
+Preserved: no MCP, no arbitrary command execution, tenant isolation, billing/usage controls, human approval for side effects, Central Execution Gate, Authorization, and Canonical Runtime.
+
+NEXT MILESTONE: Business Outcome Attribution — connect observed capability execution records to measurable business signals and outcome deltas without unsupported causal ROI claims.
+
+
+## OUTCOME_INTELLIGENCE_READY — 2026-09-09
+
+The platform now has an Outcome Intelligence layer above attribution. It computes observed metric movement around governed capabilities, uses explicit baseline/observation windows, and assigns confidence from data sufficiency. It does not claim causality or ROI and does not execute or mutate data.
+
+New production surface: `GET /api/bos/outcome-intelligence` (authenticated, tenant-scoped, read-only). The Unified Command Center now exposes Observed Impact and Outcome Confidence. Next-best actions carry impact/confidence metadata.
+
+Validation checkpoint: 121 Kemet tests passed; application and agent compileall passed. Governance remains fail-closed, human approval remains required for governed side effects, and MCP remains out of Kemet architecture.
+
+
+## OUTCOME_PRIORITY_READY — 2026-09-09
+
+Outcome intelligence now has a dedicated advisory prioritization layer. `OutcomePriorityService` ranks candidate decisions by priority, observed impact strength, and confidence without claiming causality or ROI. Authenticated endpoint: `POST /api/bos/outcome-priority`. Unknown capabilities fail closed. No MCP, arbitrary commands, autonomous external execution, or database mutation were introduced. Latest validation: **125 passed** plus compileall success.
+
+
+## DECISION_INTELLIGENCE_INTEGRATED — 2026-09-09
+
+Unified Command Center Action Center now consumes the governed Outcome Priority endpoint and displays ranked actions with outcome score, confidence, and observed impact. Approval-required actions remain review/approval controlled; there is no automatic execution path. If prioritization is unavailable, the UI safely falls back to the existing action list.
+
+Validation checkpoint: **126 Kemet tests passed** and application/agent compileall passed. Architecture remains no-MCP, fail-closed governance, tenant-scoped, and human-approval controlled for side effects.
+
+
+## OUTCOME_DRIVEN_FEED_READY — 2026-09-09
+
+`BusinessOutcomeService` now feeds executive decisions through `OutcomePriorityService`, so `decisions` and `next_best_actions` are ordered by advisory outcome priority while preserving playbook metadata. No execution, mutation, causal attribution, or ROI claim was introduced.
+
+Final checkpoint for this build window: **126 Kemet tests passed** and compileall passed.
+
+
+## DECISION_LIFECYCLE_READY — 2026-09-09
+
+Decision Lifecycle is now implemented as a read-only governed projection.
+
+- Service: `app/services/decision_lifecycle.py` v1.0.
+- Flow: Detected → Ranked → Reviewed → Approved/Rejected → Executed → Outcome Observed.
+- Uses existing org-scoped approval/execution records; no parallel execution path.
+- Stable capability linkage uses `kemet.<action>`.
+- Observed outcomes come from the existing non-causal Outcome Intelligence layer.
+- Endpoint: `GET /dashboard/api/bos/decision-lifecycle`.
+- Command Center now exposes a compact lifecycle timeline.
+- Governance remains advisory/read-only: no autonomous external execution and no database mutation.
+
+Validation: `tests/kemet` 132 passed; compileall for `app agent` passed.
+
+## DECISION_HISTORY_AUDIT_TRAIL_READY — 2026-09-10
+- Decision Lifecycle now exposes a chronological read-only history projection across detected/ranked/reviewed/approved-or-rejected/executed/outcome-observed states.
+- History is derived from existing organization-scoped Approval and Execution records plus Outcome Intelligence; no parallel executor or autonomous action path was introduced.
+- Unified Command Center displays the lifecycle event trail and current state.
+- Governance remains fail-closed, advisory, non-causal, non-ROI, with no external execution or database mutation from this layer.
+- Validation: lifecycle tests 6 passed; full Kemet suite 132 passed; compileall passed.
+
+## DECISION_ACCOUNTABILITY_READY — 2026-09-10
+- Decision Lifecycle now includes a read-only accountability projection backed by existing approval/execution records.
+- Exposes requester/reviewer identity (organization-scoped), approval status/reason/timestamps, and linked execution status/timestamps/errors.
+- No duplicate audit store and no new execution path were introduced.
+- Governance remains fail-closed, advisory, non-causal, non-ROI, with no external execution or database mutation.
+- Validation: Kemet tests passed; compileall passed.
+
+## DECISION_LEARNING_LAYER_READY — 2026-09-10
+- Added `app/services/decision_learning.py` v1.0 for observational decision learning.
+- Derives empirical approval, execution, and outcome-observed rates from the existing Decision Lifecycle projection.
+- Provides capability-level learning signals plus recommendation-only confidence adjustments.
+- Added `GET/POST /api/bos/decision-learning` with organization scoping and safe failure handling.
+- Business Control Loop now consumes learning enrichment without changing the governed execution boundary.
+- Human approval remains mandatory; auto-execution is disabled.
+- No database mutation, external execution, causal attribution, or ROI claim is introduced.
+- Added focused tests and completed validation: 5 focused tests and 138 Kemet tests passed; compileall passed.
+
+## DECISION_INTELLIGENCE_READY — 2026-09-10
+- Decision Intelligence v1.0 implemented as a unified advisory scoring layer.
+- Combines decision priority, confidence, observed impact, and observational historical learning.
+- Integrated into the Business Control Loop as recommendation/ranking intelligence only.
+- API: GET /api/bos/decision-intelligence.
+- Governance remains fail-closed: read-only, advisory, human approval required, no auto-execution, no database mutation, no external execution, and no causal/ROI claims.
+- Validation: focused Decision Intelligence + Decision Learning tests 8 passed; full tests/kemet 141 passed; compileall passed.
+
+## BUSINESS_CONTROL_LOOP_SURFACE_READY — 2026-09-10
+
+The Business Control Loop is now exposed as a governed Command Center read surface.
+
+Implemented:
+- Authenticated GET `/api/bos/business-control-loop` with organization-scoped BOS decisions.
+- Existing POST control-loop and observational feedback paths remain available.
+- Command Center displays the governed lifecycle from detection through observed outcome.
+- Learning and Decision Intelligence remain recommendation-only and observational.
+- Auto-execution is disabled and human approval remains required for side effects.
+- Business Control Loop timestamp generation is now explicitly backed by `datetime`.
+- Regression coverage added for fail-closed organization handling, governance, lifecycle states, and route methods.
+
+Validation follows the established Kemet rule: focused tests, full `tests/kemet`, then compileall.
+
+Architecture remains non-MCP, tenant-scoped, fail-closed, and governed through the existing approval and canonical execution boundaries.
+
+## BUSINESS_FEEDBACK_LOOP_READY — 2026-09-10
+
+Business Feedback is now a dedicated observational layer on top of the Control Loop.
+
+Implemented:
+- `BusinessFeedbackService` v1.0 with validated feedback signals and observation periods.
+- Structured feedback endpoint at `/api/bos/business-control-loop/feedback`.
+- Command Center explicit feedback controls for the surfaced decision.
+- Feedback cannot approve or execute an action and cannot mutate the database or invoke external systems.
+- Learning remains observational and recommendation-only; human approval remains mandatory for side effects.
+- Regression tests cover fail-closed behavior, signal validation, governance, and route registration.
+
+No MCP path was introduced. Existing canonical execution and approval boundaries remain unchanged.
+
+
+## CURRENT HANDOFF — 2026-09-10
+
+### Verified engineering baseline
+- Governance and approval chain preserved.
+- Canonical execution path is the only governed business execution path.
+- Legacy automation facade routes execution through governed_execution_service.
+- Execution Outcome Receipt is integrated into AutomationExecution output state.
+- Execution Center routes are registered and route scan has 0 conflicts.
+- Revenue Autopilot production governance proof is passing.
+- Unified Command Center is the primary product surface and next consolidation target.
+
+### Latest test baseline
+- Full suite: 218 passed, 0 failed.
+- Remaining warnings: 2 SQLAlchemy legacy warnings in the governance test only.
+- No MCP architecture is required or intended.
+
+### Architecture target
+Understand → Decide → Approve → Execute → Measure → Learn
+
+Intent → Context → Decision Engine → Policy/Governance → Approval → Authorization → Central Gate → Canonical Runtime → Action Registry → Audit → Outcome/ROI → Learning Loop
+
+### Current start point
+Continue from Unified Command Center productization and architecture consolidation.
+Do not restart completed governance/security work.
+Do not add parallel execution engines.
+Consolidate legacy services behind canonical boundaries before adding broad new capabilities.
+
+### Current end point
+The last verified implementation state is the 218-test green baseline above. The next engineering milestone is to make the Unified Command Center visibly connect Decision, Governance, Approval, Execution, Outcome, and Learning as one operating workflow.
+
+### Recovery rule
+A future session should treat this document as the project handoff source of truth, inspect the current code only for changes since this checkpoint, and continue from the Unified Command Center consolidation milestone.

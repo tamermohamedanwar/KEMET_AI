@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI - Billing Admin</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+</head>
+<body>
+<main>
+    <h1>Billing Administration</h1>
+
+    <section>
+        <p>Total: {{ payments.total }}</p>
+        <p>Paid: {{ payments.paid }}</p>
+        <p>Refunded: {{ payments.refunded }}</p>
+    </section>
+
+    <section>
+        <h2>Payments</h2>
+        {% for payment in payments.items %}
+        <article>
+            <p>ID: {{ payment.id }}</p>
+            <p>Status: {{ payment.status }}</p>
+            <p>Amount: {{ payment.amount }}</p>
+            <p>Currency: {{ payment.currency }}</p>
+        </article>
+        {% endfor %}
+    </section>
+</main>
+</body>
+</html>

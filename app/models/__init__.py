@@ -20,5 +20,16 @@ from app.models.payment import Payment
 from app.models.automation import AutomationWorkflow, AutomationAction, AutomationExecution
 from app.models.notification import Notification
 from app.models.automation import AutomationApproval
+from app.models.automation_queue import AutomationQueueJob
 
 from app.models.lead_activity import LeadActivity
+
+from app.models.audit import AuditRecord
+from app.models.automation_schedule import AutomationSchedule
+from app.models.automation_outcome import AutomationOutcome
+
+from app.models.automation_execution_ledger import AutomationExecutionLedger
+
+from app.models.execution_authorization_consumption import ExecutionAuthorizationConsumption
+from app.models.execution_evidence import ExecutionEvidence
+from app.models.automation_execution_checkpoint import AutomationExecutionCheckpoint

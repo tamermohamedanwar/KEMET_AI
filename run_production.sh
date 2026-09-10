@@ -1,7 +1,16 @@
-#!/data/data/com.termux/files/usr/bin/sh
+#!/data/data/com.termux/files/usr/bin/bash
+set -e
 
-cd /data/data/com.termux/files/home/products/Kemet_AI
+cd "$(dirname "$0")"
 
-. .venv/bin/activate
+if [ -f ".env.agent" ]; then
+    set -a
+    . ./.env.agent
+    set +a
+fi
 
-exec gunicorn -w 1 -b 0.0.0.0:5000 "app:create_app()"
+export PYTHONUNBUFFERED=1
+
+exec "$(pwd)/.venv/bin/gunicorn" \
+  -c "$(pwd)/gunicorn.conf.py" \
+  "wsgi:application"

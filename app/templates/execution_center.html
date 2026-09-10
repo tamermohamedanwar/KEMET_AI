@@ -1,0 +1,377 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>KEMET AI - Execution Center</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f8fa;
+    color: #15171a;
+}
+
+.wrap {
+    max-width: 1000px;
+    margin: auto;
+    padding: 32px 20px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.05);
+}
+
+h1 {
+    margin: 0 0 8px;
+}
+
+.sub {
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-top: 14px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.primary {
+    background: #111827;
+    color: white;
+}
+
+.approve {
+    background: #16a34a;
+    color: white;
+}
+
+pre {
+    background: #111827;
+    color: #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    overflow: auto;
+    min-height: 100px;
+}
+
+.plan {
+    margin-top: 22px;
+    display: none;
+}
+
+.status {
+    margin-top: 14px;
+    font-weight: 700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="card">
+
+<h1>KEMET AI - Execution Center</h1>
+
+<div class="sub">
+Send an instruction to Kemet AI.
+The system creates an execution plan
+and runs only approved commands.
+</div>
+
+<textarea
+id="instruction"
+placeholder="Example: check Kemet AI health">
+</textarea>
+
+<br>
+
+<button
+class="primary"
+onclick="createPlan()">
+Create Execution Plan
+</button>
+
+<div
+id="status"
+class="status">
+</div>
+
+<div
+id="plan"
+class="plan">
+
+<h3>Execution Plan</h3>
+
+<pre id="planOutput"></pre>
+
+<button
+id="runButton"
+class="approve"
+onclick="runCommand()">
+Approve and Run
+</button>
+
+</div>
+
+<div style="margin-top:24px">
+
+<h3>Execution Result</h3>
+
+<pre id="result">
+Waiting for execution...
+</pre>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let currentCommand = null;
+
+async function createPlan() {
+
+    const instruction =
+        document
+        .getElementById("instruction")
+        .value
+        .trim();
+
+    if (!instruction) {
+        return;
+    }
+
+    setStatus("Creating execution plan...");
+
+    const response = await fetch(
+        "/api/execution/plan",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                instruction: instruction
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    document
+        .getElementById("planOutput")
+        .textContent =
+        JSON.stringify(data, null, 2);
+
+    document
+        .getElementById("plan")
+        .style.display = "block";
+
+    if (!data.ok) {
+
+        setStatus(
+            "Plan failed: " +
+            (data.error || "unknown error")
+        );
+
+        return;
+    }
+
+    window.kemetExecutionPlan =
+        data.plan;
+
+    window.kemetExecutionAuthorization =
+        null;
+
+    currentCommand =
+        data.plan.command;
+
+    const button =
+        document.getElementById("runButton");
+
+    if (!currentCommand) {
+
+        button.disabled = true;
+
+        setStatus(
+            "No supported command found."
+        );
+
+        return;
+    }
+
+    button.disabled = false;
+
+    if (data.plan.requires_approval) {
+
+        button.textContent =
+            "Approve and Run";
+
+        setStatus(
+            "Approval required before execution."
+        );
+
+    } else {
+
+        button.textContent = "Run";
+
+        setStatus(
+            "Safe command ready."
+        );
+    }
+}
+
+async function runCommand() {
+
+    if (!currentCommand) {
+        return;
+    }
+
+    const planData = window.kemetExecutionPlan;
+
+    if (!planData) {
+        setStatus("No execution plan available.");
+        return;
+    }
+
+    setStatus("Processing approval...");
+
+    let authorization = window.kemetExecutionAuthorization;
+
+    if (!authorization) {
+
+        const approvalResponse = await fetch(
+            "/api/execution/approve",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    plan: planData
+                })
+            }
+        );
+
+        const approvalData = await approvalResponse.json();
+
+        document
+            .getElementById("result")
+            .textContent =
+            JSON.stringify(approvalData, null, 2);
+
+        if (!approvalResponse.ok || !approvalData.ok) {
+
+            setStatus(
+                "Approval failed: " +
+                (approvalData.error || "unknown error")
+            );
+
+            return;
+        }
+
+        if (!approvalData.authorization) {
+
+            setStatus(
+                "Authorization was not issued."
+            );
+
+            return;
+        }
+
+        window.kemetExecutionPlan =
+            approvalData.plan || planData;
+
+        window.kemetExecutionAuthorization =
+            approvalData.authorization;
+
+        authorization =
+            approvalData.authorization;
+    }
+
+    setStatus("Executing through Central Execution Gate...");
+
+    const response = await fetch(
+        "/api/execution/run",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                plan: window.kemetExecutionPlan,
+                authorization: authorization,
+                action:
+                    window.kemetExecutionPlan.action ||
+                    window.kemetExecutionPlan.command ||
+                    currentCommand
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    document
+        .getElementById("result")
+        .textContent =
+        JSON.stringify(data, null, 2);
+
+    if (data.ok) {
+
+        setStatus(
+            "Execution completed successfully."
+        );
+
+        window.kemetExecutionAuthorization = null;
+
+    } else {
+
+        setStatus(
+            "Execution failed: " +
+            (data.error || "unknown error")
+        );
+    }
+}
+
+function setStatus(text) {
+
+    document
+        .getElementById("status")
+        .textContent = text;
+}
+
+</script>
+
+</body>
+</html>

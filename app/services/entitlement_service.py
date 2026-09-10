@@ -97,37 +97,16 @@ class EntitlementService:
         source. Usage service remains the fallback for compatibility.
         """
         try:
-            from app.models import Subscription
-
-            subscription = (
-                Subscription.query
-                .filter_by(organization_id=organization_id)
-                .order_by(Subscription.id.desc())
-                .first()
+            from app.services.subscription_state_service import (
+                subscription_state_service,
             )
 
-            if subscription:
-                status = str(
-                    getattr(subscription, "status", "") or ""
-                ).strip().lower()
-
-                subscription_plan = getattr(
-                    subscription,
-                    "plan",
-                    None,
-                )
-
-                if subscription_plan and (
-                    not status
-                    or status in {
-                        "active",
-                        "trial",
-                        "trialing",
-                    }
-                ):
-                    return cls.normalize_plan(
-                        subscription_plan
-                    )
+            state = subscription_state_service.resolve(
+                organization_id
+            )
+            return cls.normalize_plan(
+                state.get("effective_plan")
+            )
 
         except Exception:
             pass

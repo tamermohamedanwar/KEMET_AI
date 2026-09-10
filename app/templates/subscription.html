@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI - Subscription</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+</head>
+<body>
+<main>
+    <h1>Subscription</h1>
+
+    <section>
+        <p>Plan: {{ subscription.plan if subscription else "none" }}</p>
+        <p>Status: {{ subscription.status if subscription else "inactive" }}</p>
+        <p>Started: {{ subscription.started_at if subscription else "-" }}</p>
+        <p>Ends: {{ subscription.ends_at if subscription else "-" }}</p>
+    </section>
+
+    <nav>
+        <a href="/pricing">Change Plan</a>
+    </nav>
+</main>
+</body>
+</html>

@@ -1,0 +1,367 @@
+from __future__ import annotations
+
+
+WORKFORCE_PROFILES = {
+    "ai_business_manager": {
+        "name": "AI Business Manager",
+        "role": "business_manager",
+        "description": "Coordinates general business operations and revenue activities.",
+        "industries": ["business"],
+        "capabilities": [
+            "business_operations",
+            "sales_management",
+            "customer_management",
+            "revenue_analysis",
+            "workflow_coordination",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "sales_follow_up",
+            "customer_retention",
+            "revenue_opportunity",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "revenue",
+            "conversion_rate",
+            "retention",
+            "pipeline_value",
+        ],
+    },
+
+    "ai_sales_manager": {
+        "name": "AI Sales Manager",
+        "role": "sales_manager",
+        "description": "Manages lead qualification, sales follow-up and revenue opportunities.",
+        "industries": [
+            "business",
+            "sales",
+            "real_estate",
+            "ecommerce",
+        ],
+        "capabilities": [
+            "lead_management",
+            "lead_scoring",
+            "sales_qualification",
+            "follow_up",
+            "pipeline_management",
+            "revenue_analysis",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "sales_follow_up",
+            "ai_sales_qualification",
+            "customer_retention",
+            "revenue_opportunity",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "qualified_leads",
+            "win_rate",
+            "pipeline_value",
+            "revenue",
+        ],
+    },
+
+    "ai_lead_qualifier": {
+        "name": "AI Lead Qualifier",
+        "role": "lead_qualifier",
+        "description": "Qualifies and prioritizes leads for sales teams.",
+        "industries": [
+            "sales",
+            "real_estate",
+            "marketing",
+            "business",
+        ],
+        "capabilities": [
+            "lead_scoring",
+            "intent_detection",
+            "sales_qualification",
+            "lead_prioritization",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "ai_sales_qualification",
+            "ai_intent_classifier",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "qualified_leads",
+            "lead_score",
+            "conversion_rate",
+        ],
+    },
+
+    "ai_follow_up_agent": {
+        "name": "AI Follow-Up Agent",
+        "role": "follow_up_agent",
+        "description": "Manages customer and sales follow-up activities.",
+        "industries": [
+            "sales",
+            "real_estate",
+            "ecommerce",
+            "business",
+            "marketing",
+        ],
+        "capabilities": [
+            "sales_follow_up",
+            "customer_follow_up",
+            "retention",
+            "notification",
+        ],
+        "allowed_actions": [
+            "sales_follow_up",
+            "customer_retention",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "follow_up_rate",
+            "response_rate",
+            "conversion_rate",
+            "retention",
+        ],
+    },
+
+    "ai_real_estate_sales_agent": {
+        "name": "AI Real Estate Sales Agent",
+        "role": "real_estate_sales",
+        "description": "Handles real estate lead qualification, sales and follow-up.",
+        "industries": ["real_estate"],
+        "capabilities": [
+            "property_sales",
+            "lead_qualification",
+            "buyer_follow_up",
+            "seller_follow_up",
+            "deal_support",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "ai_sales_qualification",
+            "sales_follow_up",
+            "customer_retention",
+            "revenue_opportunity",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "qualified_leads",
+            "viewings",
+            "offers",
+            "closed_deals",
+            "pipeline_value",
+        ],
+    },
+
+    "ai_property_matching_agent": {
+        "name": "AI Property Matching Agent",
+        "role": "property_matching",
+        "description": "Matches buyers and leads with suitable real estate opportunities.",
+        "industries": ["real_estate"],
+        "capabilities": [
+            "property_matching",
+            "buyer_analysis",
+            "lead_analysis",
+            "recommendations",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "ai_sales_qualification",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "match_rate",
+            "qualified_leads",
+            "viewings",
+        ],
+    },
+
+    "ai_store_manager": {
+        "name": "AI Store Manager",
+        "role": "ecommerce_manager",
+        "description": "Coordinates e-commerce sales, orders, customers and retention.",
+        "industries": ["ecommerce"],
+        "capabilities": [
+            "store_operations",
+            "order_management",
+            "customer_management",
+            "sales",
+            "retention",
+        ],
+        "allowed_actions": [
+            "check_order",
+            "order_tracking",
+            "payment_issue",
+            "customer_retention",
+            "churn_detection",
+            "sales_follow_up",
+            "send_notification",
+        ],
+        "approval_actions": [
+            "refund_request",
+        ],
+        "metrics": [
+            "revenue",
+            "orders",
+            "average_order_value",
+            "return_rate",
+            "customer_lifetime_value",
+        ],
+    },
+
+    "ai_order_agent": {
+        "name": "AI Order Agent",
+        "role": "order_agent",
+        "description": "Handles order tracking and order-related customer operations.",
+        "industries": ["ecommerce"],
+        "capabilities": [
+            "order_tracking",
+            "order_lookup",
+            "customer_updates",
+            "payment_issue_detection",
+        ],
+        "allowed_actions": [
+            "check_order",
+            "order_tracking",
+            "payment_issue",
+            "send_notification",
+        ],
+        "approval_actions": [
+            "refund_request",
+        ],
+        "metrics": [
+            "orders",
+            "resolution_rate",
+            "response_time",
+        ],
+    },
+
+    "ai_marketing_manager": {
+        "name": "AI Marketing Manager",
+        "role": "marketing_manager",
+        "description": "Coordinates marketing growth, lead generation and campaign intelligence.",
+        "industries": ["marketing"],
+        "capabilities": [
+            "campaign_management",
+            "lead_generation",
+            "lead_scoring",
+            "growth_analysis",
+            "conversion_analysis",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "ai_sales_qualification",
+            "sales_follow_up",
+            "revenue_opportunity",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "reach",
+            "engagement",
+            "cost_per_lead",
+            "conversion_rate",
+            "return_on_ad_spend",
+        ],
+    },
+
+    "ai_lead_generation_agent": {
+        "name": "AI Lead Generation Agent",
+        "role": "lead_generation",
+        "description": "Identifies and prioritizes business opportunities and prospects.",
+        "industries": [
+            "marketing",
+            "sales",
+            "real_estate",
+            "business",
+        ],
+        "capabilities": [
+            "lead_generation",
+            "lead_scoring",
+            "intent_detection",
+            "prospecting",
+        ],
+        "allowed_actions": [
+            "lead_scoring",
+            "ai_sales_qualification",
+            "ai_intent_classifier",
+            "revenue_opportunity",
+            "send_notification",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "new_leads",
+            "qualified_leads",
+            "conversion_rate",
+            "pipeline_value",
+        ],
+    },
+
+    "ai_revenue_analyst": {
+        "name": "AI Revenue Analyst",
+        "role": "revenue_analyst",
+        "description": "Detects revenue opportunities and analyzes customer and sales signals.",
+        "industries": [
+            "business",
+            "sales",
+            "marketing",
+            "ecommerce",
+            "real_estate",
+        ],
+        "capabilities": [
+            "revenue_analysis",
+            "opportunity_detection",
+            "customer_analysis",
+            "sales_analysis",
+        ],
+        "allowed_actions": [
+            "revenue_opportunity",
+            "lead_scoring",
+            "customer_retention",
+            "churn_detection",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "revenue",
+            "pipeline_value",
+            "retention",
+            "customer_lifetime_value",
+        ],
+    },
+
+    "ai_customer_success_agent": {
+        "name": "AI Customer Success Agent",
+        "role": "customer_success",
+        "description": "Monitors customer health, retention and churn risk.",
+        "industries": [
+            "business",
+            "sales",
+            "ecommerce",
+            "real_estate",
+        ],
+        "capabilities": [
+            "customer_success",
+            "retention",
+            "churn_detection",
+            "customer_follow_up",
+            "customer_lifecycle_management",
+        ],
+        "allowed_actions": [
+            "customer_retention",
+            "churn_detection",
+            "sales_follow_up",
+            "send_notification",
+            "customer_lifecycle",
+        ],
+        "approval_actions": [],
+        "metrics": [
+            "retention",
+            "churn_rate",
+            "customer_lifetime_value",
+        ],
+    },
+}

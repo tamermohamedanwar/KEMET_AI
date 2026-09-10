@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from app import db
 from app.models.subscription import Subscription
 from app.models.ai_usage import AIUsage
@@ -106,3 +107,34 @@ def record_usage(organization_id, tokens=0):
     db.session.commit()
 
     return check_limit(organization_id)
+
+
+class AIUsageService:
+    """
+    Compatibility facade for the AI usage service API.
+
+    The underlying implementation remains module-level functions
+    so existing imports continue to work.
+    """
+
+    PLAN_LIMITS = PLAN_LIMITS
+
+    @staticmethod
+    def current_month():
+        return current_month()
+
+    @staticmethod
+    def get_plan(organization_id):
+        return get_plan(organization_id)
+
+    @staticmethod
+    def get_usage(organization_id):
+        return get_usage(organization_id)
+
+    @staticmethod
+    def check_limit(organization_id):
+        return check_limit(organization_id)
+
+    @staticmethod
+    def record_usage(organization_id, tokens=0):
+        return record_usage(organization_id, tokens=tokens)

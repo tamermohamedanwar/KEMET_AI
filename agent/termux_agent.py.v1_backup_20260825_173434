@@ -1,0 +1,87 @@
+from flask import Flask, jsonify, request
+from dotenv import load_dotenv
+import os
+import subprocess
+
+load_dotenv(".env.agent", override=True)
+
+app = Flask(__name__)
+
+TOKEN = os.getenv("KEMET_AGENT_TOKEN", "")
+PROJECT = os.path.expanduser("~/products/Kemet_AI")
+
+ALLOWED_COMMANDS = {
+    "health": ["true"],
+    "git_status": ["git", "status", "--short"],
+    "compile": [".venv/bin/python", "-m", "compileall", "-q", "app"],
+}
+
+def run(command):
+    result = subprocess.run(
+        command,
+        cwd=PROJECT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+    return {
+        "ok": result.returncode == 0,
+        "returncode": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+    }
+
+
+@app.get("/health")
+def health():
+    return jsonify({
+        "ok": True,
+        "service": "Kemet AI Termux Agent",
+        "version": "1.1",
+    })
+
+
+@app.get("/commands")
+def commands():
+    if not TOKEN or request.headers.get("Authorization") != f"Bearer {TOKEN}":
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    return jsonify({
+        "ok": True,
+        "commands": sorted(ALLOWED_COMMANDS.keys()),
+    })
+
+
+@app.post("/run")
+def run_command():
+    if not TOKEN or request.headers.get("Authorization") != f"Bearer {TOKEN}":
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    command_name = data.get("command")
+
+    if command_name not in ALLOWED_COMMANDS:
+        return jsonify({
+            "ok": False,
+            "error": "command_not_allowed",
+            "allowed": sorted(ALLOWED_COMMANDS.keys()),
+        }), 403
+
+    result = run(ALLOWED_COMMANDS[command_name])
+
+    return jsonify({
+        "ok": result["ok"],
+        "command": command_name,
+        "returncode": result["returncode"],
+        "stdout": result["stdout"],
+        "stderr": result["stderr"],
+    }), 200
+
+
+if __name__ == "__main__":
+    app.run(
+        host="127.0.0.1",
+        port=8765,
+        debug=False,
+    )

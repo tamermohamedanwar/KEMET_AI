@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,221 +10,109 @@
 
 <title>Kemet AI</title>
 
-<style>
-:root{
-    --chat-bg:#07111f;
-    --chat-panel:#0d1a2b;
-    --chat-panel-2:#111f33;
-    --chat-border:rgba(255,255,255,.08);
-    --chat-text:#f4f7fb;
-    --chat-muted:#91a4ba;
-    --chat-primary:#6d5dfc;
-    --chat-cyan:#19c8ff;
-    --chat-green:#28d17c;
-}
 
-*{
-    box-sizing:border-box;
-    font-family:Inter,Tahoma,Arial,sans-serif;
-}
+<style>
+*{box-sizing:border-box}
 
 html,body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
+    overflow:hidden;
+    background:#f7f8fa;
+    color:#171717;
+    font-family:Arial,"Noto Sans Arabic",sans-serif;
 }
 
 body{
-    background:
-        radial-gradient(circle at 80% 0%,rgba(109,93,252,.14),transparent 30%),
-        radial-gradient(circle at 10% 20%,rgba(25,200,255,.07),transparent 25%),
-        var(--chat-bg);
-    color:var(--chat-text);
-    overflow:hidden;
-}
-
-body.light{
-    --chat-bg:#f3f6fb;
-    --chat-panel:#ffffff;
-    --chat-panel-2:#f8fafc;
-    --chat-border:#e2e8f0;
-    --chat-text:#111827;
-    --chat-muted:#64748b;
-    background:var(--chat-bg);
-    color:var(--chat-text);
-}
-
-.app{
-    width:100%;
-    height:100vh;
     display:flex;
+    min-height:100vh;
 }
 
-/* =========================
-   SIDEBAR
-   ========================= */
+/* ===== SIDEBAR ===== */
 
 .sidebar{
-    width:270px;
+    width:250px;
+    height:100vh;
     flex-shrink:0;
-    padding:18px;
-    background:rgba(13,26,43,.94);
-    border-left:1px solid var(--chat-border);
+    background:#ffffff;
+    border-left:1px solid #e8e8e8;
     overflow-y:auto;
-    box-shadow:10px 0 35px rgba(0,0,0,.12);
-    backdrop-filter:blur(18px);
-}
-
-body.light .sidebar{
-    background:#fff;
+    color:#222;
 }
 
 .sidebar-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:20px;
+    padding:20px;
+    border-bottom:1px solid #eeeeee;
 }
 
-.brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    font-size:19px;
-    font-weight:850;
-}
-
-.brand-mark{
-    width:38px;
-    height:38px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:12px;
-    background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
-    box-shadow:0 8px 25px rgba(109,93,252,.25);
-}
-
-.theme{
-    width:38px;
-    height:38px;
-    border-radius:11px;
-    border:1px solid var(--chat-border);
-    background:rgba(255,255,255,.05);
-    color:var(--chat-text);
-    cursor:pointer;
+.sidebar a,
+.chat-item{
+    color:#333 !important;
+    text-decoration:none !important;
 }
 
 .sidebar-section{
-    margin:22px 4px 8px;
-    color:var(--chat-muted);
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:.08em;
+    color:#888 !important;
+    font-size:12px;
+    padding:18px 18px 8px;
 }
 
 .chat-item{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    width:100%;
+    display:block;
+    margin:4px 10px;
     padding:11px 12px;
-    margin-bottom:7px;
-    border:1px solid transparent;
-    border-radius:11px;
-    color:var(--chat-text);
-    text-decoration:none;
-    background:rgba(255,255,255,.025);
-    transition:.18s ease;
+    border-radius:9px;
 }
 
 .chat-item:hover{
-    transform:translateX(-2px);
-    border-color:rgba(109,93,252,.25);
-    background:rgba(109,93,252,.08);
+    background:#f3f4f6;
 }
 
-/* =========================
-   MAIN
-   ========================= */
+/* ===== MAIN ===== */
 
 .main{
     flex:1;
     min-width:0;
+    height:100vh;
     display:flex;
     flex-direction:column;
-    position:relative;
+    background:#f7f8fa;
 }
 
 .header{
-    min-height:72px;
-    padding:14px 22px;
+    height:64px;
+    flex-shrink:0;
+    background:#fff;
+    border-bottom:1px solid #e8e8e8;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    border-bottom:1px solid var(--chat-border);
-    background:rgba(7,17,31,.72);
-    backdrop-filter:blur(18px);
+    padding:0 24px;
 }
 
-body.light .header{
-    background:rgba(255,255,255,.82);
+.header h1{
+    margin:0;
+    font-size:17px;
+    font-weight:600;
+    color:#171717;
 }
 
-.header-info{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.header-avatar{
-    width:42px;
-    height:42px;
-    border-radius:13px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
-    box-shadow:0 8px 25px rgba(109,93,252,.2);
-}
-
-.header-title{
-    font-weight:850;
-    font-size:16px;
-}
-
-.header-status{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    color:var(--chat-muted);
-    font-size:11px;
-    margin-top:3px;
-}
-
-.online-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--chat-green);
-    box-shadow:0 0 10px rgba(40,209,124,.7);
-}
-
-/* =========================
-   MESSAGES
-   ========================= */
+/* ===== MESSAGES ===== */
 
 .messages{
     flex:1;
+    min-height:0;
     overflow-y:auto;
-    padding:28px clamp(16px,5vw,70px);
+    padding:30px 22px 150px;
     scroll-behavior:smooth;
 }
 
 .message-row{
+    width:100%;
     display:flex;
-    gap:10px;
-    margin:16px 0;
+    margin-bottom:20px;
 }
 
 .message-row.user{
@@ -234,159 +123,92 @@ body.light .header{
     justify-content:flex-end;
 }
 
-.avatar{
-    width:34px;
-    height:34px;
-    flex:0 0 34px;
-    border-radius:11px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:15px;
-}
-
-.ai-avatar{
-    background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
-}
-
-.user-avatar{
-    background:#243247;
-}
-
 .message{
-    max-width:min(760px,82%);
+    max-width:min(760px,85%);
     padding:13px 16px;
-    border-radius:17px;
-    line-height:1.75;
-    white-space:pre-wrap;
-    word-break:break-word;
-    border:1px solid var(--chat-border);
-    box-shadow:0 7px 25px rgba(0,0,0,.08);
-}
-
-.user{
-    background:linear-gradient(135deg,#6d5dfc,#5143df);
-    color:#fff;
-    border-color:transparent;
-    border-bottom-right-radius:5px;
-}
-
-.ai{
-    background:var(--chat-panel-2);
-    color:var(--chat-text);
-    border-bottom-left-radius:5px;
-}
-
-body.light .ai{
-    background:#fff;
-    color:#111827;
-    border-color:#e2e8f0;
-}
-
-.welcome{
-    max-width:720px;
-    margin:7vh auto 30px;
-    text-align:center;
-}
-
-.welcome-icon{
-    width:64px;
-    height:64px;
-    margin:0 auto 16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:20px;
-    font-size:28px;
-    background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
-    box-shadow:0 15px 40px rgba(109,93,252,.25);
-}
-
-.welcome h2{
-    margin:0;
-    font-size:27px;
-}
-
-.welcome p{
-    color:var(--chat-muted);
+    border-radius:15px;
     line-height:1.7;
+    font-size:15px;
+    border:1px solid #e7e7e7;
+    box-shadow:0 1px 3px rgba(0,0,0,.03);
 }
 
-/* =========================
-   INPUT
-   ========================= */
-
-.input-box{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    margin:0 clamp(12px,4vw,60px) 16px;
-    padding:9px;
-    border:1px solid var(--chat-border);
-    border-radius:18px;
-    background:rgba(13,26,43,.86);
-    box-shadow:0 15px 40px rgba(0,0,0,.18);
-    backdrop-filter:blur(18px);
+.message.user{
+    background:#fff;
+    color:#222;
 }
 
-body.light .input-box{
-    background:rgba(255,255,255,.94);
+.message.ai{
+    background:#f0f0f0;
+    color:#222;
+}
+
+/* ===== COMPOSER ===== */
+
+.chat-form,
+.composer,
+.input-area,
+.chat-input{
+    position:relative;
 }
 
 #message{
-    flex:1;
-    min-width:0;
-    height:48px;
-    padding:0 15px;
-    border:0;
-    outline:0;
-    border-radius:13px;
-    background:transparent;
-    color:var(--chat-text);
-    font-size:14px;
+    width:100%;
+    min-height:52px;
+    max-height:150px;
+    resize:none;
+    border:1px solid #dcdcdc;
+    border-radius:15px;
+    outline:none;
+    background:#fff;
+    color:#171717;
+    padding:15px 150px 15px 18px;
+    font-size:15px;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+#message:focus{
+    border-color:#bdbdbd;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
 }
 
 #message::placeholder{
-    color:var(--chat-muted);
+    color:#999;
 }
 
 .upload,
 .voice,
 .send{
-    width:45px;
-    height:45px;
-    flex:0 0 45px;
-    border:1px solid var(--chat-border);
-    border-radius:13px;
+    border:0 !important;
     cursor:pointer;
-    transition:.18s ease;
+    border-radius:10px;
+    font-size:14px;
 }
 
-.upload{
-    background:rgba(255,255,255,.05);
-    color:var(--chat-text);
-}
-
+.upload,
 .voice{
-    background:rgba(40,209,124,.12);
-    color:#5ee89b;
+    background:#f3f4f6 !important;
+    color:#444 !important;
 }
 
 .send{
-    background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
-    color:#fff;
-    box-shadow:0 8px 20px rgba(109,93,252,.22);
+    background:#171717 !important;
+    color:#fff !important;
 }
 
-.upload:hover,
-.voice:hover,
-.send:hover{
-    transform:translateY(-2px);
+/* ===== KEEP INPUT AT BOTTOM ===== */
+
+.main > form,
+.main .composer,
+.main .input-area{
+    flex-shrink:0;
+    background:rgba(247,248,250,.96);
+    padding:14px 22px 20px;
+    border-top:1px solid #e9e9e9;
+    backdrop-filter:blur(8px);
 }
 
-/* =========================
-   MOBILE
-   ========================= */
+/* ===== MOBILE ===== */
 
 .menu-btn{
     display:none;
@@ -396,88 +218,61 @@ body.light .input-box{
 
     .sidebar{
         position:fixed;
+        right:0;
         top:0;
-        right:-290px;
-        height:100vh;
-        z-index:3000;
-        transition:right .22s ease;
+        z-index:1000;
+        transform:translateX(100%);
+        transition:.2s ease;
+        box-shadow:-8px 0 30px rgba(0,0,0,.12);
     }
 
     .sidebar.open{
-        right:0;
+        transform:translateX(0);
     }
 
     .menu-btn{
-        display:flex;
+        display:block;
         position:fixed;
-        bottom:85px;
-        right:18px;
-        z-index:3100;
-        width:50px;
-        height:50px;
-        align-items:center;
-        justify-content:center;
+        top:14px;
+        right:14px;
+        z-index:1100;
         border:0;
-        border-radius:15px;
-        background:linear-gradient(135deg,var(--chat-primary),var(--chat-cyan));
+        background:#171717;
         color:#fff;
-        font-size:21px;
-        box-shadow:0 10px 30px rgba(0,0,0,.25);
-    }
-
-    .header{
-        padding:12px 15px;
+        width:40px;
+        height:40px;
+        border-radius:10px;
     }
 
     .messages{
-        padding:20px 12px;
+        padding:24px 14px 145px;
     }
 
     .message{
-        max-width:88%;
-    }
-
-    .input-box{
-        margin:0 8px 8px;
-    }
-
-    .upload,
-    .voice,
-    .send{
-        width:42px;
-        height:42px;
-        flex-basis:42px;
-    }
-}
-
-@media(max-width:480px){
-
-    .header-title{
+        max-width:92%;
         font-size:14px;
     }
 
-    .header-avatar{
-        width:38px;
-        height:38px;
-    }
-
-    .message{
-        font-size:13px;
-        padding:11px 13px;
-    }
-
-    .welcome h2{
-        font-size:22px;
-    }
-
     #message{
-        font-size:13px;
+        padding-left:14px;
+        padding-right:105px;
+    }
+
+    .main > form,
+    .main .composer,
+    .main .input-area{
+        padding:10px 12px 14px;
     }
 }
 </style>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
@@ -558,6 +353,212 @@ onkeydown="if(event.key==='Enter') sendMessage()">
 </div>
 
 
+
+<style id="kemet-agent-ui">
+:root{
+    --ka-bg:#f7f8fa;
+    --ka-surface:#ffffff;
+    --ka-border:#e7e9ee;
+    --ka-text:#17191d;
+    --ka-muted:#737983;
+    --ka-soft:#f1f3f6;
+    --ka-radius:18px;
+    --ka-shadow:0 8px 30px rgba(20,24,32,.06);
+}
+
+body{
+    background:var(--ka-bg) !important;
+    color:var(--ka-text) !important;
+}
+
+.kemet-agent-status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--ka-muted);
+    padding:8px 12px;
+    border:1px solid var(--ka-border);
+    border-radius:999px;
+    background:var(--ka-surface);
+}
+
+.kemet-agent-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#28a745;
+    box-shadow:0 0 0 4px rgba(40,167,69,.10);
+}
+
+.kemet-welcome{
+    max-width:760px;
+    margin:8vh auto 0;
+    padding:24px;
+    text-align:center;
+}
+
+.kemet-welcome h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,6vw,46px);
+    letter-spacing:-1px;
+}
+
+.kemet-welcome p{
+    margin:0 auto 28px;
+    color:var(--ka-muted);
+    font-size:15px;
+    line-height:1.7;
+}
+
+.kemet-examples{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-bottom:24px;
+}
+
+.kemet-example{
+    border:1px solid var(--ka-border);
+    background:var(--ka-surface);
+    border-radius:16px;
+    padding:14px;
+    text-align:left;
+    cursor:pointer;
+    transition:.18s ease;
+}
+
+.kemet-example:hover{
+    transform:translateY(-1px);
+    box-shadow:var(--ka-shadow);
+}
+
+.kemet-example strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.kemet-example span{
+    color:var(--ka-muted);
+    font-size:12px;
+    line-height:1.5;
+}
+
+.kemet-result{
+    margin:14px 0;
+    border:1px solid var(--ka-border);
+    border-radius:var(--ka-radius);
+    background:var(--ka-surface);
+    box-shadow:var(--ka-shadow);
+    overflow:hidden;
+}
+
+.kemet-result-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--ka-border);
+}
+
+.kemet-result-title{
+    font-weight:700;
+}
+
+.kemet-result-status{
+    font-size:12px;
+    color:var(--ka-muted);
+}
+
+.kemet-result-body{
+    padding:16px;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    font-size:13px;
+    line-height:1.65;
+}
+
+.kemet-explanation{
+    margin-top:12px;
+    padding:14px 16px;
+    background:var(--ka-soft);
+    border-radius:14px;
+    color:var(--ka-text);
+    font-size:13px;
+    line-height:1.7;
+}
+
+.kemet-explanation strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.kemet-progress{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    padding:16px;
+}
+
+.kemet-step{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--ka-muted);
+    font-size:13px;
+}
+
+.kemet-step.active{
+    color:var(--ka-text);
+    font-weight:600;
+}
+
+.kemet-step.done{
+    color:#218838;
+}
+
+.kemet-step-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#d5d9df;
+    flex:0 0 auto;
+}
+
+.kemet-step.active .kemet-step-dot{
+    background:#555b65;
+    box-shadow:0 0 0 4px rgba(85,91,101,.10);
+}
+
+.kemet-step.done .kemet-step-dot{
+    background:#28a745;
+}
+
+.kemet-agent-footer{
+    display:flex;
+    justify-content:center;
+    padding:8px 16px 16px;
+    color:var(--ka-muted);
+    font-size:11px;
+}
+
+@media(max-width:640px){
+    .kemet-examples{
+        grid-template-columns:1fr;
+    }
+
+    .kemet-welcome{
+        margin-top:4vh;
+        padding:16px;
+    }
+
+    .kemet-welcome h1{
+        font-size:30px;
+    }
+}
+</style>
+
 <script>
 
 const csrfToken = document
@@ -582,6 +583,100 @@ function addMessage(text,type){
 
 
 let currentConversationId = null;
+
+
+function showAgentProgress(){
+    const box = document.getElementById("messages");
+    if(!box) return null;
+
+    const wrap = document.createElement("div");
+    wrap.className = "kemet-result";
+    wrap.id = "kemet-agent-progress";
+
+    wrap.innerHTML = `
+        <div class="kemet-result-head">
+            <div class="kemet-result-title">جاري إنشاء خطة تنفيذ</div>
+            <div class="kemet-result-status">Agent</div>
+        </div>
+        <div class="kemet-progress">
+            <div class="kemet-step active">
+                <span class="kemet-step-dot"></span>
+                <span>تحليل الطلب</span>
+            </div>
+            <div class="kemet-step">
+                <span class="kemet-step-dot"></span>
+                <span>تنفيذ العملية في Termux</span>
+            </div>
+            <div class="kemet-step">
+                <span class="kemet-step-dot"></span>
+                <span>اختبار النتيجة</span>
+            </div>
+            <div class="kemet-step">
+                <span class="kemet-step-dot"></span>
+                <span>شرح النتيجة</span>
+            </div>
+        </div>
+    `;
+
+    box.appendChild(wrap);
+    box.scrollTop = box.scrollHeight;
+    return wrap;
+}
+
+function finishAgentProgress(el){
+    if(!el) return;
+
+    const steps = el.querySelectorAll(".kemet-step");
+
+    steps.forEach((step, index) => {
+        step.classList.remove("active");
+        if(index < 3){
+            step.classList.add("done");
+        }
+    });
+
+    if(steps[3]){
+        steps[3].classList.add("done");
+    }
+
+    const status = el.querySelector(".kemet-result-status");
+    if(status){
+        status.textContent = "تم";
+    }
+}
+
+function addAgentResult(result, explanation){
+    const box = document.getElementById("messages");
+    if(!box) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "kemet-result";
+
+    const resultText = String(result || "لا توجد نتيجة.");
+    const explanationText = String(
+        explanation ||
+        "تم تنفيذ العملية وإرجاع النتيجة من Kemet AI."
+    );
+
+    wrap.innerHTML = `
+        <div class="kemet-result-head">
+            <div class="kemet-result-title">نتيجة التنفيذ</div>
+            <div class="kemet-result-status">Termux ✓</div>
+        </div>
+        <div class="kemet-result-body"></div>
+        <div class="kemet-explanation">
+            <strong>💡 شرح النتيجة</strong>
+            <span></span>
+        </div>
+    `;
+
+    wrap.querySelector(".kemet-result-body").innerText = resultText;
+    wrap.querySelector(".kemet-explanation span").innerText = explanationText;
+
+    box.appendChild(wrap);
+    box.scrollTop = box.scrollHeight;
+}
+
 
 async function sendMessage(){
 
@@ -771,8 +866,126 @@ side.classList.toggle("open");
 </script>
 
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+
+<!-- KEMET_MODE_NAV -->
+<nav id="kemet-mode-nav" style="
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin:0 0 18px;
+    padding:8px;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fff;
+    box-shadow:0 3px 14px rgba(0,0,0,.04);
+">
+    <a href="/chat" style="
+        text-decoration:none;
+        padding:9px 14px;
+        border-radius:10px;
+        font-weight:700;
+        color:#111827;
+        background:#f3f4f6;
+    ">🧠 General AI</a>
+
+{% if current_user.is_authenticated and current_user.role == "admin" %}
+    <a href="#kemet-command-agent" style="
+        text-decoration:none;
+        padding:9px 14px;
+        border-radius:10px;
+        font-weight:700;
+        color:#111827;
+        background:#f3f4f6;
+    ">🔐 Kemet Bridge</a>
+{% endif %}
+
+    <a href="/execution-center" style="
+        text-decoration:none;
+        padding:9px 14px;
+        border-radius:10px;
+        font-weight:700;
+        color:#111827;
+        background:#f3f4f6;
+    ">⚙️ Execution Center</a>
+</nav>
+
+{% if current_user.is_authenticated and current_user.role == 'admin' %}
+<!-- KEMET_COMMAND_AGENT -->
+<section id="kemet-command-agent" class="kemet-command-agent" style="
+    margin:18px 0;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    padding:16px;
+    background:#fff;
+    box-shadow:0 4px 18px rgba(0,0,0,.05);
+">
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px;">
+        🔐 Kemet Bridge
+    </div>
+
+    <textarea
+        id="kemet-agent-input"
+        rows="3"
+        placeholder="اكتب أمرًا أو مهمة تريد من Kemet Bridge تجهيزها للتنفيذ..."
+        style="
+            width:100%;
+            box-sizing:border-box;
+            resize:vertical;
+            border:1px solid #d1d5db;
+            border-radius:12px;
+            padding:12px;
+            font:inherit;
+        "
+    ></textarea>
+
+    <button
+        type="button"
+        id="kemet-agent-send"
+        style="
+            margin-top:10px;
+            border:0;
+            border-radius:10px;
+            padding:10px 18px;
+            cursor:pointer;
+            font-weight:700;
+        "
+    >
+        إنشاء خطة تنفيذ
+    </button>
+
+    <div id="kemet-agent-result" style="display:none;margin-top:16px;">
+
+        <div style="font-weight:700;margin-bottom:7px;">
+            💻 نتيجة التنفيذ
+        </div>
+
+        <pre id="kemet-agent-code" style="
+            white-space:pre-wrap;
+            overflow:auto;
+            background:#111827;
+            color:#f9fafb;
+            border-radius:12px;
+            padding:14px;
+            margin:0;
+            max-height:420px;
+        "></pre>
+
+        <div style="font-weight:700;margin:16px 0 7px;">
+            📝 شرح النتيجة
+        </div>
+
+        <div id="kemet-agent-explanation" style="
+            border:1px solid #e5e7eb;
+            border-radius:12px;
+            padding:14px;
+            line-height:1.7;
+            background:#f9fafb;
+        "></div>
+
+    </div>
+</section>
+{% endif %}
+
 </body>
 
 </html>
@@ -816,4 +1029,610 @@ z-index:999;
     font-size:26px;
 }
 
+</style>
+
+<style>
+/* KEMET AI — FINAL CHAT LAYOUT FIX */
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+}
+
+.main{
+    height:100vh !important;
+    min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+}
+
+.header{
+    flex:0 0 64px !important;
+}
+
+.messages{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    height:auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding:24px 22px 24px !important;
+}
+
+.composer,
+.input-area,
+.main > form{
+    flex:0 0 auto !important;
+    position:relative !important;
+    bottom:auto !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:12px 22px 16px !important;
+    background:#f7f8fa !important;
+    border-top:1px solid #e5e7eb !important;
+    z-index:20 !important;
+}
+
+#message{
+    max-height:140px !important;
+}
+
+@media(max-width:800px){
+    .messages{
+        padding:18px 14px 18px !important;
+    }
+
+    .composer,
+    .input-area,
+    .main > form{
+        padding:10px 12px 12px !important;
+    }
+}
+</style>
+
+<style id="kemet-chat-composer-fix">
+
+/* =========================================================
+   KEMET AI — CHAT COMPOSER FIX
+   Fixes hidden message input and action buttons
+   ========================================================= */
+
+.main{
+    height:100vh !important;
+    min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+}
+
+.messages{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding-bottom:24px !important;
+}
+
+/* Real HTML container used by chat.html */
+.input-box{
+    flex:0 0 auto !important;
+    position:relative !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    width:100% !important;
+    box-sizing:border-box !important;
+    padding:12px 22px 16px !important;
+    background:#f7f8fa !important;
+    border-top:1px solid #e5e7eb !important;
+    z-index:50 !important;
+    visibility:visible !important;
+    opacity:1 !important;
+}
+
+/* Message field */
+.input-box #message{
+    display:block !important;
+    flex:1 1 auto !important;
+    width:auto !important;
+    min-width:0 !important;
+    height:52px !important;
+    min-height:52px !important;
+    max-height:140px !important;
+    box-sizing:border-box !important;
+    resize:none !important;
+    border:1px solid #d1d5db !important;
+    border-radius:15px !important;
+    outline:none !important;
+    background:#ffffff !important;
+    color:#171717 !important;
+    padding:15px 18px !important;
+    font-size:15px !important;
+    line-height:1.4 !important;
+    box-shadow:0 4px 18px rgba(0,0,0,.06) !important;
+    visibility:visible !important;
+    opacity:1 !important;
+}
+
+.input-box #message:focus{
+    border-color:#635bff !important;
+    box-shadow:0 0 0 3px rgba(99,91,255,.12),
+               0 4px 18px rgba(0,0,0,.06) !important;
+}
+
+/* All chat action buttons */
+.input-box button{
+    flex:0 0 46px !important;
+    width:46px !important;
+    height:46px !important;
+    min-width:46px !important;
+    min-height:46px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:1px solid #d1d5db !important;
+    border-radius:12px !important;
+    cursor:pointer !important;
+    font-size:19px !important;
+    line-height:1 !important;
+    visibility:visible !important;
+    opacity:1 !important;
+}
+
+/* Upload + voice */
+.input-box .upload,
+.input-box .voice{
+    background:#ffffff !important;
+    color:#374151 !important;
+}
+
+/* Send */
+.input-box .send{
+    background:#635bff !important;
+    color:#ffffff !important;
+    border-color:#635bff !important;
+}
+
+.input-box .send:hover{
+    background:#5148e5 !important;
+}
+
+/* Make sure hidden file input remains hidden */
+.input-box #fileInput{
+    display:none !important;
+}
+
+@media(max-width:800px){
+
+    .input-box{
+        gap:6px !important;
+        padding:10px 12px 12px !important;
+    }
+
+    .input-box #message{
+        height:48px !important;
+        min-height:48px !important;
+        font-size:15px !important;
+        padding:13px 14px !important;
+        border-radius:13px !important;
+    }
+
+    .input-box button{
+        flex:0 0 42px !important;
+        width:42px !important;
+        height:42px !important;
+        min-width:42px !important;
+        min-height:42px !important;
+        font-size:17px !important;
+        border-radius:11px !important;
+    }
+
+    .messages{
+        padding-left:14px !important;
+        padding-right:14px !important;
+    }
+}
+
+</style>
+
+
+<style id="kemet-chat-final-composer">
+/* KEMET AI — FINAL CHAT LAYOUT */
+
+main.main {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+main.main .messages {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+main.main .input-box {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    display: flex !important;
+    width: 100% !important;
+    min-height: 76px !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    padding: 12px 22px 16px !important;
+    margin: 0 !important;
+    background: #f7f8fa !important;
+    border-top: 1px solid #e5e7eb !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 999 !important;
+}
+
+main.main .input-box #message {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+    background: #fff !important;
+    color: #111827 !important;
+}
+
+main.main .input-box button {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    height: 46px !important;
+}
+
+</style>
+
+<style id="kemet-chat-final-ui">
+/* KEMET AI — FINAL CHAT UI */
+
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+body {
+    background: #f7f8fa !important;
+}
+
+.main {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.messages {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 24px 22px 120px !important;
+    box-sizing: border-box !important;
+}
+
+/* Chat composer */
+.input-box {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-height: 82px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 14px 18px !important;
+    background: rgba(255,255,255,.96) !important;
+    border-top: 1px solid #e5e7eb !important;
+    box-shadow: 0 -8px 25px rgba(0,0,0,.06) !important;
+    z-index: 999 !important;
+}
+
+/* Message input */
+.input-box #message {
+    order: 1 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    box-sizing: border-box !important;
+    padding: 0 18px !important;
+    border: 1px solid #d9dce3 !important;
+    border-radius: 16px !important;
+    outline: none !important;
+    background: #f8f9fb !important;
+    color: #111827 !important;
+    font-size: 15px !important;
+    font-family: inherit !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.03) !important;
+}
+
+.input-box #message::placeholder {
+    color: #8b92a0 !important;
+}
+
+.input-box #message:focus {
+    background: #ffffff !important;
+    border-color: #635bff !important;
+    box-shadow: 0 0 0 3px rgba(99,91,255,.12) !important;
+}
+
+/* Buttons */
+.input-box button {
+    position: relative !important;
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 14px !important;
+    cursor: pointer !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-sizing: border-box !important;
+}
+
+.input-box .upload {
+    order: 2 !important;
+    background: #ffffff !important;
+    color: #4b5563 !important;
+    border: 1px solid #dfe3e8 !important;
+}
+
+.input-box .voice {
+    order: 3 !important;
+    background: #ffffff !important;
+    color: #4b5563 !important;
+    border: 1px solid #dfe3e8 !important;
+}
+
+.input-box .send {
+    order: 4 !important;
+    background: #635bff !important;
+    color: #ffffff !important;
+    border: 1px solid #635bff !important;
+    box-shadow: 0 5px 14px rgba(99,91,255,.25) !important;
+}
+
+.input-box button:active {
+    transform: scale(.96) !important;
+}
+
+.input-box .send:hover {
+    filter: brightness(.96) !important;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .messages {
+        padding: 18px 12px 110px !important;
+    }
+
+    .input-box {
+        min-height: 76px !important;
+        padding: 12px !important;
+        gap: 7px !important;
+    }
+
+    .input-box #message {
+        height: 50px !important;
+        min-height: 50px !important;
+        font-size: 15px !important;
+        padding: 0 14px !important;
+    }
+
+    .input-box button {
+        flex-basis: 44px !important;
+        width: 44px !important;
+        min-width: 44px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        border-radius: 13px !important;
+    }
+}
+</style>
+
+<style id="kemet-chat-final-ui">
+/* KEMET AI — FINAL CHAT UI */
+
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+body {
+    background: #f7f8fa !important;
+}
+
+.main {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.messages {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 24px 22px 120px !important;
+    box-sizing: border-box !important;
+}
+
+/* Chat composer */
+.input-box {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-height: 82px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 14px 18px !important;
+    background: rgba(255,255,255,.96) !important;
+    border-top: 1px solid #e5e7eb !important;
+    box-shadow: 0 -8px 25px rgba(0,0,0,.06) !important;
+    z-index: 999 !important;
+}
+
+/* Message input */
+.input-box #message {
+    order: 1 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    box-sizing: border-box !important;
+    padding: 0 18px !important;
+    border: 1px solid #d9dce3 !important;
+    border-radius: 16px !important;
+    outline: none !important;
+    background: #f8f9fb !important;
+    color: #111827 !important;
+    font-size: 15px !important;
+    font-family: inherit !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.03) !important;
+}
+
+.input-box #message::placeholder {
+    color: #8b92a0 !important;
+}
+
+.input-box #message:focus {
+    background: #ffffff !important;
+    border-color: #635bff !important;
+    box-shadow: 0 0 0 3px rgba(99,91,255,.12) !important;
+}
+
+/* Buttons */
+.input-box button {
+    position: relative !important;
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 14px !important;
+    cursor: pointer !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-sizing: border-box !important;
+}
+
+.input-box .upload {
+    order: 2 !important;
+    background: #ffffff !important;
+    color: #4b5563 !important;
+    border: 1px solid #dfe3e8 !important;
+}
+
+.input-box .voice {
+    order: 3 !important;
+    background: #ffffff !important;
+    color: #4b5563 !important;
+    border: 1px solid #dfe3e8 !important;
+}
+
+.input-box .send {
+    order: 4 !important;
+    background: #635bff !important;
+    color: #ffffff !important;
+    border: 1px solid #635bff !important;
+    box-shadow: 0 5px 14px rgba(99,91,255,.25) !important;
+}
+
+.input-box button:active {
+    transform: scale(.96) !important;
+}
+
+.input-box .send:hover {
+    filter: brightness(.96) !important;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .messages {
+        padding: 18px 12px 110px !important;
+    }
+
+    .input-box {
+        min-height: 76px !important;
+        padding: 12px !important;
+        gap: 7px !important;
+    }
+
+    .input-box #message {
+        height: 50px !important;
+        min-height: 50px !important;
+        font-size: 15px !important;
+        padding: 0 14px !important;
+    }
+
+    .input-box button {
+        flex-basis: 44px !important;
+        width: 44px !important;
+        min-width: 44px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        border-radius: 13px !important;
+    }
+}
 </style>

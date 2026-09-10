@@ -1,3 +1,8 @@
+{% include "partials/kemet-white-ui.html" %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
 {% extends "admin/base.html" %}
 
 {% block content %}
@@ -143,3 +148,31 @@
 </div>
 
 {% endblock %}
+
+<style>
+.crm-intelligence{margin-top:20px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+.crm-intelligence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.crm-intelligence-card{border:1px solid #eee;border-radius:12px;padding:12px;background:#fafafa}
+.crm-intelligence-value{font-size:18px;font-weight:800}.crm-intelligence-label{font-size:11px;color:#777;margin-top:3px}
+.crm-top-leads{margin-top:14px}.crm-top-lead{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #eee;font-size:12px}
+@media(max-width:700px){.crm-intelligence-grid{grid-template-columns:1fr}.crm-top-lead{flex-direction:column}}
+</style>
+<script>
+async function loadCRMPipelineIntelligence(){
+ const host=document.querySelector('.container-fluid'); if(!host)return;
+ const panel=document.createElement('section'); panel.className='crm-intelligence';
+ host.appendChild(panel);
+ try{
+  const r=await fetch('{{ url_for("admin_leads.pipeline_intelligence") }}',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('unavailable');
+  const esc=window.escapeHtml||function(v){const e=document.createElement('div');e.textContent=String(v??'');return e.innerHTML};
+  const s=d.summary||{}; const leads=Array.isArray(d.top_leads)?d.top_leads:[];
+  panel.innerHTML='<h3>CRM Pipeline Intelligence</h3><p class="text-muted small">Read-only prioritization of the existing pipeline. No lead mutation or automatic outreach.</p><div class="crm-intelligence-grid">'+
+   '<div class="crm-intelligence-card"><div class="crm-intelligence-value">'+esc(s.total||0)+'</div><div class="crm-intelligence-label">Total Leads</div></div>'+
+   '<div class="crm-intelligence-card"><div class="crm-intelligence-value">'+esc(s.won||0)+'</div><div class="crm-intelligence-label">Won</div></div>'+
+   '<div class="crm-intelligence-card"><div class="crm-intelligence-value">'+esc(s.conversion_rate||0)+'%</div><div class="crm-intelligence-label">Conversion Rate</div></div></div>'+
+   '<div class="crm-top-leads"><strong>Priority Leads</strong>'+leads.slice(0,5).map(x=>'<div class="crm-top-lead"><span>'+esc(x.company_name)+' · '+esc(x.status)+'</span><span>Score '+esc(x.score)+' · '+esc(x.temperature)+'</span></div>').join('')+'</div>';
+ }catch(e){panel.innerHTML='<h3>CRM Pipeline Intelligence</h3><p class="text-muted small">Pipeline intelligence is currently unavailable.</p>'}
+}
+loadCRMPipelineIntelligence();
+</script>

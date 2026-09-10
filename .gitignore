@@ -50,3 +50,4 @@ backups/
 *.before_kashier_*
 *.before_paymob_return_*
 *.before_checkout_ui_*
+.env.agent

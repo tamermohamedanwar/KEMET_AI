@@ -1,0 +1,127 @@
+{% include "partials/kemet-white-ui.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+
+<div class="k-v52-shell">
+
+    <header class="k-v52-topbar">
+
+        <div class="k-v52-brand">
+            <a href="/">
+                <span class="k-v52-brand-mark">K</span>
+                <span>Kemet AI</span>
+            </a>
+        </div>
+
+        <div class="k-v52-topbar-actions">
+
+            <a href="/notifications/" class="k-v52-icon-button" aria-label="Notifications">
+                <span>●</span>
+            </a>
+
+            <a href="/settings" class="k-v52-user">
+                <span class="k-v52-avatar">
+                    {{ current_user.email[0]|upper if current_user.is_authenticated else "K" }}
+                </span>
+
+                <span class="k-v52-user-meta">
+                    <strong>
+                        {{ current_user.email if current_user.is_authenticated else "Guest" }}
+                    </strong>
+                    <small>Workspace</small>
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+    <aside class="k-v52-sidebar">
+
+        <div class="k-v52-section-label">WORKSPACE</div>
+
+        <nav class="k-v52-nav">
+
+            <a href="/dashboard">
+                <span>⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/chat">
+                <span>✦</span>
+                <span>AI Assistant</span>
+            </a>
+
+            <a href="/conversations">
+                <span>◫</span>
+                <span>Conversations</span>
+            </a>
+
+            <a href="/tickets">
+                <span>□</span>
+                <span>Support</span>
+            </a>
+
+            <a href="/notifications/">
+                <span>◉</span>
+                <span>Notifications</span>
+            </a>
+
+        </nav>
+
+        <div class="k-v52-section-label">GROWTH</div>
+
+        <nav class="k-v52-nav">
+
+            <a href="/admin/leads">
+                <span>◇</span>
+                <span>Leads</span>
+            </a>
+
+            <a href="/admin/leads/pipeline">
+                <span>▥</span>
+                <span>Pipeline</span>
+            </a>
+
+            <a href="/admin/automation/dashboard">
+                <span>⚡</span>
+                <span>Automation</span>
+            </a>
+
+        </nav>
+
+        <div class="k-v52-section-label">BUSINESS</div>
+
+        <nav class="k-v52-nav">
+
+            <a href="/billing/subscription">
+                <span>◇</span>
+                <span>Billing</span>
+            </a>
+
+            <a href="/profile">
+                <span>○</span>
+                <span>Profile</span>
+            </a>
+
+            <a href="/settings">
+                <span>⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="k-v52-sidebar-footer">
+
+            <a href="/logout" class="k-v52-logout">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="k-v52-main">
+        {% block kemet_v52_content %}{% endblock %}
+    </main>
+
+</div>

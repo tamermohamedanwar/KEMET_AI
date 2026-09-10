@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="utf-8">
 <title>Kemet AI Login</title>
 
@@ -38,7 +39,7 @@ input {
 button {
     width:100%;
     padding:12px;
-    background:#2563eb;
+    background:#374151;
     color:white;
     border:none;
     border-radius:8px;
@@ -46,15 +47,26 @@ button {
 }
 
 a {
-    color:#60a5fa;
+    color:#9ca3af;
 }
 </style>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ai-ui.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
+
+<section class="k-v51-auth">
+    <div class="k-v51-auth-card">
+        <h1>Welcome back</h1>
+        <p class="k-v51-muted">Sign in to your Kemet AI workspace.</p>
+
 
 <div class="card">
 
@@ -108,7 +120,7 @@ Register
 
 </div>
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
+</div>
+</section>
 </body>
 </html>

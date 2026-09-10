@@ -69,6 +69,10 @@ def create_checkout(organization_id, plan):
             "status": "contact_sales",
             "plan": plan,
             "price": None,
+            "price_usd": None,
+            "price_egp": None,
+            "currency": "USD",
+            "checkout_url": None,
         }
 
     fx = convert_usd_to_egp(price)

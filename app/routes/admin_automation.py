@@ -1164,3 +1164,76 @@ def automation_templates():
         current_plan=current_plan,
     )
 
+
+# ============================================================
+# KEMET AI BOS — AI WORKFORCE CENTER
+# ============================================================
+
+@admin_automation_bp.route("/workforce")
+@login_required
+def workforce_center():
+    organization_id = current_user.organization_id
+
+    workflows = (
+        AutomationWorkflow.query
+        .filter_by(organization_id=organization_id)
+        .order_by(AutomationWorkflow.id.desc())
+        .all()
+    )
+
+    executions = (
+        AutomationExecution.query
+        .join(
+            AutomationWorkflow,
+            AutomationExecution.workflow_id == AutomationWorkflow.id,
+        )
+        .filter(
+            AutomationWorkflow.organization_id == organization_id
+        )
+        .order_by(AutomationExecution.id.desc())
+        .all()
+    )
+
+    approvals = (
+        AutomationApproval.query
+        .filter_by(organization_id=organization_id)
+        .order_by(AutomationApproval.id.desc())
+        .all()
+    )
+
+    active_agents = sum(
+        1 for workflow in workflows
+        if workflow.is_active
+    )
+
+    completed = sum(
+        1 for execution in executions
+        if execution.status == "completed"
+    )
+
+    failed = sum(
+        1 for execution in executions
+        if execution.status == "failed"
+    )
+
+    running = sum(
+        1 for execution in executions
+        if execution.status == "running"
+    )
+
+    pending_approvals = sum(
+        1 for approval in approvals
+        if approval.status == "pending"
+    )
+
+    return render_template(
+        "admin/workforce_center.html",
+        workflows=workflows,
+        executions=executions[:12],
+        approvals=approvals[:8],
+        active_agents=active_agents,
+        completed=completed,
+        failed=failed,
+        running=running,
+        pending_approvals=pending_approvals,
+    )

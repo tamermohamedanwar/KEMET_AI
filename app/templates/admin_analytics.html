@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kemet AI | Support Analytics</title>
@@ -189,8 +190,12 @@ height:280px;
 }
 
 </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
@@ -360,7 +365,5 @@ color:"rgba(148,163,184,.12)"
 
 </script>
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 </html>

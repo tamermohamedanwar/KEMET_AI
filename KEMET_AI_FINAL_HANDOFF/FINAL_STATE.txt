@@ -1,0 +1,50 @@
+KEMET AI — FINAL BUILD STATE
+
+PROJECT:
+Kemet AI Business Operating System
+
+APPLICATION:
+Flask Application Factory
+
+PYTHON:
+3.11.x
+
+ACTIVE UI:
+app/static/css/kemet-ui.css
+app/static/js/kemet-ui.js
+
+LEGACY UI:
+archive/ui_legacy/
+
+DATABASES:
+instance/supportai.db
+instance/rag.db
+
+DATABASE STATUS:
+Preserved
+Migration deferred
+
+DEPLOYMENT:
+Procfile
+gunicorn.conf.py
+run_production.sh
+
+GUNICORN:
+Configured
+
+HANDOFF:
+KEMET_AI_FINAL_HANDOFF.tar.gz
+
+CURRENT PHASE:
+Final build completed
+
+TESTING:
+Deferred to final testing gate
+
+PRODUCTION DEPLOYMENT:
+Deferred
+
+IMPORTANT:
+Do not delete or replace the existing databases.
+Do not restore legacy UI into active paths.
+Do not modify active UI assets unless explicitly required.

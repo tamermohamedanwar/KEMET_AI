@@ -1,0 +1,747 @@
+
+/* =========================================================
+   KEMET AI — CLEAN PREMIUM AI SAAS DESIGN SYSTEM
+   Version: 2026
+   Light / Modern / Joyful / Professional
+   ========================================================= */
+
+:root {
+    --k-bg: #f7f9fc;
+    --k-surface: #ffffff;
+    --k-surface-soft: #f8faff;
+
+    --k-text: #172033;
+    --k-text-soft: #344054;
+    --k-muted: #7b8798;
+
+    --k-border: #e7ebf2;
+    --k-border-soft: #eef1f6;
+
+    --k-primary: #635bff;
+    --k-primary-dark: #5148e5;
+    --k-primary-soft: #f0efff;
+
+    --k-cyan: #06b6d4;
+    --k-green: #10b981;
+    --k-orange: #f59e0b;
+    --k-red: #ef4444;
+
+    --k-radius-xs: 9px;
+    --k-radius-sm: 12px;
+    --k-radius-md: 16px;
+    --k-radius-lg: 22px;
+    --k-radius-xl: 28px;
+
+    --k-shadow:
+        0 8px 30px rgba(15, 23, 42, .055);
+
+    --k-shadow-hover:
+        0 18px 45px rgba(15, 23, 42, .10);
+
+    --k-focus:
+        0 0 0 4px rgba(99, 91, 255, .10);
+}
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 88% 0%,
+            rgba(99, 91, 255, .075),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 5% 18%,
+            rgba(6, 182, 212, .045),
+            transparent 22%
+        ),
+        var(--k-bg) !important;
+
+    color: var(--k-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--k-text);
+    font-weight: 800;
+    letter-spacing: -.45px;
+}
+
+.text-muted {
+    color: var(--k-muted) !important;
+}
+
+a {
+    transition:
+        color .16s ease,
+        opacity .16s ease;
+}
+
+/* =========================================================
+   SIDEBAR / NAVIGATION
+   ========================================================= */
+
+.sidebar,
+.admin-sidebar,
+aside {
+    background: rgba(255,255,255,.94) !important;
+    border-right: 1px solid var(--k-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.sidebar a,
+.admin-sidebar a,
+aside a {
+    border-radius: var(--k-radius-sm);
+    margin: 3px 8px;
+    transition:
+        background .16s ease,
+        color .16s ease,
+        transform .16s ease;
+}
+
+.sidebar a:hover,
+.admin-sidebar a:hover,
+aside a:hover {
+    background: var(--k-primary-soft) !important;
+    color: var(--k-primary) !important;
+    transform: translateX(2px);
+}
+
+.sidebar .active,
+.admin-sidebar .active,
+aside .active {
+    background:
+        linear-gradient(
+            135deg,
+            #f0efff,
+            #f3fbff
+        ) !important;
+
+    color: var(--k-primary) !important;
+    font-weight: 800;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+main,
+.admin-content,
+.content {
+    color: var(--k-text);
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+    border: 1px solid var(--k-border) !important;
+    border-radius: var(--k-radius-lg) !important;
+    background: rgba(255,255,255,.97) !important;
+    box-shadow: var(--k-shadow) !important;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+.card:hover {
+    box-shadow: var(--k-shadow-hover) !important;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--k-border-soft) !important;
+    background: transparent !important;
+    color: var(--k-text);
+}
+
+/* =========================================================
+   KPI / METRICS
+   ========================================================= */
+
+.kpi,
+.k-kpi,
+.stat-card,
+.metric-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi::after,
+.k-kpi::after,
+.stat-card::after,
+.metric-card::after {
+    content: "";
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    right: -35px;
+    top: -35px;
+
+    border-radius: 50%;
+    background: rgba(99,91,255,.055);
+
+    pointer-events: none;
+}
+
+.kpi-value,
+.k-kpi-value,
+.metric-value {
+    color: var(--k-text);
+    font-weight: 850;
+    letter-spacing: -.8px;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn {
+    border-radius: var(--k-radius-sm) !important;
+    font-weight: 700;
+
+    transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--k-primary) !important;
+    border-color: var(--k-primary) !important;
+
+    box-shadow:
+        0 7px 20px rgba(99,91,255,.18);
+}
+
+.btn-primary:hover {
+    background: var(--k-primary-dark) !important;
+    border-color: var(--k-primary-dark) !important;
+
+    box-shadow:
+        0 10px 25px rgba(99,91,255,.23);
+}
+
+.btn-outline-primary {
+    color: var(--k-primary) !important;
+    border-color: #dcd9ff !important;
+    background: #fff !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--k-primary-soft) !important;
+}
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+.form-control,
+.form-select,
+textarea {
+    min-height: 44px;
+
+    border: 1px solid var(--k-border) !important;
+    border-radius: var(--k-radius-sm) !important;
+
+    background: #fff !important;
+    color: var(--k-text) !important;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    border-color: rgba(99,91,255,.55) !important;
+    box-shadow: var(--k-focus) !important;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.table {
+    color: var(--k-text) !important;
+}
+
+.table thead th {
+    color: var(--k-muted);
+
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    font-weight: 800;
+
+    border-bottom:
+        1px solid var(--k-border) !important;
+
+    white-space: nowrap;
+}
+
+.table tbody td {
+    border-color: var(--k-border-soft) !important;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background: #fafbff;
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge {
+    border-radius: var(--k-radius-xs) !important;
+    padding: 7px 10px !important;
+    font-weight: 750 !important;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress {
+    background: #edf0f6 !important;
+    border-radius: 99px !important;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 99px !important;
+}
+
+/* =========================================================
+   AI STATUS
+   ========================================================= */
+
+.k-ai-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 99px;
+
+    background: var(--k-primary-soft);
+    color: var(--k-primary);
+
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.k-ai-status::before {
+    content: "";
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--k-green);
+
+    box-shadow:
+        0 0 0 4px rgba(16,185,129,.10);
+}
+
+/* =========================================================
+   AI GRADIENT SURFACES
+   ========================================================= */
+
+.k-ai-gradient,
+.k-command-center {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f6f4ff 52%,
+            #f0fbff 100%
+        ) !important;
+
+    border: 1px solid #e7e4ff !important;
+}
+
+.k-command-center {
+    border-radius: var(--k-radius-xl);
+    padding: 28px;
+    box-shadow: var(--k-shadow);
+}
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.k-quick-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px;
+
+    border: 1px solid var(--k-border);
+    border-radius: var(--k-radius-md);
+
+    background: #fff;
+    color: var(--k-text);
+
+    text-decoration: none;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease,
+        color .18s ease;
+}
+
+.k-quick-action:hover {
+    color: var(--k-primary);
+
+    transform: translateY(-3px);
+
+    border-color: #dcd9ff;
+
+    box-shadow: var(--k-shadow-hover);
+}
+
+.k-ai-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eeeaff,
+            #eafaff
+        );
+
+    color: var(--k-primary);
+    font-weight: 900;
+}
+
+/* =========================================================
+   REVENUE COMMAND CENTER
+   ========================================================= */
+
+.k-revenue {
+    max-width: 1700px;
+    margin: 0 auto;
+
+    padding:
+        26px
+        24px
+        60px;
+}
+
+.k-revenue-hero {
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid var(--k-border);
+    border-radius: var(--k-radius-xl);
+
+    padding: 34px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f7f6ff 55%,
+            #f0fbff 100%
+        );
+
+    box-shadow: var(--k-shadow);
+}
+
+.k-revenue-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    right: -100px;
+    top: -130px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(99,91,255,.075);
+
+    pointer-events: none;
+}
+
+.k-revenue-hero h1 {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    font-size:
+        clamp(1.8rem, 4vw, 2.8rem);
+
+    font-weight: 850;
+    letter-spacing: -1.3px;
+}
+
+.k-revenue .card {
+    border-radius: var(--k-radius-lg);
+}
+
+.k-section-title {
+    color: var(--k-text);
+    font-weight: 820;
+}
+
+/* =========================================================
+   HEALTH
+   ========================================================= */
+
+.k-health {
+    border-radius: var(--k-radius-lg);
+}
+
+.k-health-score {
+    color: var(--k-primary);
+
+    font-size: 2.8rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.k-health-track {
+    height: 9px;
+
+    border-radius: 99px;
+
+    background: #edf0f7;
+    overflow: hidden;
+}
+
+.k-health-fill {
+    height: 100%;
+
+    border-radius: 99px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--k-primary),
+            var(--k-cyan)
+        ) !important;
+}
+
+.k-stat {
+    height: 100%;
+
+    border: 1px solid var(--k-border);
+    border-radius: var(--k-radius-md);
+
+    padding: 16px;
+
+    background: var(--k-surface-soft);
+}
+
+.k-stat strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--k-text);
+
+    font-size: 1.35rem;
+    font-weight: 850;
+}
+
+/* =========================================================
+   OPPORTUNITIES
+   ========================================================= */
+
+.k-opportunity {
+    border-left: 3px solid transparent;
+
+    transition:
+        background .15s ease,
+        transform .15s ease;
+}
+
+.k-opportunity:hover {
+    background: #f8faff;
+}
+
+.k-opportunity-danger {
+    border-left-color: var(--k-red);
+}
+
+.k-opportunity-warning {
+    border-left-color: var(--k-orange);
+}
+
+.k-opportunity-success {
+    border-left-color: var(--k-green);
+}
+
+.k-opportunity-muted {
+    border-left-color: #94a3b8;
+}
+
+.k-score {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 13px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 850;
+    font-size: .8rem;
+
+    color: var(--k-primary);
+    background: var(--k-primary-soft);
+}
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.alert {
+    border: 1px solid var(--k-border) !important;
+    border-radius: var(--k-radius-md) !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    body {
+        font-size: .92rem;
+    }
+
+    .card {
+        border-radius: 17px !important;
+    }
+
+    .card-body {
+        padding: 17px !important;
+    }
+
+    h1 {
+        font-size: 1.7rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        min-height: 42px;
+    }
+
+    .table-responsive {
+        border-radius: 15px;
+    }
+
+    .table {
+        min-width: 680px;
+    }
+
+    .k-command-center {
+        padding: 20px 17px;
+        border-radius: 20px;
+    }
+
+    .k-revenue {
+        padding:
+            14px
+            12px
+            40px;
+    }
+
+    .k-revenue-hero {
+        padding: 22px 18px;
+        border-radius: 21px;
+    }
+
+    .k-revenue-hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .k-health-score {
+        font-size: 2.2rem;
+    }
+
+    .k-stat {
+        padding: 13px;
+    }
+
+    .k-stat strong {
+        font-size: 1.15rem;
+    }
+}
+
+/* =========================================================
+   LARGE SCREENS
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    main,
+    .admin-content,
+    .content {
+        max-width: 1700px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .k-revenue {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}

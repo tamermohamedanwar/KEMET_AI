@@ -1,0 +1,598 @@
+from app.automation.action_registry import registry
+import json
+import hashlib
+from datetime import datetime
+
+from app import db
+from app.models.automation import (
+    AutomationWorkflow,
+    AutomationAction,
+    AutomationExecution,
+)
+from app.services.automation_service import automation_service
+from app.services.automation_approval_service import automation_approval_service
+from app.services.ai_usage_service import check_limit, record_usage
+from app.automation.router import AutomationRouter
+
+
+class AutomationEngine:
+    @staticmethod
+    def _build_idempotency_key(
+        workflow_id,
+        event,
+        data,
+        organization_id,
+    ):
+        payload = {
+            "organization_id": organization_id,
+            "workflow_id": workflow_id,
+            "event": event or "unknown",
+            "data": data or {},
+        }
+
+        canonical = json.dumps(
+            payload,
+            sort_keys=True,
+            ensure_ascii=False,
+            default=str,
+        )
+
+        return hashlib.sha256(
+            canonical.encode("utf-8")
+        ).hexdigest()
+
+    def __init__(self):
+        self.workflows = []
+        self.router = AutomationRouter()
+
+    def register(self, workflow):
+        self.workflows.append(workflow)
+
+    def _execute_action(self, action, config, data):
+        action_type = action.action_type
+
+        parameters = {}
+
+        if isinstance(config, dict):
+            parameters.update(config)
+
+        if isinstance(data, dict):
+            for key, value in data.items():
+                parameters.setdefault(key, value)
+
+        organization_id = parameters.get("organization_id")
+        user_id = parameters.get("user_id")
+
+        if organization_id is not None and user_id is not None:
+            from app.models.user import User
+
+            user = User.query.filter_by(id=user_id).first()
+
+            if not user:
+                return {
+                    "success": False,
+                    "status": "blocked",
+                    "error": "Tenant security violation: user not found.",
+                    "organization_id": organization_id,
+                    "user_id": user_id,
+                }
+
+            if user.organization_id != organization_id:
+                return {
+                    "success": False,
+                    "status": "blocked",
+                    "error": "Tenant security violation: user does not belong to organization.",
+                    "organization_id": organization_id,
+                    "user_id": user_id,
+                    "user_organization_id": user.organization_id,
+                }
+
+        result = registry.execute(
+            action_type,
+            parameters,
+            user_id=user_id,
+        )
+
+        if isinstance(result, dict):
+            return result
+
+        return {
+            "success": True,
+            "action": action_type,
+            "result": result,
+        }
+
+    def execute(self, event=None, data=None, organization_id=None, workflow_id=None):
+        data = data or {}
+        results = []
+
+        # Resolve organization from an explicitly selected database workflow.
+        # This allows direct workflow execution while preserving tenant isolation.
+        if workflow_id is not None and organization_id is None:
+            selected_workflow = AutomationWorkflow.query.filter_by(
+                id=workflow_id
+            ).first()
+
+            if selected_workflow is not None:
+                organization_id = selected_workflow.organization_id
+
+        # Propagate tenant context into action parameters.
+        # Preserve an explicitly supplied user_id.
+        if organization_id is not None:
+            data["organization_id"] = organization_id
+
+        # Legacy workflows
+        for workflow in self.workflows:
+            if workflow.get("event") == event:
+                results.append({
+                    "workflow": workflow.get("name"),
+                    "action": workflow.get("action"),
+                    "status": "queued",
+                    "source": "legacy",
+                })
+
+        # Database workflows require organization
+        if not organization_id:
+            return results
+
+        workflow_query = AutomationWorkflow.query.filter_by(
+            organization_id=organization_id,
+            is_active=True,
+        )
+
+        # Billing / usage guard:
+        # Do not execute paid AI automation when the organization
+        # has exhausted its current plan allowance.
+        try:
+            usage_limit = check_limit(organization_id)
+        except Exception as exc:
+            return [{
+                "status": "failed",
+                "source": "billing",
+                "error": f"Usage check failed: {exc}",
+            }]
+
+        if not usage_limit.get("allowed", False):
+            return [{
+                "status": "blocked",
+                "source": "billing",
+                "organization_id": organization_id,
+                "plan": usage_limit.get("plan"),
+                "limit": usage_limit.get("limit"),
+                "used": usage_limit.get("used"),
+                "remaining": usage_limit.get("remaining"),
+                "error": "Automation usage limit reached.",
+            }]
+
+        if workflow_id is not None:
+            workflow_query = workflow_query.filter_by(id=workflow_id)
+        elif event == "ticket_message_created":
+            routed_action = self.router.route(data.get("message"))
+
+            workflow_ids = [
+                action.workflow_id
+                for action in AutomationAction.query
+                .filter_by(
+                    action_type=routed_action,
+                    is_active=True,
+                )
+                .all()
+            ]
+
+            if workflow_ids:
+                workflow_query = workflow_query.filter(
+                    AutomationWorkflow.id.in_(workflow_ids)
+                )
+            else:
+                workflow_query = workflow_query.filter(
+                    AutomationWorkflow.id == -1
+                )
+        else:
+            workflow_query = workflow_query.filter_by(trigger_type=event)
+
+        workflows = (
+            workflow_query
+            .order_by(AutomationWorkflow.id.asc())
+            .all()
+        )
+
+        for workflow in workflows:
+            idempotency_key = self._build_idempotency_key(
+                workflow_id=workflow.id,
+                event=event,
+                data=data,
+                organization_id=organization_id,
+            )
+
+            existing_execution = (
+                AutomationExecution.query
+                .filter_by(
+                    workflow_id=workflow.id,
+                    idempotency_key=idempotency_key,
+                )
+                .order_by(
+                    AutomationExecution.id.desc()
+                )
+                .first()
+            )
+
+            if existing_execution is not None:
+                results.append({
+                    "workflow": workflow.id,
+                    "workflow_name": workflow.name,
+                    "status": "deduplicated",
+                    "source": "idempotency",
+                    "execution_id": existing_execution.id,
+                    "execution_status": existing_execution.status,
+                    "idempotency_key": idempotency_key,
+                })
+                continue
+
+            execution = AutomationExecution(
+                workflow_id=workflow.id,
+                trigger_type=event or "unknown",
+                status="running",
+                input_json=json.dumps(
+                    data,
+                    ensure_ascii=False,
+                    default=str,
+                ),
+                started_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
+            )
+
+            db.session.add(execution)
+            db.session.flush()
+
+            try:
+                actions = (
+                    AutomationAction.query
+                    .filter_by(
+                        workflow_id=workflow.id,
+                        is_active=True,
+                    )
+                    .order_by(AutomationAction.position.asc())
+                    .all()
+                )
+
+                action_results = []
+
+                for action in actions:
+                    config = {}
+
+                    if action.config_json:
+                        try:
+                            config = json.loads(action.config_json)
+                        except Exception:
+                            config = {}
+
+                    action_result = self._execute_action(
+                        action,
+                        config,
+                        data,
+                    )
+
+                    # Human approval gate.
+                    # Actions explicitly requesting approval are persisted
+                    # and execution stops before any downstream action.
+                    if (
+                        isinstance(action_result, dict)
+                        and action_result.get("approval_required") is True
+                    ):
+                        approval = automation_approval_service.create(
+                            organization_id=organization_id,
+                            action_type=action.action_type,
+                            reason=(
+                                action_result.get("message")
+                                or action_result.get("reason")
+                                or f"Human approval required for {action.action_type}"
+                            ),
+                            request_data={
+                                "action_id": action.id,
+                                "action": action.action_type,
+                                "parameters": config,
+                                "data": data,
+                                "action_result": action_result,
+                            },
+                            workflow_id=workflow.id,
+                            execution_id=execution.id,
+                            requested_by=data.get("user_id"),
+                        )
+
+                        action_result = {
+                            **action_result,
+                            "approval_id": approval.get("approval_id"),
+                            "status": "pending",
+                            "approval_required": True,
+                            "requires_human": True,
+                            "financial_action_executed": False,
+                        }
+
+                        action_results.append({
+                            'action_id': action.id,
+                            'action_type': action.action_type,
+                            'config': config,
+                            'result': action_result,
+                            "status": "waiting_approval",
+                        })
+
+                        execution.status = "waiting_approval"
+                        execution.output_json = json.dumps(
+                            action_results,
+                            ensure_ascii=False,
+                            default=str,
+                        )
+                        execution.completed_at = None
+
+                        results.append({
+                            'workflow': workflow.name,
+                            'workflow_id': workflow.id,
+                            'execution_id': execution.id,
+                            "status": "waiting_approval",
+                            "approval_id": approval.get("approval_id"),
+                            "approval_required": True,
+                            "requires_human": True,
+                            "financial_action_executed": False,
+                            'actions': action_results,
+                            "source": "database",
+                        })
+
+                        break
+
+                    action_results.append({
+                        "action_id": action.id,
+                        "action_type": action.action_type,
+                        "config": config,
+                        "result": action_result,
+                        "status": (
+                            "completed"
+                            if action_result.get("success")
+                            else "failed"
+                        ),
+                    })
+
+                    if not action_result.get("success"):
+                        raise RuntimeError(
+                            action_result.get(
+                                "message",
+                                "Automation action failed",
+                            )
+                        )
+
+                if execution.status != "waiting_approval":
+                    execution.status = "completed"
+                    execution.output_json = json.dumps(
+                        action_results,
+                        ensure_ascii=False,
+                        default=str,
+                    )
+                    execution.completed_at = datetime.utcnow()
+
+                    results.append({
+                        "workflow": workflow.name,
+                        "workflow_id": workflow.id,
+                        "status": "completed",
+                        "actions": action_results,
+                        "source": "database",
+                    })
+
+            except Exception as exc:
+                db.session.rollback()
+
+                execution.status = "failed"
+                execution.error_message = str(exc)
+                execution.completed_at = datetime.utcnow()
+
+                db.session.add(execution)
+
+                results.append({
+                    "workflow": workflow.name,
+                    "workflow_id": workflow.id,
+                    "status": "failed",
+                    "error": str(exc),
+                    "source": "database",
+                })
+
+        db.session.commit()
+
+        return results
+
+
+
+    def resume_after_approval(
+        self,
+        approval_id,
+        execution_id,
+        workflow_id,
+        organization_id,
+    ):
+        from app.models.automation import (
+            AutomationAction,
+            AutomationApproval,
+            AutomationExecution,
+            AutomationWorkflow,
+        )
+
+        approval = AutomationApproval.query.get(approval_id)
+        execution = AutomationExecution.query.get(execution_id)
+        workflow = AutomationWorkflow.query.get(workflow_id)
+
+        if not approval:
+            raise RuntimeError("Approval request not found.")
+        if approval.status != "approved":
+            raise RuntimeError(
+                f"Approval is not approved: {approval.status}"
+            )
+        if not execution:
+            raise RuntimeError("Automation execution not found.")
+        if not workflow:
+            raise RuntimeError("Automation workflow not found.")
+
+        # --------------------------------------------------------
+        # CENTRAL EXECUTION GATE
+        # --------------------------------------------------------
+        # Approved status alone is NOT authorization.
+        # The execution must carry the exact plan and its
+        # cryptographic authorization.
+        decision_data = {}
+
+        if approval.decision_json:
+            try:
+                decision_data = json.loads(
+                    approval.decision_json
+                )
+            except Exception:
+                decision_data = {}
+
+        plan = decision_data.get("plan")
+        authorization = decision_data.get("authorization")
+
+        if not plan:
+            raise RuntimeError(
+                "Execution plan authorization is missing."
+            )
+
+        if not authorization:
+            raise RuntimeError(
+                "Execution authorization is missing."
+            )
+
+        action_from_plan = plan.get("action")
+
+        if not action_from_plan:
+            raise RuntimeError(
+                "Authorized execution action is missing."
+            )
+
+        context = plan.get("context") or {}
+
+        action_id_from_plan = context.get("action_id")
+
+        if not action_id_from_plan:
+            raise RuntimeError(
+                "Authorized plan action_id is missing."
+            )
+
+        if context.get("approval_id") != approval.id:
+            raise RuntimeError(
+                "Authorized plan approval mismatch."
+            )
+
+        if context.get("execution_id") != execution.id:
+            raise RuntimeError(
+                "Authorized plan execution mismatch."
+            )
+
+        if context.get("workflow_id") != workflow.id:
+            raise RuntimeError(
+                "Authorized plan workflow mismatch."
+            )
+
+        if context.get("organization_id") != organization_id:
+            raise RuntimeError(
+                "Authorized plan organization mismatch."
+            )
+
+        from app.core.execution.execution_boundary import execution_boundary
+
+        gate_result = execution_boundary.require(
+            plan=plan,
+            authorization=authorization,
+            action=action_from_plan,
+        )
+
+        if not gate_result.get("allowed"):
+            raise RuntimeError(
+                gate_result.get(
+                    "error",
+                    "Central execution gate denied execution.",
+                )
+            )
+
+        action_type = action_from_plan
+
+        plan_parameters = plan.get("parameters")
+        if not isinstance(plan_parameters, dict):
+            raise RuntimeError(
+                "Authorized plan parameters are invalid."
+            )
+
+        plan_data = plan.get("data")
+        if plan_data is None:
+            plan_data = {}
+
+        if not isinstance(plan_data, dict):
+            raise RuntimeError(
+                "Authorized plan data are invalid."
+            )
+
+        action = AutomationAction.query.filter_by(
+            id=action_id_from_plan,
+            workflow_id=workflow.id,
+            action_type=action_type,
+            is_active=True,
+        ).first()
+
+        if not action:
+            raise RuntimeError(
+                f"Authorized action not found: {action_id_from_plan}"
+            )
+
+        parameters = dict(plan_parameters)
+        data = dict(plan_data)
+
+        result = self._execute_action(
+            action,
+            parameters,
+            data,
+        )
+
+        if not isinstance(result, dict):
+            result = {
+                "success": bool(result),
+                "result": result,
+            }
+
+        if result.get("approval_required"):
+            raise RuntimeError(
+                "Action requested approval again."
+            )
+
+        if not result.get("success"):
+            raise RuntimeError(
+                result.get(
+                    "message",
+                    "Approved automation action failed.",
+                )
+            )
+
+        output = [{
+            "action_id": action.id,
+            "action_type": action.action_type,
+            "result": result,
+            "status": "completed",
+            "approval_id": approval_id,
+        }]
+
+        execution.status = "completed"
+        execution.output_json = json.dumps(
+            output,
+            ensure_ascii=False,
+            default=str,
+        )
+        execution.error_message = None
+        execution.completed_at = datetime.utcnow()
+
+        db.session.add(execution)
+        db.session.commit()
+
+        return {
+            "success": True,
+            "status": "completed",
+            "approval_id": approval_id,
+            "execution_id": execution.id,
+            "workflow_id": workflow.id,
+            "actions": output,
+        }
+
+engine = AutomationEngine()

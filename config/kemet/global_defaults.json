@@ -1,0 +1,17 @@
+{
+  "product": "Kemet",
+  "category": "AI Business Operating System",
+  "tagline": "Don't use another AI tool. Run your business with Kemet.",
+  "default_locale": "en",
+  "supported_locales": ["en", "ar"],
+  "default_currency": "USD",
+  "execution": {
+    "require_approval_for_external_side_effects": true,
+    "max_retry_attempts": 3,
+    "audit_every_execution": true
+  },
+  "tenancy": {
+    "enabled": true,
+    "isolate_business_data": true
+  }
+}

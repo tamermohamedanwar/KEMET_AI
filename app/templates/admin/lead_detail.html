@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Kemet AI — Lead</title>
 
 <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/kemet-v2.css') }}">
 
 <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/kemet-v3.css') }}">
 
 <style>
 body {
@@ -69,7 +68,7 @@ textarea {
 }
 
 button {
-    background: #2563eb;
+    background: #374151;
     color: #fff;
     border: 0;
     padding: 10px 16px;
@@ -90,9 +89,15 @@ button {
 }
 
 a {
-    color: #60a5fa;
+    color: #9ca3af;
 }
 </style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>

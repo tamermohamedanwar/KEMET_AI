@@ -6,8 +6,29 @@ class AutomationService:
 
     def execute(self, action, parameters=None, user_id=None):
         """
-        Central dispatcher for automation actions.
+        Compatibility facade for legacy callers.
+
+        All business execution must enter through the governed execution
+        service so legacy call sites cannot bypass policy, authorization,
+        entitlement checks, or the canonical runtime.
         """
+        from app.models.user import User
+        from app.core.execution.governed_executor import governed_execution_service
+
+        organization_id = None
+        if user_id is not None:
+            user = User.query.filter_by(id=user_id).first()
+            organization_id = getattr(user, "organization_id", None)
+
+        return governed_execution_service.execute(
+            action=action,
+            parameters=parameters or {},
+            organization_id=organization_id,
+            user_id=user_id,
+        )
+
+    def _legacy_execute(self, action, parameters=None, user_id=None):
+        """Legacy internal action dispatch; never call from request boundaries."""
         handlers = {
             "check_order": self.check_order,
             "generate_ai_reply": self.generate_ai_reply,

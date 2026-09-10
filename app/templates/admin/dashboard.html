@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -387,6 +388,42 @@ flex:1;
 justify-content:center
 }
 }
+
+<style>
+.bos-approval-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.bos-approval-btn{
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    padding:7px 12px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    background:#fff;
+}
+
+.bos-approval-btn:hover{
+    opacity:.85;
+}
+
+.bos-approval-btn.approve{
+    border-color:#86efac;
+}
+
+.bos-approval-btn.reject{
+    border-color:#fca5a5;
+}
+
+.bos-approval-btn.snooze{
+    border-color:#fde68a;
+}
+</style>
+
 </style>
 
 <style>
@@ -538,8 +575,12 @@ justify-content:center
 }
 </style>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
@@ -2193,101 +2234,430 @@ loadKPI("30d");
 </script>
 <!-- dashboard-shell-end -->
 </div>
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 
 <!-- KEMET_AI_V59_EXECUTIVE_CONTROL_CENTER -->
-<section id="kemet-executive-control-center"
-         style="margin:24px 0;padding:24px;border:1px solid #e5e7eb;border-radius:16px;background:#ffffff;">
 
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+<section id="kemet-executive-control-center"
+         class="kemet-bos-command-center">
+
+    <div class="kemet-bos-header">
         <div>
-            <h2 style="margin:0 0 6px;">Executive Control Center</h2>
-            <p id="kemet-executive-focus"
-               style="margin:0;color:#6b7280;">
-                Loading business intelligence...
+            <span class="kemet-bos-eyebrow">KEMET AI BOS</span>
+            <h2>Executive Command Center</h2>
+            <p id="kemet-bos-summary">
+                Business intelligence and priority decisions.
             </p>
         </div>
 
-        <div id="kemet-governance-badge"
-             style="padding:8px 12px;border-radius:999px;background:#f3f4f6;font-size:13px;">
-            ADVISORY
-        </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:20px;">
-
-        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
-            <div style="font-size:13px;color:#6b7280;">Health Score</div>
-            <div id="kemet-health-score"
-                 style="font-size:32px;font-weight:700;margin-top:6px;">
-                —
+        <div class="kemet-bos-health">
+            <div class="kemet-bos-health-ring">
+                <span id="kemet-bos-health-score">--</span>
             </div>
-        </div>
-
-        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
-            <div style="font-size:13px;color:#6b7280;">Total Decisions</div>
-            <div id="kemet-total-decisions"
-                 style="font-size:32px;font-weight:700;margin-top:6px;">
-                —
-            </div>
-        </div>
-
-        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
-            <div style="font-size:13px;color:#6b7280;">High Priority</div>
-            <div id="kemet-high-decisions"
-                 style="font-size:32px;font-weight:700;margin-top:6px;">
-                —
-            </div>
-        </div>
-
-        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:12px;">
-            <div style="font-size:13px;color:#6b7280;">Medium Priority</div>
-            <div id="kemet-medium-decisions"
-                 style="font-size:32px;font-weight:700;margin-top:6px;">
-                —
-            </div>
-        </div>
-
-    </div>
-
-    <div style="margin-top:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">Top Decisions</h3>
-            <span id="kemet-approval-status"
-                  style="font-size:13px;color:#6b7280;">
-                Approval required
-            </span>
-        </div>
-
-        <div id="kemet-top-decisions">
-            <div style="padding:16px;color:#6b7280;">
-                Loading decisions...
+            <div>
+                <strong>Business Health</strong>
+                <small id="kemet-bos-focus">
+                    Loading intelligence...
+                </small>
             </div>
         </div>
     </div>
 
-    <div style="margin-top:24px;padding:16px;border-radius:12px;background:#f9fafb;">
-        <div style="font-weight:600;margin-bottom:8px;">
-            Governance
+    <div class="kemet-bos-kpis">
+        <div class="kemet-bos-kpi">
+            <span>Total Decisions</span>
+            <strong id="kemet-bos-total">0</strong>
         </div>
 
-        <div id="kemet-governance-details"
-             style="font-size:14px;color:#6b7280;">
-            Advisory mode. No external actions or database mutations are enabled.
+        <div class="kemet-bos-kpi kemet-bos-kpi-high">
+            <span>High Priority</span>
+            <strong id="kemet-bos-high">0</strong>
+        </div>
+
+        <div class="kemet-bos-kpi kemet-bos-kpi-medium">
+            <span>Medium Priority</span>
+            <strong id="kemet-bos-medium">0</strong>
+        </div>
+
+        <div class="kemet-bos-kpi">
+            <span>Signals</span>
+            <strong id="kemet-bos-signals">0</strong>
+        </div>
+    </div>
+
+    <div class="kemet-bos-section-title">
+        <div>
+            <h3>Top Business Decisions</h3>
+            <p>Highest-impact recommendations requiring management attention.</p>
+        </div>
+        <span id="kemet-bos-decision-status">Live</span>
+    </div>
+
+    <div id="kemet-bos-decisions"
+         class="kemet-bos-decisions">
+        <div class="kemet-bos-loading">
+            Loading BOS intelligence...
+        </div>
+    </div>
+
+    <div class="kemet-bos-section-title" style="margin-top:28px;">
+        <div>
+            <h3>Governance Control</h3>
+            <p>Live policy, approval, execution, and audit state.</p>
+        </div>
+        <span id="kemet-governance-live-status">Loading</span>
+    </div>
+
+    <div id="kemet-governance-panel" class="kemet-governance-panel">
+        <div class="kemet-governance-summary">
+            <div class="kemet-governance-card">
+                <span>Safe Execution</span>
+                <strong id="kemet-governance-safe">0</strong>
+            </div>
+            <div class="kemet-governance-card">
+                <span>Approval Required</span>
+                <strong id="kemet-governance-approval">0</strong>
+            </div>
+            <div class="kemet-governance-card">
+                <span>Blocked</span>
+                <strong id="kemet-governance-blocked">0</strong>
+            </div>
+            <div class="kemet-governance-card">
+                <span>Executions</span>
+                <strong id="kemet-governance-executions">0</strong>
+            </div>
+        </div>
+
+        <div class="kemet-governance-details" id="kemet-governance-details-list">
+            Loading governance state...
+        </div>
+
+        <div class="kemet-governance-audit">
+            <strong>Recent Audit</strong>
+            <div id="kemet-governance-audit-list">
+                Loading audit records...
+            </div>
         </div>
     </div>
 
     <div id="kemet-control-center-error"
-         style="display:none;margin-top:16px;padding:12px;border-radius:10px;background:#fef2f2;color:#991b1b;">
-    </div>
+         class="kemet-bos-error"
+         hidden></div>
 </section>
+
+<style>
+
+.kemet-governance-panel {
+    margin-top: 12px;
+    padding: 18px;
+    border: 1px solid rgba(127,127,127,.18);
+    border-radius: 16px;
+}
+
+.kemet-governance-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.kemet-governance-card {
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(127,127,127,.06);
+}
+
+.kemet-governance-card span {
+    display: block;
+    font-size: 12px;
+    opacity: .72;
+}
+
+.kemet-governance-card strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 24px;
+}
+
+.kemet-governance-details {
+    margin-top: 14px;
+    display: grid;
+    gap: 8px;
+}
+
+.kemet-governance-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(127,127,127,.045);
+}
+
+.kemet-governance-row strong {
+    text-transform: uppercase;
+}
+
+.kemet-governance-audit {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(127,127,127,.14);
+}
+
+.kemet-governance-audit-list {
+    margin-top: 10px;
+}
+
+@media (max-width: 760px) {
+    .kemet-governance-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kemet-governance-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+.kemet-bos-command-center {
+    margin: 24px 0;
+    padding: 28px;
+    border-radius: 20px;
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+
+.kemet-bos-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+}
+
+.kemet-bos-eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    opacity: .65;
+}
+
+.kemet-bos-header h2 {
+    margin: 5px 0;
+}
+
+.kemet-bos-header p,
+.kemet-bos-section-title p {
+    margin: 0;
+    opacity: .68;
+}
+
+.kemet-bos-health {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 220px;
+}
+
+.kemet-bos-health-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 7px solid #16a34a;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.kemet-bos-health small {
+    display: block;
+    margin-top: 4px;
+    opacity: .65;
+}
+
+.kemet-bos-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.kemet-bos-kpi {
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(127,127,127,.07);
+}
+
+.kemet-bos-kpi span {
+    display: block;
+    font-size: 12px;
+    opacity: .65;
+}
+
+.kemet-bos-kpi strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 25px;
+}
+
+.kemet-bos-kpi-high strong {
+    color: #dc2626;
+}
+
+.kemet-bos-kpi-medium strong {
+    color: #d97706;
+}
+
+.kemet-bos-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0 14px;
+}
+
+.kemet-bos-section-title h3 {
+    margin: 0 0 4px;
+}
+
+#kemet-bos-decision-status {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(22,163,74,.1);
+}
+
+.kemet-bos-decisions {
+    display: grid;
+    gap: 12px;
+}
+
+.kemet-bos-decision {
+    padding: 18px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 15px;
+}
+
+.kemet-bos-decision-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.kemet-bos-decision h4 {
+    margin: 0;
+}
+
+.kemet-bos-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 10px 0;
+}
+
+.kemet-bos-badge {
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(127,127,127,.1);
+}
+
+.kemet-bos-high {
+    color: #b91c1c;
+    background: rgba(220,38,38,.1);
+}
+
+.kemet-bos-medium {
+    color: #b45309;
+    background: rgba(217,119,6,.1);
+}
+
+.kemet-bos-decision-reason {
+    margin: 8px 0;
+    opacity: .78;
+}
+
+.kemet-bos-action {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(59,130,246,.07);
+}
+
+.kemet-bos-action strong {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.kemet-bos-loading,
+.kemet-bos-error {
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.kemet-bos-error {
+    margin-top: 14px;
+    color: #b91c1c;
+    background: rgba(220,38,38,.08);
+}
+
+@media (max-width: 800px) {
+    .kemet-bos-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .kemet-bos-kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
 
 <script>
 (function () {
     "use strict";
 
-    const endpoint = "/dashboard/api/bos/control-center";
+    
+async function transitionBOSDecision(decisionId, transition) {
+    const response = await fetch(
+        "/dashboard/api/bos/decision-transition",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                decision_id: decisionId,
+                transition: transition
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || data.ok !== true) {
+        throw new Error(
+            data.message || "Decision transition failed."
+        );
+    }
+
+    return data;
+}
+
+function getCSRFToken() {
+    const meta = document.querySelector(
+        'meta[name="csrf-token"]'
+    );
+
+    return meta ? meta.getAttribute("content") : "";
+}
+
+const endpoint = "/dashboard/api/bos/control-center";
 
     function setText(id, value) {
         const element = document.getElementById(id);
@@ -2305,7 +2675,86 @@ loadKPI("30d");
             .replace(/'/g, "&#039;");
     }
 
-    function renderDecisions(decisions) {
+    
+function renderBOSApprovalActions(decision) {
+    const decisionId =
+        decision.id ||
+        decision.decision_id ||
+        decision.decisionId;
+
+    if (!decisionId) {
+        return "";
+    }
+
+    return `
+        <div class="bos-approval-actions">
+            <button
+                type="button"
+                class="bos-approval-btn approve"
+                onclick="handleBOSDecisionTransition(${decisionId}, 'approve')"
+            >
+                Approve
+            </button>
+
+            <button
+                type="button"
+                class="bos-approval-btn reject"
+                onclick="handleBOSDecisionTransition(${decisionId}, 'reject')"
+            >
+                Reject
+            </button>
+
+            <button
+                type="button"
+                class="bos-approval-btn snooze"
+                onclick="handleBOSDecisionTransition(${decisionId}, 'snooze')"
+            >
+                Snooze
+            </button>
+        </div>
+    `;
+}
+
+async function handleBOSDecisionTransition(decisionId, transition) {
+    if (!decisionId || !transition) {
+        return;
+    }
+
+    const confirmed = window.confirm(
+        "Apply decision transition: " + transition + "?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const result = await transitionBOSDecision(
+            decisionId,
+            transition
+        );
+
+        window.dispatchEvent(
+            new CustomEvent("bos-decision-transition", {
+                detail: result
+            })
+        );
+
+        await loadControlCenter();
+    } catch (error) {
+        console.error(
+            "BOS decision transition failed:",
+            error
+        );
+
+        window.alert(
+            error.message ||
+            "Decision transition failed."
+        );
+    }
+}
+
+function renderDecisions(decisions) {
         const container = document.getElementById(
             "kemet-top-decisions"
         );
@@ -2344,6 +2793,8 @@ loadKPI("30d");
                             ${priority}
                         </span>
                     </div>
+                    ${renderBOSApprovalActions(item)}
+
                 </div>
             `;
         }).join("");
@@ -2434,6 +2885,84 @@ loadKPI("30d");
             renderDecisions(
                 data.top_decisions || []
             );
+
+            await loadGovernanceState();
+
+
+async function loadGovernanceState() {
+    const status = document.getElementById("kemet-governance-live-status");
+    const safe = document.getElementById("kemet-governance-safe");
+    const approval = document.getElementById("kemet-governance-approval");
+    const blocked = document.getElementById("kemet-governance-blocked");
+    const executions = document.getElementById("kemet-governance-executions");
+    const details = document.getElementById("kemet-governance-details-list");
+    const audit = document.getElementById("kemet-governance-audit-list");
+
+    try {
+        const response = await fetch("/command-center/api/governance", {
+            method: "GET",
+            credentials: "same-origin",
+            headers: {"Accept": "application/json"}
+        });
+
+        const payload = await response.json();
+
+            if (!response.ok || payload.success !== true) {
+                throw new Error(payload.message || "Governance unavailable");
+            }
+
+            const data = payload.data || {};
+            const policies = data.policies || [];
+            const approvalRows = data.approvals || [];
+            const executionRows = data.executions || [];
+            const auditRows = data.audit || [];
+
+        const safeCount = policies.filter(
+            item => item.execution_mode === "direct_safe"
+        ).length;
+
+        const approvalCount = policies.filter(
+            item => item.execution_mode === "approval_required"
+        ).length;
+
+        const blockedCount = policies.filter(
+            item => item.execution_mode === "blocked"
+        ).length;
+
+        if (safe) safe.textContent = safeCount;
+        if (approval) approval.textContent = approvalCount;
+        if (blocked) blocked.textContent = blockedCount;
+        if (executions) executions.textContent = executionRows.length;
+        if (status) status.textContent = "Live";
+
+        if (details) {
+            details.innerHTML = policies.length
+                ? policies.map(item => `
+                    <div class="kemet-governance-row">
+                        <span>${item.action_type || "unknown"}</span>
+                        <strong>${item.execution_mode || "blocked"}</strong>
+                    </div>
+                `).join("")
+                : "<div>No governance policies available.</div>";
+        }
+
+        if (audit) {
+            audit.innerHTML = auditRows.length
+                ? auditRows.slice(0, 5).map(item => `
+                    <div class="kemet-governance-row">
+                        <span>${item.event_type || "event"} · ${item.action || "system"}</span>
+                        <strong>${item.status || "recorded"}</strong>
+                    </div>
+                `).join("")
+                : "<div>No audit records yet.</div>";
+        }
+    } catch (error) {
+        if (status) status.textContent = "Unavailable";
+        if (details) details.textContent =
+            error.message || "Unable to load governance state.";
+        if (audit) audit.textContent = "Audit state unavailable.";
+    }
+}
 
         } catch (error) {
             const box = document.getElementById(
@@ -2612,6 +3141,215 @@ loadKPI("30d");
     }
 
     loadEntitlement();
+})();
+</script>
+
+
+<script>
+/* KEMET_BOS_COMMAND_CENTER_V1 */
+(async function () {
+    const endpoint = "/dashboard/api/bos/control-center";
+
+    const errorBox = document.getElementById(
+        "kemet-control-center-error"
+    );
+
+    const decisionsBox = document.getElementById(
+        "kemet-bos-decisions"
+    );
+
+    function setText(id, value) {
+        const node = document.getElementById(id);
+        if (node) node.textContent = value;
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function renderDecision(item) {
+        const priority = String(
+            item.priority || "low"
+        ).toLowerCase();
+
+        const score = Number(item.decision_score || 0);
+        const impact = item.impact ?? 0;
+        const urgency = item.urgency ?? 0;
+        const confidence = Number(
+            item.confidence ?? 0
+        );
+
+        return `
+            <article class="kemet-bos-decision">
+                <div class="kemet-bos-decision-top">
+                    <div>
+                        <h4>${escapeHtml(
+                            item.title || "Business Decision"
+                        )}</h4>
+                        <div class="kemet-bos-meta">
+                            <span class="kemet-bos-badge ${priority === "high"
+                                ? "kemet-bos-high"
+                                : priority === "medium"
+                                    ? "kemet-bos-medium"
+                                    : ""
+                            }">
+                                ${escapeHtml(priority.toUpperCase())}
+                            </span>
+
+                            <span class="kemet-bos-badge">
+                                Score ${score.toFixed(2)}
+                            </span>
+
+                            <span class="kemet-bos-badge">
+                                Impact ${escapeHtml(impact)}
+                            </span>
+
+                            <span class="kemet-bos-badge">
+                                Urgency ${escapeHtml(urgency)}
+                            </span>
+
+                            <span class="kemet-bos-badge">
+                                Confidence ${(confidence * 100).toFixed(0)}%
+                            </span>
+                        </div>
+                    </div>
+
+                    <span class="kemet-bos-badge">
+                        ${escapeHtml(item.status || "recommended")}
+                    </span>
+                </div>
+
+                <div class="kemet-bos-decision-reason">
+                    ${escapeHtml(item.reason || "")}
+                </div>
+
+                ${item.why_now ? `
+                    <div class="kemet-bos-decision-reason">
+                        <strong>Why now:</strong>
+                        ${escapeHtml(item.why_now)}
+                    </div>
+                ` : ""}
+
+                <div class="kemet-bos-action">
+                    <strong>Recommended Action</strong>
+                    ${escapeHtml(
+                        item.recommended_action ||
+                        "Review this business decision."
+                    )}
+                </div>
+
+                ${item.expected_outcome ? `
+                    <div class="kemet-bos-decision-reason">
+                        <strong>Expected Outcome:</strong>
+                        ${escapeHtml(item.expected_outcome)}
+                    </div>
+                ` : ""}
+            </article>
+        `;
+    }
+
+    try {
+        const response = await fetch(endpoint, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            },
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                "BOS endpoint returned HTTP " +
+                response.status
+            );
+        }
+
+        const data = await response.json();
+
+        setText(
+            "kemet-bos-health-score",
+            Number(data.health_score || 0).toFixed(1)
+        );
+
+        setText(
+            "kemet-bos-summary",
+            data.summary || "Business intelligence available."
+        );
+
+        setText(
+            "kemet-bos-focus",
+            data.focus || "Operations monitored."
+        );
+
+        const counts = data.counts || {};
+
+        setText(
+            "kemet-bos-total",
+            counts.total ?? 0
+        );
+
+        setText(
+            "kemet-bos-high",
+            counts.high ?? 0
+        );
+
+        setText(
+            "kemet-bos-medium",
+            counts.medium ?? 0
+        );
+
+        setText(
+            "kemet-bos-signals",
+            data.signal_count ??
+            data.signals ??
+            counts.total ??
+            0
+        );
+
+        const decisions = data.decisions || [];
+
+        if (!decisions.length) {
+            decisionsBox.innerHTML =
+                '<div class="kemet-bos-loading">' +
+                'No strategic decisions currently require attention.' +
+                '</div>';
+        } else {
+            decisionsBox.innerHTML =
+                decisions.map(renderDecision).join("");
+        }
+
+        setText(
+            "kemet-bos-decision-status",
+            decisions.length
+                ? "Live"
+                : "Stable"
+        );
+
+    } catch (error) {
+        console.error(
+            "KEMET BOS Command Center:",
+            error
+        );
+
+        if (errorBox) {
+            errorBox.hidden = false;
+            errorBox.textContent =
+                "Unable to load BOS intelligence. " +
+                "Please refresh the dashboard.";
+        }
+
+        if (decisionsBox) {
+            decisionsBox.innerHTML =
+                '<div class="kemet-bos-error">' +
+                'BOS intelligence temporarily unavailable.' +
+                '</div>';
+        }
+    }
 })();
 </script>
 

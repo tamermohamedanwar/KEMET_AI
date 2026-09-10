@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+{% include "partials/kemet-white-ui.html" %}
     <meta charset="UTF-8">
     <title>Kemet AI Checkout</title>
     <style>
@@ -22,13 +23,13 @@
 
         .price {
             font-size: 42px;
-            color: #60a5fa;
+            color: #9ca3af;
             margin: 25px;
         }
 
         .btn {
             display: inline-block;
-            background: #2563eb;
+            background: #374151;
             color: white;
             padding: 14px 30px;
             border-radius: 10px;
@@ -38,8 +39,12 @@
             font-size: 16px;
         }
     </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 <body>
 
@@ -65,7 +70,5 @@
     </button>
 </div>
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+{% include "partials/kemet-white-ui.html" %}
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1">
@@ -9,10 +10,8 @@
     <title>Kemet AI — إتمام الدفع</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/kemet-v2.css') }}">
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/kemet-v3.css') }}">
 
     <style>
         body {
@@ -53,14 +52,14 @@
         }
 
         .summary strong {
-            color: #60a5fa;
+            color: #9ca3af;
         }
 
         .pay-button {
             display: block;
             width: 100%;
             padding: 15px;
-            background: #2563eb;
+            background: #374151;
             color: #fff;
             text-align: center;
             border-radius: 12px;
@@ -70,7 +69,7 @@
         }
 
         .pay-button:hover {
-            background: #1d4ed8;
+            background: #374151;
         }
 
         .notice {
@@ -97,6 +96,12 @@
             text-decoration: none;
         }
     </style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
@@ -173,8 +178,6 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 
 </body>
 </html>

@@ -125,6 +125,12 @@ class AutomationExecution(db.Model):
         nullable=False,
     )
 
+    idempotency_key = db.Column(
+        db.String(255),
+        nullable=True,
+        index=True,
+    )
+
     status = db.Column(
         db.String(30),
         nullable=False,

@@ -18,7 +18,7 @@ def home():
             user=current_user
         )
 
-    return render_template("landing.html")
+    return redirect(url_for("auth.login"))
 
 
 @main.route("/history")
@@ -104,7 +104,7 @@ from app.config.plans import PLAN_DETAILS, PAID_PLANS, is_paid_plan
 
 @main.route("/landing")
 def landing():
-    return render_template("landing.html")
+    return redirect(url_for("auth.login"))
 
 
 @main.route("/pricing")
@@ -170,7 +170,7 @@ def select_plan(plan):
         subscription.status = "active"
         db.session.commit()
         flash("Free plan activated")
-        return redirect(url_for("billing.billing"))
+        return redirect(url_for("billing.pricing"))
 
     try:
         result = create_checkout(
@@ -314,7 +314,7 @@ def mock_payment(payment_id):
     db.session.commit()
 
     flash(f"Payment {payment.id} completed successfully.")
-    return redirect(url_for("billing.billing"))
+    return redirect(url_for("billing.pricing"))
 
 
 @main.route("/payment/paymob/callback", methods=["POST"])
@@ -352,7 +352,7 @@ def paymob_callback():
     order = obj.get("order") or {}
 
     values = [
-        obj.get("amount_cents"),
+        obj.get("amount"),
         obj.get("created_at"),
         obj.get("currency"),
         obj.get("error_occured"),
@@ -365,7 +365,7 @@ def paymob_callback():
         obj.get("is_refunded"),
         obj.get("is_standalone_payment"),
         obj.get("is_voided"),
-        order.get("id"),
+        order,
         obj.get("owner"),
         obj.get("pending"),
         source_data.get("pan"),
@@ -406,8 +406,13 @@ def paymob_callback():
     if payment.status == "paid":
         return jsonify({"status": "already_paid"}), 200
 
-    amount_cents = int(obj.get("amount_cents") or 0)
-    expected_amount_cents = int(payment.amount * 100)
+    amount_value = obj.get("amount")
+    try:
+        amount_cents = int(amount_value or 0)
+    except (TypeError, ValueError):
+        amount_cents = 0
+
+    expected_amount_cents = int(round(float(payment.amount) * 100))
 
     currency = str(obj.get("currency") or "").upper()
     expected_currency = str(payment.currency or "").upper()

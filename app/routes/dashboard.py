@@ -195,8 +195,14 @@ def bos_actions():
             if not isinstance(item, dict):
                 continue
 
+            decision_id = (
+                item.get("decision_id")
+                or item.get("id")
+            )
+
             normalized.append({
-                "id": index,
+                "id": decision_id,
+                "decision_id": decision_id,
                 "type": item.get("type", "signal"),
                 "priority": item.get("priority", "low"),
                 "title": item.get("title", "Business action"),
@@ -324,7 +330,7 @@ def bos_governance():
             "message": str(exc),
         }), 500
 
-@dashboard.route("/dashboard/api/bos/approval-preview/<int:decision_id>")
+@dashboard.route("/dashboard/api/bos/approval-preview/<decision_id>")
 @login_required
 def bos_approval_preview(decision_id):
     organization_id = _current_organization_id()
@@ -346,6 +352,344 @@ def bos_approval_preview(decision_id):
             "error": type(exc).__name__,
             "message": str(exc),
         }), 500
+
+
+@dashboard.route("/dashboard/api/bos/decision-transition", methods=["POST"])
+@login_required
+def bos_decision_transition():
+    """
+    Apply a BOS governance transition.
+
+    Approve uses the canonical BOS approval bridge and therefore
+    reaches AutomationApprovalService, cryptographic authorization,
+    the execution boundary, and the central execution gate.
+    Reject never executes.
+    Snooze remains advisory.
+    """
+    organization_id = _current_organization_id()
+    user_id = getattr(current_user, "id", None)
+
+    if not organization_id:
+        return jsonify({
+            "ok": False,
+            "message": "No organization is assigned to this account.",
+        }), 403
+
+    payload = request.get_json(silent=True) or {}
+    decision_id = str(payload.get("decision_id") or "").strip()
+    transition = str(
+        payload.get("transition") or ""
+    ).strip().lower()
+
+    if not decision_id:
+        return jsonify({
+            "ok": False,
+            "message": "decision_id is required.",
+        }), 400
+
+    if transition not in {"approve", "reject", "snooze"}:
+        return jsonify({
+            "ok": False,
+            "message": "Unsupported transition.",
+        }), 400
+
+    preview = BOSIntelligenceService.build_approval_preview(
+        organization_id=organization_id,
+        decision_id=decision_id,
+    )
+
+    if not preview.get("success"):
+        return jsonify({
+            "ok": False,
+            "message": "Decision not found.",
+        }), 404
+
+    decision = preview.get("decision") or {}
+
+    if transition == "approve":
+        action = str(
+            decision.get("action")
+            or decision.get("executable_action")
+            or ""
+        ).strip().lower()
+
+        if not action:
+            return jsonify({
+                "ok": False,
+                "error": "approval_requires_explicit_action",
+                "decision_id": decision_id,
+            }), 422
+
+        from app.automation.orchestrator import orchestrator
+        from app.services.bos_approval_service import (
+            bos_approval_service,
+        )
+
+        allowed_actions = getattr(
+            orchestrator,
+            "ALLOWED_ACTIONS",
+            set(),
+        )
+
+        if action not in allowed_actions:
+            return jsonify({
+                "ok": False,
+                "error": "action_not_allowed",
+                "decision_id": decision_id,
+                "action": action,
+            }), 422
+
+        command_map = {
+            "lead_scoring": "Find my hottest leads",
+            "churn_detection": "Find customers at risk of churn",
+            "revenue_opportunity": "Find revenue opportunities",
+            "customer_retention": "Retain customers at risk",
+            "ai_sales_qualification": "Qualify sales leads",
+            "payment_issue": "Review payment issues",
+            "account_help": "Review account issues",
+            "sales_follow_up": "Follow up with customers",
+            "order_tracking": "Track order",
+            "create_ticket": "Create support ticket",
+            "smart_ticket_ai": "Review support tickets",
+            "send_notification": "Send business notification",
+            "refund_request": "Process refund request",
+        }
+
+        command = str(
+            decision.get("command")
+            or decision.get("executable_command")
+            or command_map.get(action)
+            or ""
+        ).strip()
+
+        if not command:
+            return jsonify({
+                "ok": False,
+                "error": "no_safe_execution_command",
+                "decision_id": decision_id,
+                "action": action,
+            }), 422
+
+        try:
+            plan = orchestrator.understand(command)
+
+            if plan.action != action:
+                return jsonify({
+                    "ok": False,
+                    "error": "action_command_mismatch",
+                    "decision_id": decision_id,
+                    "expected_action": action,
+                    "resolved_action": plan.action,
+                }), 422
+
+            prepared = bos_approval_service.prepare(
+                organization_id=organization_id,
+                action_type=action,
+                reason=(
+                    decision.get("reason")
+                    or decision.get("recommended_action")
+                    or "Approved BOS business decision."
+                ),
+                data={
+                    "command": command,
+                    "decision_id": decision_id,
+                    "organization_id": organization_id,
+                    "user_id": user_id,
+                    **dict(plan.parameters or {}),
+                },
+                requested_by=user_id,
+            )
+
+            if not prepared.get("success"):
+                return jsonify({
+                    "ok": False,
+                    "decision_id": decision_id,
+                    "action": action,
+                    "approval": prepared,
+                }), 422
+
+            approval_id = prepared.get("approval_id")
+
+            approved = bos_approval_service.approve(
+                approval_id=approval_id,
+                decided_by=user_id,
+            )
+
+            return jsonify({
+                "ok": bool(approved.get("success")),
+                "decision_id": decision_id,
+                "action": action,
+                "approval": approved,
+                "execution": approved.get("execution"),
+            }), (
+                200
+                if approved.get("success")
+                else 422
+            )
+
+        except Exception as exc:
+            return jsonify({
+                "ok": False,
+                "error": "governed_execution_error",
+                "message": str(exc),
+                "decision_id": decision_id,
+                "action": action,
+            }), 500
+
+    result = BOSIntelligenceService.get_approval_transition(
+        preview,
+        transition,
+    )
+
+    return jsonify({
+        "ok": True,
+        "decision_id": decision_id,
+        "transition": transition,
+        "result": result,
+    })
+
+
+@dashboard.route("/dashboard/api/bos/decision-approve", methods=["POST"])
+@login_required
+def bos_decision_approve_execute():
+    """
+    Convert an approved BOS decision into the governed orchestration path.
+    Only explicit registered actions may be executed.
+    Human-readable recommendations are never executed as commands.
+    """
+    organization_id = _current_organization_id()
+    user_id = getattr(current_user, "id", None)
+
+    if not organization_id:
+        return jsonify({
+            "ok": False,
+            "message": "No organization is assigned to this account.",
+        }), 403
+
+    payload = request.get_json(silent=True) or {}
+    decision_id = str(payload.get("decision_id") or "").strip()
+
+    if not decision_id:
+        return jsonify({
+            "ok": False,
+            "message": "decision_id is required.",
+        }), 400
+
+    preview = BOSIntelligenceService.build_approval_preview(
+        organization_id=organization_id,
+        decision_id=decision_id,
+    )
+
+    if not preview.get("success"):
+        return jsonify(preview), 404
+
+    decision = preview.get("decision") or {}
+
+    action = str(
+        decision.get("action")
+        or decision.get("executable_action")
+        or ""
+    ).strip().lower()
+
+    command = str(
+        decision.get("command")
+        or decision.get("executable_command")
+        or ""
+    ).strip()
+
+    from app.automation.orchestrator import orchestrator
+
+    allowed_actions = getattr(
+        orchestrator,
+        "ALLOWED_ACTIONS",
+        set(),
+    )
+
+    if not action:
+        return jsonify({
+            "ok": False,
+            "error": "approval_requires_explicit_action",
+            "message": (
+                "This decision contains only a human-readable "
+                "recommendation and has no explicit executable action."
+            ),
+            "decision_id": decision_id,
+        }), 422
+
+    if action not in allowed_actions:
+        return jsonify({
+            "ok": False,
+            "error": "action_not_allowed",
+            "message": "The decision action is not allowed by the Orchestrator.",
+            "decision_id": decision_id,
+            "action": action,
+        }), 422
+
+    if command:
+        execution_command = command
+    else:
+        command_map = {
+            "lead_scoring": "Find my hottest leads",
+            "churn_detection": "Find customers at risk of churn",
+            "revenue_opportunity": "Find revenue opportunities",
+            "customer_retention": "Retain customers at risk",
+            "ai_sales_qualification": "Qualify sales leads",
+            "payment_issue": "Review payment issues",
+            "account_help": "Review account issues",
+            "sales_follow_up": "Follow up with customers",
+            "order_tracking": "Track order",
+            "create_ticket": "Create support ticket",
+            "smart_ticket_ai": "Review support tickets",
+            "send_notification": "Send business notification",
+            "refund_request": "Process refund request",
+        }
+
+        execution_command = command_map.get(action)
+
+    if not execution_command:
+        return jsonify({
+            "ok": False,
+            "error": "no_safe_execution_command",
+            "message": "No safe executable command is mapped to this action.",
+            "decision_id": decision_id,
+            "action": action,
+        }), 422
+
+    try:
+        plan = orchestrator.understand(execution_command)
+        if plan.action != action:
+            return jsonify({
+                "ok": False,
+                "error": "action_command_mismatch",
+                "message": "The executable command does not resolve to the approved action.",
+                "decision_id": decision_id,
+                "expected_action": action,
+                "resolved_action": plan.action,
+            }), 422
+
+        result = orchestrator.execute(
+            execution_command,
+            organization_id=organization_id,
+            user_id=user_id,
+        )
+    except Exception as exc:
+        return jsonify({
+            "ok": False,
+            "error": "orchestrator_error",
+            "message": str(exc),
+        }), 500
+
+    return jsonify({
+        "ok": True,
+        "decision_id": decision_id,
+        "action": action,
+        "approval": {
+            "approved": True,
+            "human_approved": True,
+        },
+        "orchestration": result,
+    })
+
 
 @dashboard.route("/dashboard/api/bos/control-center")
 @login_required
@@ -405,5 +749,66 @@ def entitlement_overview():
         return jsonify({
             "success": False,
             "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500
+
+
+@dashboard.route("/dashboard/api/bos/decision-lifecycle")
+@login_required
+def bos_decision_lifecycle():
+    """Return a read-only lifecycle projection for BOS decisions."""
+    organization_id = _current_organization_id()
+    if not organization_id:
+        return jsonify({"success": False, "error": "organization_required"}), 403
+
+    try:
+        from app.services.decision_lifecycle import DecisionLifecycleService
+
+        period = request.args.get("period", "30d")
+        data = BOSIntelligenceService.get_decisions(
+            organization_id=organization_id,
+            limit=10,
+        )
+        result = DecisionLifecycleService.project(
+            organization_id,
+            data.get("decisions", []),
+            period=period,
+        )
+        return jsonify(result)
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": "decision_lifecycle_unavailable",
+            "message": str(exc),
+        }), 500
+
+
+@dashboard.route("/dashboard/api/bos/learning-loop")
+@login_required
+def bos_learning_loop():
+    """Return read-only evaluation and learning signals for BOS decisions."""
+    organization_id = _current_organization_id()
+    if not organization_id:
+        return jsonify({"success": False, "error": "organization_required"}), 403
+
+    try:
+        from app.services.decision_lifecycle import DecisionLifecycleService
+        from app.services.evaluation_learning import EvaluationLearningService
+
+        period = request.args.get("period", "30d")
+        data = BOSIntelligenceService.get_decisions(
+            organization_id=organization_id,
+            limit=10,
+        )
+        lifecycle = DecisionLifecycleService.project(
+            organization_id,
+            data.get("decisions", []),
+            period=period,
+        )
+        return jsonify(EvaluationLearningService.build(lifecycle.get("items", [])))
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": "learning_loop_unavailable",
             "message": str(exc),
         }), 500

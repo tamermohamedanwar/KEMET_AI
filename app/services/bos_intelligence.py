@@ -14,6 +14,91 @@ from app.models.automation import (
 )
 
 
+_SAFE_BOS_ACTIONS = {
+    "lead_scoring": "Find my hottest leads",
+    "churn_detection": "Find customers at risk of churn",
+    "revenue_opportunity": "Find revenue opportunities",
+    "customer_retention": "Retain customers at risk",
+    "ai_sales_qualification": "Qualify sales leads",
+    "payment_issue": "Review payment issues",
+    "account_help": "Review account issues",
+    "sales_follow_up": "Follow up with customers",
+    "order_tracking": "Track order",
+    "create_ticket": "Create support ticket",
+    "smart_ticket_ai": "Review support tickets",
+    "send_notification": "Send business notification",
+    "refund_request": "Process refund request",
+}
+
+def _safe_executable_action(signal_type):
+    mapping = {
+        "lead": "lead_scoring",
+        "leads": "lead_scoring",
+        "lead_scoring": "lead_scoring",
+        "churn": "churn_detection",
+        "churn_detection": "churn_detection",
+        "retention": "customer_retention",
+        "customer_retention": "customer_retention",
+        "revenue": "revenue_opportunity",
+        "revenue_opportunity": "revenue_opportunity",
+        "sales": "sales_follow_up",
+        "sales_follow_up": "sales_follow_up",
+        "follow_up": "sales_follow_up",
+        "order": "order_tracking",
+        "order_tracking": "order_tracking",
+        "payment": "payment_issue",
+        "payment_issue": "payment_issue",
+        "account": "account_help",
+        "account_help": "account_help",
+        "support": "smart_ticket_ai",
+        "support_attention": "smart_ticket_ai",
+        "ticket": "smart_ticket_ai",
+        "smart_ticket_ai": "smart_ticket_ai",
+        "qualification": "ai_sales_qualification",
+        "ai_sales_qualification": "ai_sales_qualification",
+    }
+
+    key = str(signal_type or "").strip().lower()
+
+    if key in mapping:
+        return mapping[key]
+
+    signal_parts = {
+        part
+        for part in key.replace("-", "_").split("_")
+        if part
+    }
+
+    if "support" in signal_parts or "ticket" in signal_parts:
+        return "smart_ticket_ai"
+
+    if "churn" in signal_parts:
+        return "churn_detection"
+
+    if "retention" in signal_parts:
+        return "customer_retention"
+
+    if "revenue" in signal_parts:
+        return "revenue_opportunity"
+
+    if "lead" in signal_parts:
+        return "lead_scoring"
+
+    if "payment" in signal_parts:
+        return "payment_issue"
+
+    if "account" in signal_parts:
+        return "account_help"
+
+    if "order" in signal_parts:
+        return "order_tracking"
+
+    if "follow" in signal_parts or "sales" in signal_parts:
+        return "sales_follow_up"
+
+    return None
+
+
 class BOSIntelligenceService:
     """
     Read-only intelligence layer for Kemet AI Business OS.
@@ -262,19 +347,34 @@ class BOSIntelligenceService:
         if not organization_id:
             return 0
 
-        score = 100
+        signals = signals or []
 
-        for signal in signals:
-            priority = signal.get("priority")
+        if not signals:
+            return 100
 
-            if priority == cls.HIGH:
-                score -= 8
-            elif priority == cls.MEDIUM:
-                score -= 3
-            else:
-                score -= 1
+        high_count = sum(
+            1
+            for signal in signals
+            if signal.get("priority") == cls.HIGH
+        )
 
-        return max(0, min(score, 100))
+        medium_count = sum(
+            1
+            for signal in signals
+            if signal.get("priority") == cls.MEDIUM
+        )
+
+        total = len(signals)
+
+        high_ratio = high_count / total
+        medium_ratio = medium_count / total
+
+        high_penalty = min(high_ratio * 50, 50)
+        medium_penalty = min(medium_ratio * 20, 20)
+
+        score = 100 - high_penalty - medium_penalty
+
+        return round(max(0, min(score, 100)), 2)
 
     @classmethod
     def get_brief(cls, organization_id):
@@ -435,24 +535,125 @@ class BOSIntelligenceService:
                 "low": 1,
             }.get(priority, 1)
 
+            impact = {
+                "high": 3,
+                "medium": 2,
+                "low": 1,
+            }.get(priority, 1)
+
+            confidence = 0.95 if signal_type in {
+                "sales",
+                "support",
+                "support_attention",
+                "automation",
+                "automation_attention",
+                "human_review",
+            } else 0.75
+
+            entity_id = signal.get("entity_id")
+            decision_id = signal.get("decision_id")
+            if not decision_id:
+                decision_id = (
+                    f"kemet-bos-{signal_type}-"
+                    f"{entity_id or 'global'}-{priority}"
+                )
+
+            if priority == "high":
+                why_now = (
+                    "This signal has high operational priority "
+                    "and should be reviewed immediately."
+                )
+                expected_outcome = (
+                    "Reduce operational risk and resolve the "
+                    "highest-priority business issue."
+                )
+            elif priority == "medium":
+                why_now = (
+                    "This signal represents a meaningful business "
+                    "opportunity or operational risk."
+                )
+                expected_outcome = (
+                    "Improve operational performance by addressing "
+                    "the issue before it becomes critical."
+                )
+            else:
+                why_now = (
+                    "This signal is currently low priority but "
+                    "should remain visible for monitoring."
+                )
+                expected_outcome = (
+                    "Maintain operational stability and prevent "
+                    "future escalation."
+                )
+
+            decision_score = round(
+                (impact * 40)
+                + (urgency * 35)
+                + (confidence * 25),
+                2,
+            )
+
             decisions.append({
-                "id": index,
+                "id": decision_id,
+                "decision_id": decision_id,
+                "index": index,
                 "type": signal_type,
                 "priority": priority,
                 "urgency": urgency,
+                "impact": impact,
+                "confidence": confidence,
+                "decision_score": decision_score,
+                "entity_id": entity_id,
                 "title": title,
                 "reason": message,
+                "why_now": why_now,
                 "recommended_action": recommended_action,
+                "action": _safe_executable_action(signal_type),
+                "executable_action": _safe_executable_action(signal_type),
+                "expected_outcome": expected_outcome,
                 "status": "recommended",
             })
 
         decisions.sort(
             key=lambda item: (
-                item["urgency"],
-                item["priority"],
+                item.get("decision_score", 0),
+                item.get("urgency", 0),
+                item.get("impact", 0),
             ),
             reverse=True,
         )
+
+        # Prefer decision diversity when multiple signal types exist.
+        diversified = []
+        deferred = []
+
+        for decision in decisions:
+            if len(diversified) < limit:
+                current_type = decision.get("type")
+                existing_types = {
+                    item.get("type")
+                    for item in diversified
+                }
+
+                if (
+                    current_type not in existing_types
+                    or len(existing_types) == 1
+                ):
+                    diversified.append(decision)
+                else:
+                    deferred.append(decision)
+            else:
+                deferred.append(decision)
+
+        if len(diversified) < min(limit, len(decisions)):
+            for decision in deferred:
+                if decision not in diversified:
+                    diversified.append(decision)
+
+                if len(diversified) >= limit:
+                    break
+
+        decisions = diversified
 
         return {
             "success": True,
@@ -539,6 +740,7 @@ class BOSIntelligenceService:
         No external action is executed.
         No database mutation occurs.
         """
+
         result = cls.get_decision_summary(
             organization_id=organization_id,
             limit=limit,
@@ -548,22 +750,60 @@ class BOSIntelligenceService:
         counts = result.get("counts", {}) or {}
 
         high = [
-            item for item in decisions
+            item
+            for item in decisions
             if str(item.get("priority", "")).lower() == "high"
         ]
 
         medium = [
-            item for item in decisions
+            item
+            for item in decisions
             if str(item.get("priority", "")).lower() == "medium"
         ]
 
         top_decisions = []
 
         for item in decisions[:5]:
+            decision_id = (
+                item.get("decision_id")
+                or item.get("id")
+            )
+
+            action = (
+                item.get("action")
+                or item.get("executable_action")
+            )
+
             top_decisions.append({
-                "id": item.get("id"),
-                "type": item.get("type", "signal"),
-                "priority": item.get("priority", "low"),
+                "id": decision_id,
+                "decision_id": decision_id,
+                "type": item.get(
+                    "type",
+                    "signal",
+                ),
+                "priority": item.get(
+                    "priority",
+                    "low",
+                ),
+                "urgency": item.get(
+                    "urgency",
+                    1,
+                ),
+                "impact": item.get(
+                    "impact",
+                    1,
+                ),
+                "confidence": item.get(
+                    "confidence",
+                    0,
+                ),
+                "decision_score": item.get(
+                    "decision_score",
+                    0,
+                ),
+                "entity_id": item.get(
+                    "entity_id",
+                ),
                 "title": item.get(
                     "title",
                     "Business decision",
@@ -572,9 +812,19 @@ class BOSIntelligenceService:
                     "reason",
                     "",
                 ),
+                "why_now": item.get(
+                    "why_now",
+                    "",
+                ),
                 "recommended_action": item.get(
                     "recommended_action",
                     "Review this business signal.",
+                ),
+                "action": action,
+                "executable_action": action,
+                "expected_outcome": item.get(
+                    "expected_outcome",
+                    "",
                 ),
                 "status": item.get(
                     "status",
@@ -626,7 +876,7 @@ class BOSIntelligenceService:
                     0,
                 ),
             },
-            "top_decisions": top_decisions,
+            "decisions": top_decisions,
         }
 
     @classmethod
@@ -643,13 +893,28 @@ class BOSIntelligenceService:
             limit=limit,
         )
 
-        decisions = result.get("top_decisions", []) or []
+        decisions = (
+            result.get("decisions")
+            or result.get("top_decisions")
+            or []
+        )
 
         governed = []
 
         for decision in decisions:
+            decision_id = (
+                decision.get("decision_id")
+                or decision.get("id")
+            )
+
+            action = (
+                decision.get("action")
+                or decision.get("executable_action")
+            )
+
             governed.append({
-                "id": decision.get("id"),
+                "id": decision_id,
+                "decision_id": decision_id,
                 "type": decision.get("type", "signal"),
                 "priority": decision.get("priority", "low"),
                 "title": decision.get(
@@ -663,6 +928,24 @@ class BOSIntelligenceService:
                 "recommended_action": decision.get(
                     "recommended_action",
                     "Review this business signal.",
+                ),
+                "action": action,
+                "executable_action": action,
+                "expected_outcome": decision.get(
+                    "expected_outcome",
+                    "",
+                ),
+                "confidence": decision.get(
+                    "confidence",
+                    0,
+                ),
+                "impact": decision.get(
+                    "impact",
+                    0,
+                ),
+                "urgency": decision.get(
+                    "urgency",
+                    "normal",
                 ),
                 "status": "pending_review",
                 "allowed_actions": [
@@ -715,7 +998,11 @@ class BOSIntelligenceService:
         selected = None
 
         for decision in decisions:
-            if str(decision.get("id")) == str(decision_id):
+            candidate_id = (
+                decision.get("decision_id")
+                or decision.get("id")
+            )
+            if str(candidate_id) == str(decision_id):
                 selected = decision
                 break
 
@@ -765,7 +1052,50 @@ class BOSIntelligenceService:
                 "database_mutation": False,
             }
 
-        if not decision:
+        # Advisory-only guard:
+        # A real decision object is required before a transition
+        # can be considered valid. Numeric IDs alone are not decisions.
+        if decision is None:
+            return {
+                "success": False,
+                "status": "decision_not_found",
+                "transition": transition,
+                "approval_required": True,
+                "external_execution": False,
+                "database_mutation": False,
+            }
+
+        if isinstance(decision, bool):
+            return {
+                "success": False,
+                "status": "decision_not_found",
+                "transition": transition,
+                "approval_required": True,
+                "external_execution": False,
+                "database_mutation": False,
+            }
+
+        if isinstance(decision, int):
+            return {
+                "success": False,
+                "status": "decision_not_found",
+                "transition": transition,
+                "approval_required": True,
+                "external_execution": False,
+                "database_mutation": False,
+            }
+
+        if isinstance(decision, str):
+            if not decision.strip():
+                return {
+                    "success": False,
+                    "status": "decision_not_found",
+                    "transition": transition,
+                    "approval_required": True,
+                    "external_execution": False,
+                    "database_mutation": False,
+                }
+
             return {
                 "success": False,
                 "status": "decision_not_found",

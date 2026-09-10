@@ -7,8 +7,6 @@ from app.services.ai_usage_service import check_limit, record_usage
 from app.models.user import User
 from app.services.automation_service import automation_service
 from app.rag.rag_service import rag_service
-from app.automation.models import Task, TaskStep
-from app.automation.manager import AutomationManager
 
 
 class ChatService:
@@ -164,16 +162,6 @@ class ChatService:
         automation_data = parse_automation_response(raw_answer)
 
         if automation_data and automation_data.get("action"):
-            steps = [
-                TaskStep(action=step["action"], params=step.get("params", {}))
-                for step in automation_data.get("steps", [])
-            ]
-
-            task = Task(
-                name=automation_data.get("task_name", "مهمة أتمتة"),
-                steps=steps
-            )
-
             try:
                 result = automation_service.execute(
                     automation_data.get("action"),

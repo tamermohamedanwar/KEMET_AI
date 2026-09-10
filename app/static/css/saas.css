@@ -10,8 +10,8 @@
     --kemet-border: #e5e7eb;
     --kemet-text: #111827;
     --kemet-muted: #6b7280;
-    --kemet-primary: #2563eb;
-    --kemet-primary-dark: #1d4ed8;
+    --kemet-primary: #374151;
+    --kemet-primary-dark: #374151;
     --kemet-success: #16a34a;
     --kemet-warning: #d97706;
     --kemet-danger: #dc2626;
@@ -123,7 +123,7 @@ button {
     border-radius: 11px;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: linear-gradient(135deg, #374151, #7c3aed);
     color: #fff;
     font-weight: 800;
     box-shadow: 0 8px 20px rgba(37,99,235,.28);
@@ -183,7 +183,7 @@ button {
 .app-sidebar a.active {
     background: rgba(37,99,235,.20);
     color: #fff;
-    box-shadow: inset 3px 0 0 #3b82f6;
+    box-shadow: inset 3px 0 0 #6b7280;
 }
 
 .sidebar .section-title,
@@ -378,7 +378,7 @@ textarea {
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: #60a5fa;
+    border-color: #9ca3af;
     box-shadow: 0 0 0 4px rgba(37,99,235,.10);
 }
 
@@ -419,7 +419,7 @@ select:focus {
 
 .badge-primary {
     background: #dbeafe;
-    color: #1e40af;
+    color: #374151;
 }
 
 /* =========================================================

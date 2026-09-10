@@ -3,6 +3,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <title>🎫 مركز الدعم - Kemet AI</title>
 
@@ -123,7 +124,7 @@ tr:hover{
 
 
 .btn{
-    background:#2563eb;
+    background:#374151;
     color:white;
     padding:8px 18px;
     border-radius:10px;
@@ -132,14 +133,18 @@ tr:hover{
 
 
 .btn:hover{
-    background:#1d4ed8;
+    background:#374151;
 }
 
 
 </style>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 
@@ -321,8 +326,6 @@ type="submit">
 </div>
 
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 
 </html>

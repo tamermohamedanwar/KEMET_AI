@@ -191,6 +191,15 @@ class KPIService:
                 AIUsage.organization_id == organization_id
             )
 
+        if hasattr(AIUsage, "created_at"):
+            usage_query = usage_query.filter(
+                AIUsage.created_at >= start_date
+            )
+        elif hasattr(AIUsage, "updated_at"):
+            usage_query = usage_query.filter(
+                AIUsage.updated_at >= start_date
+            )
+
         usage_rows = usage_query.all()
 
         ai_requests = sum(

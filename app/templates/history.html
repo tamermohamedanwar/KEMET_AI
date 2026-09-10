@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="utf-8">
 <title>Kemet AI History</title>
 
@@ -31,7 +32,7 @@ body {
 }
 
 .answer {
-    background:#1d4ed8;
+    background:#374151;
     padding:15px;
     border-radius:10px;
 }
@@ -42,8 +43,12 @@ a {
 }
 </style>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
@@ -86,7 +91,5 @@ No conversations yet.
 
 </div>
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 </html>

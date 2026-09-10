@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Kemet AI — Command Center</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--line:#e7ebf1;--text:#172033;--muted:#718096;--accent:#5b5ce2;--soft:#f0f1ff;--ok:#16845b;--warn:#b7791f;--shadow:0 12px 36px rgba(23,32,51,.07)}.outcome{margin-bottom:18px}.outcome .kpis{margin-bottom:0}.outcome .kpi{box-shadow:none;border:1px solid var(--line)}.action-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.action-row .secondary{padding:7px 12px;font-size:11px}#outcomeSummary{max-width:70%;text-align:right;line-height:1.5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}.app{min-height:100vh}.top{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.03em}.mark{width:34px;height:34px;border-radius:10px;background:var(--text);color:#fff;display:grid;place-items:center;font-weight:900}.top-right{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12px}.online{display:flex;gap:7px;align-items:center}.online i{width:7px;height:7px;border-radius:50%;background:#25a56f}.avatar{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:800}.wrap{max-width:1180px;margin:auto;padding:30px 22px 56px}.hero{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero-main{padding:30px}.eyebrow{color:var(--accent);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.03;letter-spacing:-.055em;margin:8px 0 10px}.hero p{color:var(--muted);max-width:680px;line-height:1.6;margin:0 0 22px}.command{display:flex;gap:9px;border:1px solid var(--line);padding:7px;border-radius:15px;background:#fbfcfe}.command input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:12px;font:inherit;color:var(--text)}button{border:0;border-radius:11px;padding:0 19px;background:var(--accent);color:#fff;font-weight:750;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{background:#f6f7fa;color:#4a5568;border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer}.pulse{padding:24px}.pulse-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.pulse h3{margin:0;font-size:15px}.live{color:var(--ok);font-size:11px;font-weight:800}.big{font-size:42px;font-weight:850;letter-spacing:-.05em}.pulse small{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.kpi{padding:18px}.kpi label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.kpi strong{font-size:24px;letter-spacing:-.04em}.kpi span{display:block;color:var(--muted);font-size:11px;margin-top:5px}.workspace{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}.panel{padding:22px}.panel h2{font-size:16px;margin:0 0 5px}.sub{color:var(--muted);font-size:12px;margin:0 0 18px}.plan{display:none;border:1px solid var(--line);border-radius:15px;padding:16px;background:#fbfcff}.plan.show{display:block}.plan-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.plan-title{font-size:14px;font-weight:800}.state{padding:5px 9px;border-radius:999px;background:#edf9f3;color:var(--ok);font-size:10px;font-weight:800}.state.warn{background:#fff8e8;color:var(--warn)}.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.plan-item{background:#f7f8fb;border-radius:11px;padding:11px}.plan-item label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}.plan-item strong{font-size:13px}.plan-note{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5}.plan-actions{display:flex;gap:8px;margin-top:14px}.secondary{background:#fff;color:#4a5568;border:1px solid var(--line)}.rows{display:grid;gap:0}.row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--line)}.row:first-child{border-top:0}.row span:first-child{color:#4a5568}.value{font-weight:750}.badge{padding:5px 9px;border-radius:999px;background:#f1f2f5;color:#596273;font-size:10px;font-weight:800}.badge.ok{background:#edf9f3;color:var(--ok)}.badge.warn{background:#fff8e8;color:var(--warn)}.areas{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.area{padding:14px;background:#fafbfc;border:1px solid var(--line);border-radius:13px}.area b{display:block;font-size:13px;margin-bottom:4px}.area span{color:var(--muted);font-size:11px}.footer{margin-top:18px;text-align:center;color:#9aa4b2;font-size:11px}.toast{position:fixed;right:18px;bottom:18px;background:#172033;color:#fff;border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);display:none}.toast.show{display:block}@media(max-width:850px){.hero,.workspace{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.top{padding:0 15px}.top-right .online{display:none}.wrap{padding:18px 13px 40px}.hero-main{padding:22px}.hero h1{font-size:31px}.command{flex-direction:column}.command button{height:46px}.kpis{grid-template-columns:1fr 1fr}.plan-grid{grid-template-columns:1fr}.areas{grid-template-columns:1fr}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><a class="brand" href="/command-center/"><span class="mark">K</span><span>Kemet AI</span></a><div class="top-right"><span class="online"><i></i>Platform online</span><span class="avatar">{{ current_user.email[0]|upper if current_user.is_authenticated else 'K' }}</span></div></header>
+<main class="wrap">
+<section class="hero">
+<div class="card hero-main"><div class="eyebrow">AI Business Operating System</div><h1>Run your business from one command.</h1><p>Tell Kemet what you want to accomplish. Kemet understands the goal, builds a governed plan, and shows you exactly what will happen before execution.</p>
+<div class="command"><input id="commandInput" placeholder="What do you want Kemet to do?" autocomplete="off"><button id="planBtn">Create plan</button></div>
+<div class="chips"><button class="chip" data-command="Analyze my business performance">Business analysis</button><button class="chip" data-command="Find my hottest leads">Hottest leads</button><button class="chip" data-command="Find customers at risk of churn">Churn risk</button><button class="chip" data-command="Track order ORD-1024">Track order</button></div>
+<div id="plan" class="plan"><div class="plan-head"><span class="plan-title">Execution plan</span><span id="planState" class="state">READY</span></div><div class="plan-grid"><div class="plan-item"><label>Intent</label><strong id="pIntent">—</strong></div><div class="plan-item"><label>Action</label><strong id="pAction">—</strong></div><div class="plan-item"><label>Confidence</label><strong id="pConfidence">—</strong></div><div class="plan-item"><label>Risk</label><strong id="pRisk">—</strong></div></div><div class="plan-note"><b>Expected result</b><div id="pResult">—</div></div><div class="plan-note" id="pNote">—</div><div class="plan-actions"><button id="operateBtn">Run with Kemet</button><button class="secondary" id="clearBtn">Clear</button></div></div>
+</div>
+<div class="card pulse"><div class="pulse-head"><h3>Business pulse</h3><span class="live">● LIVE</span></div><div class="big" id="pulseValue">—</div><small id="pulseText">Connected to your workspace</small><div class="rows" style="margin-top:22px"><div class="row"><span>Approvals</span><span class="badge" id="approvalCount">0</span></div><div class="row"><span>Automations</span><span class="badge ok" id="automationCount">0</span></div><div class="row"><span>Subscriptions</span><span class="badge" id="subscriptionCount">0</span></div></div></div>
+</section><section class="kpis"><div class="card kpi"><label>Workflows</label><strong id="workflows">0</strong><span>Business automations</span></div><div class="card kpi"><label>Tickets</label><strong id="tickets">0</strong><span>Support activity</span></div><div class="card kpi"><label>Payments</label><strong id="payments">0</strong><span>Financial activity</span></div><div class="card kpi"><label>AI usage</label><strong id="usage">0</strong><span>Workspace activity</span></div></section>
+<section class="card panel outcome" id="outcomePanel"><div class="pulse-head"><div><h2>Business outcome</h2><p class="sub">Verified workspace signals and next-best actions.</p></div><span id="outcomeState" class="badge">LOADING</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>Health</label><strong id="outcomeHealth">—</strong><span id="outcomeStatus">—</span></div><div class="kpi"><label>Revenue</label><strong id="outcomeRevenue">—</strong><span>Observed paid amount</span></div><div class="kpi"><label>Automation</label><strong id="outcomeAutomation">—</strong><span>Execution success rate</span></div><div class="kpi"><label>Open tickets</label><strong id="outcomeTickets">—</strong><span>Current support load</span></div></div><div class="rows"><div class="row"><span>Executive summary</span><span class="value" id="outcomeSummary">—</span></div></div><div id="nextActions" class="rows" style="margin-top:8px"></div></section><section class="card panel" id="decisionFlow"><div class="pulse-head"><div><h2>Decision control loop</h2><p class="sub">One governed trail from decision to measured outcome.</p></div><span id="decisionFlowState" class="badge">LOADING</span></div><div id="decisionTimeline" class="rows"><div class="row"><span>Loading decision lifecycle…</span></div></div></section><section class="card panel" id="learningLoop"><div class="pulse-head"><div><h2>Evaluation & learning</h2><p class="sub">Read-only signals that improve decision quality without changing policy or executing actions.</p></div><span id="learningState" class="badge">LOADING</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>Quality</label><strong id="learningQuality">—</strong><span>Evaluation pass rate</span></div><div class="kpi"><label>Observed</label><strong id="learningObserved">—</strong><span>Outcome coverage</span></div><div class="kpi"><label>Review</label><strong id="learningReview">—</strong><span>Needs measurement/review</span></div><div class="kpi"><label>Signals</label><strong id="learningSignals">—</strong><span>Actionable learning signals</span></div></div><div id="learningSummary" class="rows"><div class="row"><span>Loading learning signals…</span></div></div></section><section class="workspace"><div class="card panel"><h2>What Kemet can run</h2><p class="sub">One command surface. Many business capabilities.</p><div class="areas"><div class="area"><b>Sales & Growth</b><span>Leads, qualification, follow-up, retention</span></div><div class="area"><b>Operations</b><span>Workflows, support, tickets, notifications</span></div><div class="area"><b>Intelligence</b><span>KPIs, business insights, opportunities</span></div><div class="area"><b>Finance</b><span>Payments and approval-controlled actions</span></div></div><div class="rows" style="margin-top:18px"><div class="row"><span>Decision Engine</span><span class="badge ok">READY</span></div><div class="row"><span>Governance</span><span class="badge ok">PROTECTED</span></div><div class="row"><span>Execution Runtime</span><span class="badge ok">CANONICAL</span></div><div class="row"><span>Human approval</span><span class="badge warn">REQUIRED WHEN NEEDED</span></div></div></div>
+<div class="card panel"><h2>Workspace status</h2><p class="sub">Live signals from your organization.</p><div class="rows"><div class="row"><span>Pending approvals</span><span class="value" id="pending">0</span></div><div class="row"><span>Active workflows</span><span class="value" id="activeWorkflows">0</span></div><div class="row"><span>Subscriptions</span><span class="value" id="subs">0</span></div><div class="row"><span>Platform</span><span class="badge ok">ONLINE</span></div></div></div></section>
+<div class="footer">Kemet AI BOS · Intelligence → Plan → Approval → Execution → Outcome</div>
+</main><div id="toast" class="toast"></div></div>
+<script>
+const $=id=>document.getElementById(id);const input=$("commandInput");
+function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+async function loadOverview(){try{const r=await fetch("/command-center/api/overview",{credentials:"same-origin",headers:{Accept:"application/json"}});const j=await r.json();const d=j.data||{};$("pending").textContent=d.pending_approvals||0;$("approvalCount").textContent=d.pending_approvals||0;$("automationCount").textContent=d.automations||0;$("activeWorkflows").textContent=d.workflows||0;$("subs").textContent=d.subscriptions||0;$("workflows").textContent=d.workflows||0;$("tickets").textContent=d.tickets||0;$("payments").textContent=d.payments||0;$("usage").textContent=d.ai_usage||0;$("pulseValue").textContent=(d.workflows||0)+(d.automations||0);$("pulseText").textContent="Active business operations"}catch(e){toast("Workspace data is temporarily unavailable")}}
+async function createPlan(){const command=input.value.trim();if(!command){input.focus();return}const b=$("planBtn");b.disabled=true;b.textContent="Planning…";try{const r=await fetch("/api/bos/plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command})});const j=await r.json();$("plan").classList.add("show");$("pIntent").textContent=j.intent||"Unmapped";$("pAction").textContent=j.action||"—";$("pConfidence").textContent=j.confidence!=null?Math.round(j.confidence*100)+"%":"—";$("pRisk").textContent=(j.risk||"—").toUpperCase();$("pResult").textContent=j.expected_result||"—";$("pNote").textContent=j.approval_reason||j.reason||(j.message)||"Plan validated against Kemet's registered capabilities.";$("planState").textContent=!r.ok?"BLOCKED":j.requires_approval?"APPROVAL REQUIRED":"READY";$("planState").className="state"+(j.requires_approval||!r.ok?" warn":"");$("operateBtn").style.display="inline-block";if(!r.ok)toast(j.message||"Kemet could not safely map this command");}catch(e){$("plan").classList.add("show");$("pNote").textContent="Planner unavailable. No action was executed.";$("operateBtn").style.display="inline-block";toast("No action was executed") }finally{b.disabled=false;b.textContent="Create plan"}}
+$("planBtn").onclick=createPlan;input.addEventListener("keydown",e=>{if(e.key==="Enter")createPlan()});
+$("commandInput").setAttribute("aria-label","Business command");$("operateBtn").setAttribute("aria-label","Run governed business operation");
+$("operateBtn").textContent="Run with Kemet";document.querySelectorAll("[data-command]").forEach(x=>x.onclick=()=>{input.value=x.dataset.command;createPlan()});$("clearBtn").onclick=()=>{$("plan").classList.remove("show");input.value="";input.focus()};
+$("operateBtn").onclick=operateCommand;
+const csrf=document.querySelector('meta[name="csrf-token"]')?.content||"";
+function postHeaders(){return {"Content-Type":"application/json","X-Requested-With":"XMLHttpRequest",...(csrf?{"X-CSRFToken":csrf}: {})}}
+async function loadOutcome(){
+  try{
+    const r=await fetch("/api/bos/outcome?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success) throw new Error(j.error||"outcome_unavailable");
+    $("outcomeHealth").textContent=Math.round(Number(j.health_score||0))+"/100";
+    $("outcomeRevenue").textContent=Number(j.business?.paid_amount||0).toLocaleString(undefined,{maximumFractionDigits:2});
+    const rate=j.automation?.success_rate;
+    $("outcomeAutomation").textContent=rate==null?"—":Number(rate).toFixed(1)+"%";
+    $("outcomeTickets").textContent=Number(j.business?.open_tickets||0).toLocaleString();
+    $("outcomeStatus").textContent=(j.status||"monitor").replaceAll("_"," ").toUpperCase();
+    $("outcomeState").textContent="LIVE";$("outcomeState").className="badge ok";
+    $("outcomeSummary").textContent=j.executive_summary||"No executive summary is available yet.";
+    const actions=j.next_best_actions||[];
+    $("nextActions").innerHTML=actions.length?actions.map((a,i)=>`<div class="row action-row"><span><b>${escapeHtml(a.title||"Next best action")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(a.expected_outcome||"")}</small></span><button class="secondary outcome-plan" data-index="${i}">Review & plan</button></div>`).join(""):"<div class='row'><span>No priority actions are available.</span></div>";
+    document.querySelectorAll(".outcome-plan").forEach((btn,i)=>btn.onclick=()=>reviewOutcomeAction(actions[i]));
+  }catch(e){$("outcomeState").textContent="UNAVAILABLE";$("outcomeState").className="badge warn"}
+}
+function escapeHtml(value){return String(value).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;", "'":"&#39;"}[c]))}
+function reviewOutcomeAction(action){const command=action?.action;if(!command){toast("This recommendation has no executable command mapping yet");return}input.value=command;createPlan();window.scrollTo({top:0,behavior:"smooth"})}
+async function operateCommand(){
+  const command=input.value.trim();
+  if(!command){toast("Enter a business command first");return}
+  const b=$("operateBtn");b.disabled=true;b.textContent="Running…";
+  try{
+    const r=await fetch("/api/bos/operate",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command})});
+    const j=await r.json();
+    if(!r.ok||!j.success){toast(j.message||j.error||"Kemet stopped the operation");return}
+    const results=j.results||[];const first=results[0]||{};
+    if(first.status==="waiting_approval"){
+      const approval=first.approval_id;
+      $("planState").textContent="APPROVAL REQUIRED";$("planState").className="state warn";
+      $("pNote").textContent="This operation is ready but requires an authorized human approval before the business action executes. Approval #"+(approval||"—");
+      b.textContent="Approve required";b.disabled=true;
+      if(approval && confirm("This action requires approval. Approve and execute it now?")){
+        const ar=await fetch("/api/bos/approvals/"+approval+"/approve",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:"{}"});
+        const aj=await ar.json();
+        if(ar.ok&&aj.success){$("planState").textContent="COMPLETED";$("planState").className="state";$("pNote").textContent="Approved and executed through the governed runtime.";b.textContent="Completed ✓";toast("Operation completed");loadOverview();}
+        else{toast(aj.message||aj.error||"Approved execution failed");b.textContent="Approve required"}
+      }
+      return;
+    }
+    if(first.status==="completed"||first.status==="deduplicated"){
+      $("planState").textContent=first.status.toUpperCase();$("planState").className="state";
+      $("pNote").textContent="Kemet completed the operation through the governed canonical runtime.";
+      b.textContent="Completed ✓";toast("Operation completed");loadOverview();return;
+    }
+    toast(first.error||"Operation was blocked safely");
+  }catch(e){toast("No unsafe action was executed")}finally{if(b.textContent!=="Completed ✓")b.disabled=false;if(b.textContent==="Running…")b.textContent="Run with Kemet"}
+}
+async function loadDecisionLifecycle(){
+  try{
+    const r=await fetch("/dashboard/api/bos/decision-lifecycle?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success) throw new Error(j.error||"lifecycle_unavailable");
+    const items=j.items||j.decisions||j.data||[];
+    const latest=Array.isArray(items)?items[0]:null;
+    const latestState=latest?.state||"detected";
+    $("decisionFlowState").textContent=String(latestState).replaceAll("_"," ").toUpperCase();
+    $("decisionFlowState").className="badge ok";
+    $("decisionTimeline").innerHTML=Array.isArray(items)&&items.length?items.slice(0,5).map(x=>{
+      const title=escapeHtml(x.decision_id||"Decision");
+      const state=escapeHtml(String(x.state||"detected").replaceAll("_"," "));
+      const capability=escapeHtml(x.capability_id||"No capability mapped");
+      const approval=x.approval||{};
+      const execution=x.execution||{};
+      const approvalText=approval.status?`Approval: ${escapeHtml(String(approval.status))}`:"Approval: not requested";
+      const executionText=execution.status?`Execution: ${escapeHtml(String(execution.status))}`:"Execution: not started";
+      const outcome=(x.observed_outcome||[]).length?"Outcome: observed":"Outcome: pending";
+      return `<div class="row"><span><b>${title}</b><small style="display:block;color:var(--muted);margin-top:3px">${capability}<br>${approvalText} · ${executionText} · ${outcome}</small></span><span class="badge">${state.toUpperCase()}</span></div>`;
+    }).join(""):"<div class='row'><span>No decision history is available yet.</span></div>";
+  }catch(e){
+    $("decisionFlowState").textContent="UNAVAILABLE";$("decisionFlowState").className="badge warn";
+    $("decisionTimeline").innerHTML="<div class='row'><span>Decision lifecycle is temporarily unavailable. No action was executed.</span></div>";
+  }
+}
+async function loadLearningLoop(){
+  try{
+    const r=await fetch("/dashboard/api/bos/learning-loop?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success) throw new Error(j.error||"learning_unavailable");
+    const s=j.summary||{};
+    $("learningQuality").textContent=(Number(s.evaluation_pass_rate||0)*100).toFixed(0)+"%";
+    $("learningObserved").textContent=(Number(s.outcome_observation_rate||0)*100).toFixed(0)+"%";
+    $("learningReview").textContent=(Number(s.review_rate||0)*100).toFixed(0)+"%";
+    $("learningSignals").textContent=(j.learning_signals||[]).length;
+    $("learningState").textContent=j.items?.length?"MONITORED":"READY";
+    $("learningState").className="badge ok";
+    const signals=j.learning_signals||[];
+    $("learningSummary").innerHTML=signals.length?signals.map(s=>`<div class="row"><span><b>${escapeHtml(s.type||"learning")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(s.action||"")}</small></span><span class="badge">${escapeHtml(String(s.priority||"low").toUpperCase())}</span></div>`).join(""):"<div class='row'><span>No learning signals require attention.</span></div>";
+  }catch(e){
+    $("learningState").textContent="UNAVAILABLE";$("learningState").className="badge warn";
+    $("learningSummary").innerHTML="<div class='row'><span>Learning signals are temporarily unavailable. No policy or execution change was made.</span></div>";
+  }
+}
+loadOverview();loadOutcome();loadDecisionLifecycle();loadLearningLoop();setInterval(()=>{loadOverview();loadOutcome();loadDecisionLifecycle();loadLearningLoop()},30000);
+</script></body></html>

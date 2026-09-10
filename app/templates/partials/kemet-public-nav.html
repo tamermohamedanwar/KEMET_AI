@@ -1,0 +1,28 @@
+{% include "partials/kemet-white-ui.html" %}
+<nav class="kemet-public-nav">
+    <div class="kemet-brand">
+        <a href="/">
+            Kemet AI
+        </a>
+    </div>
+
+    <div class="kemet-public-actions">
+        {% if current_user.is_authenticated %}
+            <a class="kemet-nav-link" href="/">
+                Dashboard
+            </a>
+
+            <a class="kemet-nav-button" href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+        {% else %}
+            <a class="kemet-nav-link" href="{{ url_for('auth.login') }}">
+                Login
+            </a>
+
+            <a class="kemet-nav-button" href="{{ url_for('auth.register') }}">
+                Get Started
+            </a>
+        {% endif %}
+    </div>
+</nav>

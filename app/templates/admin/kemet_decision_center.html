@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kemet — Decision Center</title>
+<style>
+:root{--bg:#f5f5f2;--surface:#fff;--text:#111;--muted:#747474;--line:#e5e5e1;--soft:#f0f0ec}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.shell{min-height:100vh;display:grid;grid-template-columns:235px 1fr}
+.sidebar{background:#111;color:#fff;padding:25px 18px}
+.brand{font-size:27px;font-weight:850;letter-spacing:-.05em;margin-bottom:34px}
+.brand small{display:block;margin-top:4px;color:#888;font-size:9px;letter-spacing:.18em}
+.nav a{display:block;padding:11px 12px;margin-bottom:5px;border-radius:10px;color:#aaa;text-decoration:none;font-size:14px}
+.nav a:hover,.nav a.active{color:#fff;background:#222}
+main{width:100%;max-width:1500px;padding:32px;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:25px}
+h1{margin:0;font-size:32px;letter-spacing:-.05em}
+.subtitle{margin-top:7px;color:var(--muted);font-size:14px}
+.live{padding:8px 11px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:10px;font-weight:850;letter-spacing:.08em}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.metric,.card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.metric{padding:20px}
+.label,.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800}
+.value{font-size:27px;font-weight:850;letter-spacing:-.04em;margin-top:8px}
+.grid{display:grid;grid-template-columns:1.45fr .8fr;gap:18px}
+.card{padding:27px}
+.decision-head{display:flex;justify-content:space-between;gap:20px}
+.decision-title{margin-top:8px;font-size:27px;font-weight:850;letter-spacing:-.045em}
+.priority{height:fit-content;background:#111;color:#fff;padding:8px 11px;border-radius:9px;font-size:10px;font-weight:850}
+.section{margin-top:25px}
+.section p{margin:8px 0 0;color:#555;line-height:1.65}
+.action{margin-top:8px;padding:16px;border-radius:13px;background:var(--soft);line-height:1.6;font-weight:650}
+.confidence{margin-top:22px}
+.bar{height:7px;margin-top:8px;overflow:hidden;border-radius:20px;background:#e2e2de}
+.fill{height:100%;background:#111}
+.buttons{display:flex;gap:10px;margin-top:23px}
+button{border:0;border-radius:11px;padding:12px 17px;font-weight:800;cursor:pointer}
+.primary{background:#111;color:#fff}
+.secondary{background:#ededeb;color:#111}
+.side-row{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}
+.side-row:last-child{border-bottom:0}
+.side-row span:first-child{color:var(--muted)}
+.side-row span:last-child{font-weight:800}
+.governance{margin-top:18px;padding:14px;border:1px dashed #ccc;border-radius:13px;color:#555;font-size:12px;line-height:1.6}
+@media(max-width:1000px){.shell{display:block}.sidebar{padding:16px}.nav{display:flex;gap:5px;overflow-x:auto}.nav a{white-space:nowrap}.metrics{grid-template-columns:repeat(2,1fr)}main{padding:20px}.grid{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:14px}.topbar{gap:12px}.topbar .live{font-size:9px}h1{font-size:25px}.metrics{grid-template-columns:repeat(2,1fr);gap:9px}.metric{padding:16px}.value{font-size:22px}.card{padding:19px}.decision-head{flex-direction:column}.decision-title{font-size:23px}.buttons{flex-direction:column}button{width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+<div class="brand">Kemet<small>AI BUSINESS OS</small></div>
+<nav class="nav">
+<a href="/admin/automation/command-center">Command Center</a>
+<a class="active" href="/admin/automation/decision-center">Decision Center</a>
+<a href="/admin/revenue">Revenue</a>
+<a href="#">Sales</a>
+<a href="#">Customers</a>
+<a href="#">Analytics</a>
+<a href="#">Automations</a>
+<a href="#">Marketplace</a>
+</nav>
+</aside>
+<main>
+<div class="topbar">
+<div><h1>Decision Center</h1><div class="subtitle">Live business intelligence → decision → recommended action.</div></div>
+<div class="live">LIVE DATA</div>
+</div>
+<section class="metrics">
+<div class="metric"><div class="label">Revenue</div><div class="value">{{ "%.2f"|format(metrics.revenue) }}</div></div>
+<div class="metric"><div class="label">Leads</div><div class="value">{{ metrics.leads }}</div></div>
+<div class="metric"><div class="label">Customers</div><div class="value">{{ metrics.customers }}</div></div>
+<div class="metric"><div class="label">Open Tickets</div><div class="value">{{ metrics.open_tickets }}</div></div>
+</section>
+<section class="grid">
+<div class="card">
+<div class="decision-head"><div><div class="eyebrow">Top Decision</div><div class="decision-title">{{ decision.title }}</div><div class="subtitle">{{ decision.focus }}</div></div><div class="priority">{{ decision.priority|upper }}</div></div>
+<div class="section"><div class="eyebrow">Why Kemet recommends this</div><p>{{ decision.rationale }}</p></div>
+<div class="section"><div class="eyebrow">Recommended action</div><div class="action">{{ decision.recommended_action }}</div></div>
+<div class="confidence"><div class="eyebrow">Confidence {{ (decision.confidence * 100)|round(1) }}%</div><div class="bar"><div class="fill" style="width:{{ decision.confidence * 100 }}%"></div></div></div>
+<div class="buttons"><button class="primary">Review Decision</button><button class="secondary">Prepare Action</button></div>
+<div class="governance"><strong>Governance active.</strong> Kemet is advisory-only. External execution and database mutation remain blocked until an authorized approval is provided.</div>
+</div>
+<div class="card">
+<div class="eyebrow">Live Business Snapshot</div>
+<div style="margin-top:14px">
+<div class="side-row"><span>Qualified Leads</span><span>{{ metrics.qualified_leads }}</span></div>
+<div class="side-row"><span>Converted Leads</span><span>{{ metrics.converted_leads }}</span></div>
+<div class="side-row"><span>Automation Executions</span><span>{{ metrics.automation_executions }}</span></div>
+<div class="side-row"><span>Successful Executions</span><span>{{ metrics.successful_executions }}</span></div>
+<div class="side-row"><span>AI Requests</span><span>{{ metrics.ai_requests }}</span></div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body>
+</html>

@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import (
     Blueprint,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -957,3 +958,12 @@ def pipeline():
         stages=stages,
         pipeline_stats=pipeline_stats,
     )
+
+
+@admin_leads.route("/admin/leads/api/pipeline-intelligence")
+@login_required
+def pipeline_intelligence():
+    organization_id = getattr(current_user, "organization_id", None)
+    from app.services.crm_pipeline_intelligence import crm_pipeline_intelligence
+    result = crm_pipeline_intelligence.build(organization_id)
+    return jsonify(result), 200 if result.get("success") else 400

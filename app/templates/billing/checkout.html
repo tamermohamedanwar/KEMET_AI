@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI - Checkout</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+</head>
+
+<body>
+
+<main>
+
+    <header>
+        <h1>Kemet AI Checkout</h1>
+        <p>Review your subscription before payment.</p>
+    </header>
+
+    <section>
+
+        <h2>
+            {{ plan.name if plan.name is defined else plan }}
+        </h2>
+
+        {% if plan.slug is defined %}
+        <p>
+            Plan: {{ plan.slug }}
+        </p>
+        {% endif %}
+
+        {% if plan.price is defined %}
+        <p>
+            Price: ${{ plan.price }} / month
+        </p>
+        {% endif %}
+
+    </section>
+
+    <section>
+
+        <h2>Payment</h2>
+
+        <div id="billing-context">
+            <p>
+                Payment Provider:
+                <strong>{{ payment_provider }}</strong>
+            </p>
+
+            <p>
+                Organization:
+                <strong>{{ organization_id }}</strong>
+            </p>
+
+            <p>
+                Payment Ready:
+                <strong>{{ payment_ready }}</strong>
+            </p>
+
+            <p>
+                Payment Executed:
+                <strong>{{ payment_executed }}</strong>
+            </p>
+
+            {% if payment_intent %}
+            <div id="payment-intent">
+                <p>
+                    Payment Status:
+                    <strong>{{ payment_intent.status }}</strong>
+                </p>
+
+                <p>
+                    Currency:
+                    <strong>{{ payment_intent.currency }}</strong>
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if payment_ready %}
+            <p>Payment is ready.</p>
+
+            <form
+                method="post"
+                action="{{ url_for('billing.checkout', plan=plan_slug) }}"
+            >
+                <button type="submit">
+                    Continue to Payment
+                </button>
+            </form>
+        {% else %}
+            <p>
+                Payment processing will be connected in the payment phase.
+            </p>
+
+            <button type="button" disabled>
+                Payment Coming Next
+            </button>
+        {% endif %}
+
+    </section>
+
+    <nav>
+        <a href="/billing/pricing">
+            Back to Pricing
+        </a>
+
+        <br>
+
+        <a href="/billing/subscription">
+            View Subscription
+        </a>
+    </nav>
+
+</main>
+
+</body>
+</html>

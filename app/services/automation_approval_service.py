@@ -48,7 +48,7 @@ class AutomationApprovalService:
         }
 
     def approve(self, approval_id, decided_by=None):
-        approval = AutomationApproval.query.get(approval_id)
+        approval = db.session.get(AutomationApproval, approval_id)
 
         if approval is None:
             return {
@@ -63,9 +63,89 @@ class AutomationApprovalService:
                 "status": approval.status,
             }
 
+        request_data = {}
+        if approval.request_json:
+            try:
+                request_data = json.loads(approval.request_json)
+            except Exception:
+                request_data = {}
+
+        action_type = request_data.get("action") or approval.action_type
+        parameters = dict(request_data.get("parameters") or {})
+        data = request_data.get("data") or {}
+
+        # Build the exact execution parameters before authorization.
+        # Runtime later reconstructs these parameters and may inject
+        # the server-side approval marker. The marker is excluded from
+        # canonical hashing, so the signed plan remains stable.
+        execution_parameters = dict(parameters)
+
+        for key, value in data.items():
+            execution_parameters.setdefault(key, value)
+
+        # Build the exact execution plan before execution.
+        plan = {
+            "request": "automation_approval",
+            "decision": "approved",
+            "context": {
+                "organization_id": approval.organization_id,
+                "workflow_id": approval.workflow_id,
+                "execution_id": approval.execution_id,
+                "approval_id": approval.id,
+                "action_id": request_data.get("action_id"),
+            },
+            "action": action_type,
+            "status": "approved",
+            "approved": True,
+            "approver_id": decided_by,
+            "executed": False,
+            "external_execution": False,
+            "database_mutation": False,
+            "parameters": execution_parameters,
+            "data": data,
+        }
+
+        try:
+            from app.core.execution.authorization import execution_authorization
+
+            authorization = execution_authorization.create_authorization(
+                plan,
+                approver_id=decided_by,
+            )
+
+            plan["plan_id"] = authorization["plan_id"]
+            plan["plan_hash"] = authorization["plan_hash"]
+
+        except Exception as exc:
+            db.session.rollback()
+            return {
+                "success": False,
+                "approval_id": approval_id,
+                "status": "pending",
+                "message": (
+                    "Execution authorization creation failed: "
+                    f"{exc}"
+                ),
+            }
+
         approval.status = "approved"
         approval.decided_by = decided_by
         approval.decided_at = datetime.utcnow()
+
+        # Persist the authorization BEFORE any execution attempt.
+        approval.decision_json = json.dumps(
+            {
+                "success": True,
+                "status": "authorized",
+                "plan": plan,
+                "authorization": authorization,
+            },
+            ensure_ascii=False,
+            default=str,
+        )
+
+        db.session.add(approval)
+        db.session.commit()
 
         execution_result = None
 
@@ -80,46 +160,33 @@ class AutomationApprovalService:
                     organization_id=approval.organization_id,
                 )
 
-                if isinstance(execution_result, dict):
-                    approval.decision_json = json.dumps(
-                        execution_result,
-                        ensure_ascii=False,
-                        default=str,
-                    )
-                else:
-                    approval.decision_json = json.dumps(
-                        {
-                            "success": True,
-                            "execution": execution_result,
-                        },
-                        ensure_ascii=False,
-                        default=str,
-                    )
-
-                db.session.commit()
-
                 return {
                     "success": True,
                     "approval_id": approval.id,
                     "status": "approved",
                     "action": approval.action_type,
                     "execution": execution_result,
+                    "authorization": authorization,
                 }
 
             except Exception as exc:
                 db.session.rollback()
 
-                approval = AutomationApproval.query.get(approval_id)
+                approval = db.session.get(AutomationApproval, approval_id)
 
                 if approval is not None:
                     approval.status = "approved"
                     approval.decided_by = decided_by
                     approval.decided_at = datetime.utcnow()
+
                     approval.decision_json = json.dumps(
                         {
-                            "success": False,
-                            "error": str(exc),
+                            "success": True,
+                            "status": "authorized",
+                            "plan": plan,
+                            "authorization": authorization,
                             "resume_failed": True,
+                            "error": str(exc),
                         },
                         ensure_ascii=False,
                         default=str,
@@ -132,12 +199,11 @@ class AutomationApprovalService:
                     "approval_id": approval_id,
                     "status": "approved",
                     "message": (
-                        "Approval granted, but automation resume failed: "
+                        "Approval granted, but authorized automation "
+                        "resume failed: "
                         f"{exc}"
                     ),
                 }
-
-        db.session.commit()
 
         return {
             "success": True,
@@ -145,10 +211,11 @@ class AutomationApprovalService:
             "status": "approved",
             "action": approval.action_type,
             "execution": execution_result,
+            "authorization": authorization,
         }
 
     def reject(self, approval_id, decided_by=None, reason=None):
-        approval = AutomationApproval.query.get(approval_id)
+        approval = db.session.get(AutomationApproval, approval_id)
 
         if approval is None:
             return {

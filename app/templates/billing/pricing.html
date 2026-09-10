@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI - Pricing</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+</head>
+<body>
+<main>
+    <h1>Kemet AI Pricing</h1>
+
+    {% for plan in plans %}
+    <section>
+        <h2>{{ plan.name }}</h2>
+
+        {% if plan.contact_sales %}
+        <p>Contact Sales</p>
+        <a href="/billing/subscribe/{{ plan.slug }}">
+            Contact Sales
+        </a>
+        {% else %}
+        <p>${{ "%.2f"|format(plan.price_usd|float) }} / month</p>
+        <a href="/billing/subscribe/{{ plan.slug }}">
+            Choose {{ plan.name }}
+        </a>
+        {% endif %}
+    </section>
+    {% endfor %}
+</main>
+
+<!-- Kemet AI billing pricing navigation -->
+<section class="k-billing-pricing-entry">
+    <div class="k-revenue">
+        <h2>Kemet AI Pricing</h2>
+        <p>Select a plan to continue to checkout.</p>
+
+        <div class="k-pricing-plans">
+            <a href="/pricing/select/starter" class="k-quick-action">
+                Starter
+            </a>
+
+            <a href="/pricing/select/business" class="k-quick-action">
+                Business
+            </a>
+
+            <a href="/pricing/select/enterprise" class="k-quick-action">
+                Enterprise
+            </a>
+        </div>
+
+        <a href="/pricing" class="k-quick-action">
+            Checkout
+        </a>
+    </div>
+</section>
+
+</body>
+</html>

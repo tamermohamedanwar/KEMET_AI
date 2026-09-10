@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+{% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -22,7 +23,7 @@ body{
 header{
     padding:90px 10%;
     text-align:center;
-    background:linear-gradient(135deg,#0f172a,#2563eb);
+    background:linear-gradient(135deg,#0f172a,#374151);
 }
 
 h1{
@@ -53,7 +54,7 @@ h1{
 
 .primary{
     background:#fff;
-    color:#2563eb;
+    color:#374151;
 }
 
 .secondary{
@@ -95,11 +96,85 @@ footer{
     color:#94a3b8;
 }
 </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
+{% include "partials/kemet-public-nav.html" %}
+
+<section class="k-v51-hero">
+    <div class="k-v51-shell">
+        <div class="k-v51-eyebrow">
+            AI Business Operating System
+        </div>
+
+        <h1>
+            Run your business with AI.
+        </h1>
+
+        <p>
+            Kemet AI brings customer support, CRM, automation,
+            sales operations, billing and business intelligence
+            into one intelligent platform.
+        </p>
+
+        <div class="k-v51-hero-actions">
+            <a class="k-v51-button" href="/register">
+                Start Free
+            </a>
+
+            <a class="k-v51-link" href="/login">
+                Sign In
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="k-v51-section">
+    <div class="k-v51-shell">
+        <div class="k-v51-section-title">
+            <h2>One operating system for your business</h2>
+            <p>
+                Replace disconnected tools with one intelligent workspace.
+            </p>
+        </div>
+
+        <div class="k-v51-grid">
+            <article class="k-v51-card">
+                <span class="k-v51-status">AI Support</span>
+                <h3>Customer Support</h3>
+                <p>
+                    Manage conversations, tickets, knowledge and AI-assisted
+                    responses from one workspace.
+                </p>
+            </article>
+
+            <article class="k-v51-card">
+                <span class="k-v51-status">Automation</span>
+                <h3>Business Automation</h3>
+                <p>
+                    Turn repetitive business processes into reliable
+                    workflows and executions.
+                </p>
+            </article>
+
+            <article class="k-v51-card">
+                <span class="k-v51-status">Analytics</span>
+                <h3>Business Intelligence</h3>
+                <p>
+                    Track activity, AI usage, customers and operational
+                    performance from one dashboard.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+
 
 <header class="hero">
 
@@ -199,7 +274,5 @@ footer{
 </footer>
 
 
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 </html>

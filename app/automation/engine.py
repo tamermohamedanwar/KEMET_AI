@@ -1,5 +1,7 @@
 from app.automation.action_registry import registry
+from app.core.execution.governed_executor import governed_execution_service
 import json
+import hashlib
 from datetime import datetime
 
 from app import db
@@ -11,10 +13,36 @@ from app.models.automation import (
 from app.services.automation_service import automation_service
 from app.services.automation_approval_service import automation_approval_service
 from app.services.ai_usage_service import check_limit, record_usage
+from app.services.monetization_guard import monetization_guard
 from app.automation.router import AutomationRouter
 
 
 class AutomationEngine:
+    @staticmethod
+    def _build_idempotency_key(
+        workflow_id,
+        event,
+        data,
+        organization_id,
+    ):
+        payload = {
+            "organization_id": organization_id,
+            "workflow_id": workflow_id,
+            "event": event or "unknown",
+            "data": data or {},
+        }
+
+        canonical = json.dumps(
+            payload,
+            sort_keys=True,
+            ensure_ascii=False,
+            default=str,
+        )
+
+        return hashlib.sha256(
+            canonical.encode("utf-8")
+        ).hexdigest()
+
     def __init__(self):
         self.workflows = []
         self.router = AutomationRouter()
@@ -61,9 +89,11 @@ class AutomationEngine:
                     "user_organization_id": user.organization_id,
                 }
 
-        result = registry.execute(
-            action_type,
-            parameters,
+        result = governed_execution_service.execute(
+            action=action_type,
+            parameters=parameters,
+            data=data,
+            organization_id=organization_id,
             user_id=user_id,
         )
 
@@ -75,6 +105,68 @@ class AutomationEngine:
             "action": action_type,
             "result": result,
         }
+
+    def _execute_with_retry(self, action, config, data, retry_policy=None):
+        policy = dict(retry_policy or {})
+        max_attempts = max(1, int(policy.get("max_attempts", 1)))
+        retry_on = {str(item) for item in (policy.get("retry_on") or [])}
+        attempts = []
+        result = None
+
+        for attempt in range(1, max_attempts + 1):
+            result = self._execute_action(action, config, data)
+            attempts.append({
+                "attempt": attempt,
+                "success": bool(result.get("success")) if isinstance(result, dict) else True,
+                "status": result.get("status") if isinstance(result, dict) else "completed",
+                "error": result.get("error") if isinstance(result, dict) else None,
+            })
+            if not isinstance(result, dict) or result.get("success"):
+                break
+            error_code = str(result.get("error_code") or result.get("status") or "")
+            error_text = str(result.get("error") or result.get("message") or "")
+            transient = error_code in retry_on or error_text in retry_on
+            if not transient or attempt >= max_attempts:
+                break
+
+        if not isinstance(result, dict):
+            result = {"success": True, "result": result}
+        result = dict(result)
+        result["retry"] = {
+            "attempts": len(attempts),
+            "max_attempts": max_attempts,
+            "history": attempts,
+        }
+        return result
+
+    @staticmethod
+    def _checkpoint(execution, action_results, current_position, status="running", error=None):
+        prior = {}
+        if execution.output_json:
+            try:
+                parsed = json.loads(execution.output_json)
+                if isinstance(parsed, dict):
+                    prior = parsed
+            except Exception:
+                prior = {}
+        state = {
+            "version": "1.1",
+            "status": status,
+            "current_position": current_position,
+            "completed_positions": [
+                item.get("position") for item in action_results
+                if item.get("status") == "completed"
+            ],
+            "steps": action_results,
+        }
+        if prior.get("outcome_baseline"):
+            state["outcome_baseline"] = prior["outcome_baseline"]
+        if prior.get("outcome"):
+            state["outcome"] = prior["outcome"]
+        execution.status = status
+        execution.output_json = json.dumps(state, ensure_ascii=False, default=str)
+        execution.error_message = error
+        execution.completed_at = datetime.utcnow() if status in {"completed", "failed", "rejected"} else None
 
     def execute(self, event=None, data=None, organization_id=None, workflow_id=None):
         data = data or {}
@@ -89,6 +181,18 @@ class AutomationEngine:
 
             if selected_workflow is not None:
                 organization_id = selected_workflow.organization_id
+
+        if organization_id is not None:
+            monetization = monetization_guard.feature(organization_id, "automation")
+            if not monetization.get("allowed"):
+                return [{
+                    "success": False,
+                    "status": "blocked",
+                    "error_code": "feature_not_entitled",
+                    "error": monetization.get("reason"),
+                    "organization_id": organization_id,
+                    "feature": "automation",
+                }]
 
         # Propagate tenant context into action parameters.
         # Preserve an explicitly supplied user_id.
@@ -171,9 +275,41 @@ class AutomationEngine:
         )
 
         for workflow in workflows:
+            idempotency_key = self._build_idempotency_key(
+                workflow_id=workflow.id,
+                event=event,
+                data=data,
+                organization_id=organization_id,
+            )
+
+            existing_execution = (
+                AutomationExecution.query
+                .filter_by(
+                    workflow_id=workflow.id,
+                    idempotency_key=idempotency_key,
+                )
+                .order_by(
+                    AutomationExecution.id.desc()
+                )
+                .first()
+            )
+
+            if existing_execution is not None:
+                results.append({
+                    "workflow": workflow.id,
+                    "workflow_name": workflow.name,
+                    "status": "deduplicated",
+                    "source": "idempotency",
+                    "execution_id": existing_execution.id,
+                    "execution_status": existing_execution.status,
+                    "idempotency_key": idempotency_key,
+                })
+                continue
+
             execution = AutomationExecution(
                 workflow_id=workflow.id,
                 trigger_type=event or "unknown",
+                idempotency_key=idempotency_key,
                 status="running",
                 input_json=json.dumps(
                     data,
@@ -188,6 +324,18 @@ class AutomationEngine:
             db.session.flush()
 
             try:
+                from app.services.business_outcome_service import business_outcome_service
+                baseline = business_outcome_service.capture_snapshot(organization_id, "30d")
+                execution.output_json = json.dumps({
+                    "version": "1.1",
+                    "status": "running",
+                    "current_position": 0,
+                    "completed_positions": [],
+                    "steps": [],
+                    "outcome_baseline": baseline if baseline.get("success") else None,
+                }, ensure_ascii=False, default=str)
+                db.session.flush()
+
                 actions = (
                     AutomationAction.query
                     .filter_by(
@@ -199,6 +347,8 @@ class AutomationEngine:
                 )
 
                 action_results = []
+                step_context = dict(data)
+                step_context["workflow_context"] = {"steps": []}
 
                 for action in actions:
                     config = {}
@@ -209,10 +359,18 @@ class AutomationEngine:
                         except Exception:
                             config = {}
 
-                    action_result = self._execute_action(
+                    retry_policy = {}
+                    try:
+                        if isinstance(config, dict):
+                            retry_policy = config.get("retry_policy") or {}
+                    except Exception:
+                        retry_policy = {}
+
+                    action_result = self._execute_with_retry(
                         action,
                         config,
-                        data,
+                        step_context,
+                        retry_policy=retry_policy,
                     )
 
                     # Human approval gate.
@@ -252,20 +410,20 @@ class AutomationEngine:
                         }
 
                         action_results.append({
-                            'action_id': action.id,
-                            'action_type': action.action_type,
-                            'config': config,
-                            'result': action_result,
+                            "position": action.position,
+                            "action_id": action.id,
+                            "action_type": action.action_type,
+                            "config": config,
+                            "result": action_result,
                             "status": "waiting_approval",
                         })
 
-                        execution.status = "waiting_approval"
-                        execution.output_json = json.dumps(
+                        self._checkpoint(
+                            execution,
                             action_results,
-                            ensure_ascii=False,
-                            default=str,
+                            current_position=action.position,
+                            status="waiting_approval",
                         )
-                        execution.completed_at = None
 
                         results.append({
                             'workflow': workflow.name,
@@ -283,6 +441,7 @@ class AutomationEngine:
                         break
 
                     action_results.append({
+                        "position": action.position,
                         "action_id": action.id,
                         "action_type": action.action_type,
                         "config": config,
@@ -294,6 +453,21 @@ class AutomationEngine:
                         ),
                     })
 
+                    step_context["workflow_context"]["steps"].append({
+                        "position": action.position,
+                        "action_id": action.id,
+                        "action_type": action.action_type,
+                        "success": bool(action_result.get("success")),
+                        "result": action_result,
+                    })
+                    step_context["previous_result"] = action_result
+                    self._checkpoint(
+                        execution,
+                        action_results,
+                        current_position=action.position,
+                        status="running",
+                    )
+
                     if not action_result.get("success"):
                         raise RuntimeError(
                             action_result.get(
@@ -303,13 +477,41 @@ class AutomationEngine:
                         )
 
                 if execution.status != "waiting_approval":
-                    execution.status = "completed"
-                    execution.output_json = json.dumps(
+                    self._checkpoint(
+                        execution,
                         action_results,
-                        ensure_ascii=False,
-                        default=str,
+                        current_position=(actions[-1].position if actions else 0),
+                        status="completed",
                     )
-                    execution.completed_at = datetime.utcnow()
+                    try:
+                        checkpoint = json.loads(execution.output_json or "{}")
+                        baseline = checkpoint.get("outcome_baseline")
+                        capability = action_results[-1].get("action_type") if action_results else None
+                        if baseline and capability:
+                            from app.services.business_outcome_service import business_outcome_service
+                            outcome = business_outcome_service.build_execution_outcome(
+                                organization_id, f"kemet.{capability}", baseline, "30d"
+                            )
+                            checkpoint["outcome"] = outcome if outcome.get("success") else {"success": False, "error": outcome.get("error")}
+                            checkpoint["outcome_measurement"] = {
+                                "status": "completed" if outcome.get("success") else "failed",
+                                "attempted_at": datetime.utcnow().isoformat(),
+                                "error": outcome.get("error") if not outcome.get("success") else None,
+                            }
+                            execution.output_json = json.dumps(checkpoint, ensure_ascii=False, default=str)
+                    except Exception as exc:
+                        try:
+                            checkpoint = json.loads(execution.output_json or "{}")
+                            checkpoint["outcome_measurement"] = {
+                                "status": "failed",
+                                "attempted_at": datetime.utcnow().isoformat(),
+                                "error_type": type(exc).__name__,
+                                "error": str(exc),
+                                "non_blocking": True,
+                            }
+                            execution.output_json = json.dumps(checkpoint, ensure_ascii=False, default=str)
+                        except Exception:
+                            pass
 
                     results.append({
                         "workflow": workflow.name,
@@ -349,113 +551,236 @@ class AutomationEngine:
         workflow_id,
         organization_id,
     ):
-        from app.models.automation import (
-            AutomationAction,
-            AutomationApproval,
-            AutomationExecution,
-            AutomationWorkflow,
-        )
+        from app.models.automation import AutomationAction, AutomationApproval, AutomationExecution, AutomationWorkflow
 
-        approval = AutomationApproval.query.get(approval_id)
-        execution = AutomationExecution.query.get(execution_id)
-        workflow = AutomationWorkflow.query.get(workflow_id)
+        approval = db.session.get(AutomationApproval, approval_id)
+        execution = db.session.get(AutomationExecution, execution_id)
+        workflow = db.session.get(AutomationWorkflow, workflow_id)
 
-        if not approval:
-            raise RuntimeError("Approval request not found.")
-        if approval.status != "approved":
-            raise RuntimeError(
-                f"Approval is not approved: {approval.status}"
-            )
+        if not approval or approval.status != "approved":
+            raise RuntimeError("Approval request is not approved.")
         if not execution:
             raise RuntimeError("Automation execution not found.")
         if not workflow:
             raise RuntimeError("Automation workflow not found.")
+        if approval.organization_id != organization_id or workflow.organization_id != organization_id:
+            raise RuntimeError("Automation tenant mismatch.")
 
-        request_data = {}
-        if approval.request_json:
+        decision_data = {}
+        if approval.decision_json:
             try:
-                request_data = json.loads(approval.request_json)
+                decision_data = json.loads(approval.decision_json)
             except Exception:
-                request_data = {}
+                decision_data = {}
+        plan = decision_data.get("plan") or {}
+        authorization = decision_data.get("authorization")
+        if not plan or not authorization:
+            raise RuntimeError("Execution plan authorization is missing.")
 
-        action_id = request_data.get("action_id")
-        action_type = request_data.get("action") or approval.action_type
-        parameters = dict(request_data.get("parameters") or {})
-        parameters["_approved_execution"] = True
-        data = request_data.get("data") or {}
+        context = plan.get("context") or {}
+        if (context.get("approval_id") != approval.id or
+                context.get("execution_id") != execution.id or
+                context.get("workflow_id") != workflow.id or
+                context.get("organization_id") != organization_id):
+            raise RuntimeError("Authorized execution context mismatch.")
 
-        action = (
-            AutomationAction.query.get(action_id)
-            if action_id else
-            AutomationAction.query.filter_by(
-                workflow_id=workflow.id,
-                action_type=action_type,
-                is_active=True,
-            ).order_by(
-                AutomationAction.position.asc()
-            ).first()
-        )
+        action_type = plan.get("action")
+        action_id = context.get("action_id")
+        if not action_type or not action_id:
+            raise RuntimeError("Authorized action identity is missing.")
 
+        action = AutomationAction.query.filter_by(
+            id=action_id, workflow_id=workflow.id, action_type=action_type, is_active=True
+        ).first()
         if not action:
-            raise RuntimeError(
-                f"Approved action not found: {action_type}"
-            )
+            raise RuntimeError("Authorized action is no longer available.")
 
-        parameters = dict(parameters or {})
-        parameters["_approved_execution"] = True
-
-        result = self._execute_action(
-            action,
-            parameters,
-            data,
+        from app.core.execution.execution_boundary import execution_boundary
+        gate_result = execution_boundary.require(
+            plan=plan, authorization=authorization, action=action_type
         )
+        if not gate_result.get("allowed"):
+            raise RuntimeError(gate_result.get("error", "Central execution gate denied execution."))
 
-        if not isinstance(result, dict):
-            result = {
-                "success": bool(result),
-                "result": result,
-            }
+        parameters = plan.get("parameters") or {}
+        data = plan.get("data") or {}
+        if not isinstance(parameters, dict) or not isinstance(data, dict):
+            raise RuntimeError("Authorized execution payload is invalid.")
 
-        if result.get("approval_required"):
-            raise RuntimeError(
-                "Action requested approval again."
-            )
+        from app.core.execution.runtime import canonical_execution_runtime
+        canonical_parameters = dict(parameters)
+        canonical_parameters["_approved_execution"] = True
+        for key, value in data.items():
+            canonical_parameters.setdefault(key, value)
+        canonical_plan = dict(plan)
+        canonical_plan["action"] = action_type
+        canonical_plan["parameters"] = canonical_parameters
 
-        if not result.get("success"):
-            raise RuntimeError(
-                result.get(
-                    "message",
-                    "Approved automation action failed.",
-                )
-            )
+        approved_result = canonical_execution_runtime.execute(
+            plan=canonical_plan,
+            authorization=authorization,
+            action_registry=registry,
+            user_id=canonical_parameters.get("user_id"),
+        )
+        if approved_result.get("approval_required"):
+            raise RuntimeError("Action requested approval again.")
+        if not approved_result.get("success"):
+            raise RuntimeError(approved_result.get("message") or approved_result.get("error") or "Approved action failed.")
 
-        output = [{
+        action_results = []
+        if execution.output_json:
+            try:
+                checkpoint = json.loads(execution.output_json)
+                if isinstance(checkpoint, dict):
+                    action_results = list(checkpoint.get("steps") or [])
+                elif isinstance(checkpoint, list):
+                    action_results = checkpoint
+            except Exception:
+                action_results = []
+
+        action_results = [item for item in action_results if item.get("action_id") != action.id]
+        action_results.append({
+            "position": action.position,
             "action_id": action.id,
             "action_type": action.action_type,
-            "result": result,
+            "result": approved_result,
             "status": "completed",
-            "approval_id": approval_id,
-        }]
+            "approval_id": approval.id,
+        })
+        action_results.sort(key=lambda item: item.get("position", 0))
 
-        execution.status = "completed"
-        execution.output_json = json.dumps(
-            output,
-            ensure_ascii=False,
-            default=str,
-        )
-        execution.error_message = None
-        execution.completed_at = datetime.utcnow()
-
-        db.session.add(execution)
-        db.session.commit()
-
-        return {
-            "success": True,
-            "status": "completed",
-            "approval_id": approval_id,
-            "execution_id": execution.id,
-            "workflow_id": workflow.id,
-            "actions": output,
+        step_context = dict(data)
+        step_context["organization_id"] = organization_id
+        step_context["workflow_context"] = {
+            "steps": [
+                {
+                    "position": item.get("position"),
+                    "action_id": item.get("action_id"),
+                    "action_type": item.get("action_type"),
+                    "success": bool((item.get("result") or {}).get("success")),
+                    "result": item.get("result"),
+                }
+                for item in action_results
+            ]
         }
+        step_context["previous_result"] = approved_result
+
+        actions = AutomationAction.query.filter_by(
+            workflow_id=workflow.id, is_active=True
+        ).order_by(AutomationAction.position.asc()).all()
+
+        for next_action in actions:
+            if next_action.position <= action.position:
+                continue
+
+            config = {}
+            if next_action.config_json:
+                try:
+                    config = json.loads(next_action.config_json)
+                except Exception:
+                    config = {}
+
+            retry_policy = config.get("retry_policy") if isinstance(config, dict) else {}
+            next_result = self._execute_with_retry(
+                next_action, config, step_context, retry_policy=retry_policy
+            )
+
+            if next_result.get("approval_required") is True:
+                approval_next = automation_approval_service.create(
+                    organization_id=organization_id,
+                    action_type=next_action.action_type,
+                    reason=next_result.get("message") or next_result.get("reason") or f"Human approval required for {next_action.action_type}",
+                    request_data={
+                        "action_id": next_action.id,
+                        "action": next_action.action_type,
+                        "parameters": config,
+                        "data": data,
+                        "action_result": next_result,
+                    },
+                    workflow_id=workflow.id,
+                    execution_id=execution.id,
+                    requested_by=data.get("user_id"),
+                )
+                item = {
+                    "position": next_action.position,
+                    "action_id": next_action.id,
+                    "action_type": next_action.action_type,
+                    "config": config,
+                    "result": {**next_result, "approval_id": approval_next.get("approval_id"), "status": "pending", "financial_action_executed": False},
+                    "status": "waiting_approval",
+                }
+                action_results.append(item)
+                self._checkpoint(execution, action_results, next_action.position, status="waiting_approval")
+                db.session.commit()
+                return {
+                    "success": False, "status": "waiting_approval",
+                    "approval_id": approval_next.get("approval_id"),
+                    "execution_id": execution.id, "workflow_id": workflow.id,
+                    "actions": action_results,
+                }
+
+            item = {
+                "position": next_action.position,
+                "action_id": next_action.id,
+                "action_type": next_action.action_type,
+                "config": config,
+                "result": next_result,
+                "status": "completed" if next_result.get("success") else "failed",
+            }
+            action_results.append(item)
+            step_context["workflow_context"]["steps"].append({
+                "position": next_action.position,
+                "action_id": next_action.id,
+                "action_type": next_action.action_type,
+                "success": bool(next_result.get("success")),
+                "result": next_result,
+            })
+            step_context["previous_result"] = next_result
+            self._checkpoint(execution, action_results, next_action.position, status="running")
+            if not next_result.get("success"):
+                self._checkpoint(execution, action_results, next_action.position, status="failed", error=next_result.get("error") or next_result.get("message"))
+                db.session.commit()
+                return {
+                    "success": False, "status": "failed",
+                    "execution_id": execution.id, "workflow_id": workflow.id,
+                    "actions": action_results,
+                    "error": next_result.get("error") or next_result.get("message"),
+                }
+
+        final_position = actions[-1].position if actions else action.position
+        self._checkpoint(execution, action_results, final_position, status="completed")
+        try:
+            checkpoint = json.loads(execution.output_json or "{}")
+            baseline = checkpoint.get("outcome_baseline")
+            capability = action_results[-1].get("action_type") if action_results else None
+            if baseline and capability:
+                from app.services.business_outcome_service import business_outcome_service
+                outcome = business_outcome_service.build_execution_outcome(
+                    organization_id, f"kemet.{capability}", baseline, "30d"
+                )
+                checkpoint["outcome"] = outcome if outcome.get("success") else {"success": False, "error": outcome.get("error")}
+                checkpoint["outcome_measurement"] = {
+                    "status": "completed" if outcome.get("success") else "failed",
+                    "attempted_at": datetime.utcnow().isoformat(),
+                    "error": outcome.get("error") if not outcome.get("success") else None,
+                }
+                execution.output_json = json.dumps(checkpoint, ensure_ascii=False, default=str)
+        except Exception as exc:
+            try:
+                checkpoint = json.loads(execution.output_json or "{}")
+                checkpoint["outcome_measurement"] = {
+                    "status": "failed", "attempted_at": datetime.utcnow().isoformat(),
+                    "error_type": type(exc).__name__, "error": str(exc), "non_blocking": True,
+                }
+                execution.output_json = json.dumps(checkpoint, ensure_ascii=False, default=str)
+            except Exception:
+                pass
+        db.session.commit()
+        return {
+            "success": True, "status": "completed",
+            "approval_id": approval.id, "execution_id": execution.id,
+            "workflow_id": workflow.id, "actions": action_results,
+        }
+
 
 engine = AutomationEngine()

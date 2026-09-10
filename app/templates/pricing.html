@@ -1,184 +1,47 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kemet AI - Pricing</title>
-<style>
-*{box-sizing:border-box}
-body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    background:#08111f;
-    color:#fff;
-    padding:40px 20px;
-}
-.container{
-    max-width:1100px;
-    margin:auto;
-}
-h1{
-    text-align:center;
-    font-size:42px;
-    margin-bottom:10px;
-}
-.subtitle{
-    text-align:center;
-    color:#94a3b8;
-    margin-bottom:45px;
-}
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:22px;
-}
-.card{
-    background:#111827;
-    border:1px solid #1e293b;
-    padding:30px 22px;
-    border-radius:18px;
-    text-align:center;
-}
-.card.featured{
-    border:2px solid #2563eb;
-    transform:translateY(-6px);
-}
-.card h2{
-    margin-top:0;
-}
-.price{
-    font-size:38px;
-    font-weight:bold;
-    color:#60a5fa;
-    margin:18px 0;
-}
-.price small{
-    display:block;
-    margin-top:8px;
-    font-size:16px;
-    font-weight:500;
-}
-.price span{
-    font-size:14px;
-    color:#94a3b8;
-}
-ul{
-    list-style:none;
-    padding:0;
-    color:#cbd5e1;
-    line-height:2;
-    min-height:150px;
-}
-.btn{
-    display:inline-block;
-    width:100%;
-    background:#2563eb;
-    color:white;
-    padding:13px 20px;
-    border-radius:10px;
-    text-decoration:none;
-    font-weight:bold;
-}
-.btn:hover{
-    background:#1d4ed8;
-}
-.free{
-    background:#334155;
-}
-.badge{
-    display:inline-block;
-    background:#2563eb;
-    padding:5px 12px;
-    border-radius:20px;
-    font-size:12px;
-    margin-bottom:10px;
-}
-</style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-v3.css') }}">
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI - Pricing</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+
+    <script defer
+            src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+    <link rel="stylesheet"
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
 <body>
-<div class="container">
+<main>
+    <h1>Kemet AI Pricing</h1>
 
-<h1>خطط Kemet AI</h1>
-<p class="subtitle">
-ابدأ مجانًا ثم قم بالترقية عندما ينمو فريق الدعم لديك.
-</p>
+    <section>
+        <h2>Starter</h2>
+        <p>$49.00 / month</p>
+        <a href="/billing/subscribe/starter">Choose Starter</a>
+    </section>
 
-<div style="text-align:center;margin:10px 0 25px;font-size:14px;opacity:.8;">
-  سعر الصرف الحالي: 1 USD ≈ {{ exchange_rate }} EGP
-  {% if exchange_rate_fallback %}
-    <br>يتم استخدام سعر احتياطي مؤقت.
-  {% endif %}
+    <section>
+        <h2>Business</h2>
+        <p>$99.00 / month</p>
+        <a href="/billing/subscribe/business">Choose Business</a>
+    </section>
+
+    <section>
+        <h2>Enterprise</h2>
+        <p>Contact Sales</p>
+        <a href="/billing/subscribe/enterprise">Contact Sales</a>
+    </section>
+</main>
+
+<div class="k-checkout-entry">
+    <a href="/pricing" class="k-quick-action">Checkout</a>
 </div>
 
-<div class="cards">
-
-<div class="card">
-<h2>Free</h2>
-<div class="price">$0 <span>/ شهر</span></div>
-<ul>
-<li>100 استخدام AI شهريًا</li>
-<li>إدارة التذاكر</li>
-<li>AI Suggest</li>
-<li>Analytics</li>
-</ul>
-<a class="btn free" href="/register">ابدأ مجانًا</a>
-</div>
-
-<div class="card featured">
-<div class="badge">الأكثر مناسبة</div>
-<h2>Starter</h2>
-<div class="price">
-        $9 <span>/ شهر</span>
-        <small>≈ {{ pricing["starter"]["egp"] }} EGP / شهر</small>
-    </div>
-<ul>
-<li>1,000 استخدام AI شهريًا</li>
-<li>إدارة التذاكر</li>
-<li>AI Suggest</li>
-<li>Analytics</li>
-<li>أتمتة الدعم</li>
-</ul>
-<a class="btn" href="/pricing/select/starter">ابدأ Starter</a>
-</div>
-
-<div class="card">
-<h2>Business</h2>
-<div class="price">
-        $29 <span>/ شهر</span>
-        <small>≈ {{ pricing["business"]["egp"] }} EGP / شهر</small>
-    </div>
-<ul>
-<li>5,000 استخدام AI شهريًا</li>
-<li>كل مزايا Starter</li>
-<li>Knowledge Base</li>
-<li>RAG</li>
-<li>أتمتة متقدمة</li>
-</ul>
-<a class="btn" href="/pricing/select/business">ابدأ Business</a>
-</div>
-
-<div class="card">
-<h2>Enterprise</h2>
-<div class="price">
-        $79 <span>/ شهر</span>
-        <small>≈ {{ pricing["enterprise"]["egp"] }} EGP / شهر</small>
-    </div>
-<ul>
-<li>50,000 استخدام AI شهريًا</li>
-<li>كل مزايا Business</li>
-<li>دعم مخصص</li>
-<li>تكاملات خاصة</li>
-</ul>
-<a class="btn" href="/pricing/select/enterprise">تواصل معنا</a>
-</div>
-
-</div>
-
-</div>
-<script src="{{ url_for('static', filename='js/kemet-v2.js') }}"></script>
-<script src="{{ url_for('static', filename='js/kemet-v3.js') }}"></script>
 </body>
 </html>

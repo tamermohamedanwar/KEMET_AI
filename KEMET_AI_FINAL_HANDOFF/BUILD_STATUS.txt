@@ -1,0 +1,32 @@
+KEMET AI — FINAL BUILD STATUS
+
+PYTHON:
+3.11.x
+
+APPLICATION:
+Flask Application Factory
+
+ACTIVE UI:
+app/static/css/kemet-ui.css
+app/static/js/kemet-ui.js
+
+LEGACY UI:
+archive/ui_legacy/
+
+DATABASES:
+instance/supportai.db
+instance/rag.db
+
+DEPLOYMENT:
+Procfile
+gunicorn.conf.py
+run_production.sh
+
+TESTING:
+DEFERRED TO FINAL GATE
+
+DATABASE MIGRATION:
+DEFERRED
+
+PRODUCTION DEPLOYMENT:
+DEFERRED

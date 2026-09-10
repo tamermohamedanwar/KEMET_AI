@@ -1,0 +1,250 @@
+<style>
+/* =========================================================
+   KEMET AI BOS — WHITE MODERN UI
+   Visual layer only — no backend changes
+   ========================================================= */
+
+:root{
+  --kemet-bg:#f7f8fa !important;
+  --kemet-surface:#ffffff !important;
+  --kemet-surface-soft:#f9fafb !important;
+  --kemet-border:#e5e7eb !important;
+  --kemet-text:#111827 !important;
+  --kemet-muted:#6b7280 !important;
+  --kemet-accent:#635bff !important;
+  --kemet-accent-dark:#5148e5 !important;
+  --kemet-success:#16a34a !important;
+  --kemet-danger:#dc2626 !important;
+  --kemet-warning:#d97706 !important;
+  --kemet-shadow:0 8px 30px rgba(17,24,39,.06);
+}
+
+html,
+body{
+  background:#f7f8fa !important;
+  color:#111827 !important;
+}
+
+body{
+  min-height:100vh;
+}
+
+/* Remove old dark shells */
+body,
+main,
+section,
+article,
+.dashboard,
+.dashboard-container,
+.content,
+.main-content,
+.page-content,
+.app-content{
+  background-color:#f7f8fa !important;
+  color:#111827 !important;
+}
+
+/* Panels / cards */
+.card,
+.panel,
+.box,
+.stat-card,
+.metric-card,
+.widget,
+.dashboard-card,
+.content-card,
+.settings-card,
+.ticket-card,
+.lead-card,
+.workflow-card,
+.table-container{
+  background:#ffffff !important;
+  color:#111827 !important;
+  border:1px solid #e5e7eb !important;
+  box-shadow:var(--kemet-shadow) !important;
+}
+
+/* Text */
+h1,h2,h3,h4,h5,h6,
+.title,
+.heading{
+  color:#111827 !important;
+}
+
+p,
+label,
+.text-muted,
+.muted,
+small{
+  color:#6b7280 !important;
+}
+
+/* Inputs */
+input,
+textarea,
+select{
+  background:#ffffff !important;
+  color:#111827 !important;
+  border:1px solid #d1d5db !important;
+  border-radius:10px !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#635bff !important;
+  box-shadow:0 0 0 3px rgba(99,91,255,.12) !important;
+  outline:none !important;
+}
+
+/* Buttons */
+button,
+.btn,
+button.primary,
+.btn.primary,
+.primary{
+  background:#635bff !important;
+  color:#ffffff !important;
+  border-color:#635bff !important;
+  border-radius:10px !important;
+}
+
+button:hover,
+.btn:hover,
+button.primary:hover,
+.btn.primary:hover,
+.primary:hover{
+  background:#5148e5 !important;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.secondary{
+  background:#ffffff !important;
+  color:#374151 !important;
+  border:1px solid #d1d5db !important;
+}
+
+/* Links */
+a{
+  color:#635bff;
+}
+
+a:hover{
+  color:#5148e5;
+}
+
+/* Tables */
+table{
+  background:#ffffff !important;
+  color:#111827 !important;
+}
+
+thead,
+th{
+  background:#f9fafb !important;
+  color:#374151 !important;
+}
+
+td{
+  border-color:#e5e7eb !important;
+  color:#374151 !important;
+}
+
+/* Sidebar */
+.sidebar,
+aside,
+.app-sidebar,
+.dashboard-sidebar{
+  background:#ffffff !important;
+  color:#374151 !important;
+  border-right:1px solid #e5e7eb !important;
+}
+
+.sidebar a,
+aside a,
+.app-sidebar a,
+.dashboard-sidebar a{
+  color:#4b5563 !important;
+}
+
+.sidebar a:hover,
+.sidebar a.active,
+aside a:hover,
+aside a.active,
+.app-sidebar a:hover,
+.app-sidebar a.active,
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a.active{
+  background:#f1f0ff !important;
+  color:#635bff !important;
+}
+
+/* Header */
+header,
+.navbar,
+.topbar,
+.app-header{
+  background:#ffffff !important;
+  color:#111827 !important;
+  border-bottom:1px solid #e5e7eb !important;
+}
+
+/* Chat */
+.chat-container,
+.chat-window,
+.chat-main{
+  background:#f7f8fa !important;
+}
+
+.chat-message,
+.message,
+.chat-bubble{
+  background:#ffffff !important;
+  color:#111827 !important;
+  border:1px solid #e5e7eb !important;
+}
+
+.user-message,
+.message.user{
+  background:#635bff !important;
+  color:#ffffff !important;
+  border-color:#635bff !important;
+}
+
+/* Badges */
+.badge,
+.status-badge{
+  border-radius:999px !important;
+}
+
+/* Remove aggressive gradients */
+[style*="linear-gradient"]{
+  background-image:none !important;
+}
+
+/* Remove old dark backgrounds */
+[style*="#07111f"],
+[style*="#0d1a2b"],
+[style*="#111f33"],
+[style*="#0f172a"],
+[style*="#08111f"],
+[style*="#111827"]{
+  background:#ffffff !important;
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .sidebar,
+  aside,
+  .app-sidebar{
+    box-shadow:0 10px 30px rgba(17,24,39,.08) !important;
+  }
+
+  .card,
+  .panel,
+  .dashboard-card{
+    border-radius:14px !important;
+  }
+}
+</style>

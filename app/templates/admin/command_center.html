@@ -1,0 +1,1669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kemet AI — Unified Command Center</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#f7f7f5;
+    color:#171717;
+}
+.shell{
+    max-width:1400px;
+    margin:auto;
+    padding:24px;
+}
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:24px;
+}
+.brand{
+    font-weight:800;
+    font-size:22px;
+    letter-spacing:-.5px;
+}
+.brand span{
+    display:block;
+    font-size:12px;
+    font-weight:500;
+    color:#777;
+    margin-top:4px;
+}
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 13px;
+    background:#fff;
+    border:1px solid #e5e5e5;
+    border-radius:999px;
+    font-size:13px;
+}
+.dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#222;
+}
+.hero{
+    background:#fff;
+    border:1px solid #e5e5e5;
+    border-radius:20px;
+    padding:28px;
+    margin-bottom:20px;
+}
+.hero h1{
+    margin:0 0 8px;
+    font-size:32px;
+    letter-spacing:-1px;
+}
+.hero p{
+    margin:0;
+    color:#707070;
+    max-width:800px;
+    line-height:1.6;
+}
+.command{
+    margin-top:22px;
+    display:flex;
+    gap:10px;
+}
+textarea{
+    flex:1;
+    min-height:58px;
+    resize:vertical;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:17px;
+    font:inherit;
+    outline:none;
+    background:#fafafa;
+}
+textarea:focus{
+    border-color:#999;
+    background:#fff;
+}
+button{
+    border:0;
+    border-radius:12px;
+    padding:0 22px;
+    font:inherit;
+    font-weight:700;
+    cursor:pointer;
+    background:#171717;
+    color:#fff;
+}
+button:disabled{
+    opacity:.55;
+    cursor:wait;
+}
+.examples{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+.example{
+    padding:8px 12px;
+    background:#f5f5f3;
+    color:#333;
+    border:1px solid #e4e4e4;
+    font-size:12px;
+    border-radius:999px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:20px;
+}
+.card{
+    background:#fff;
+    border:1px solid #e5e5e5;
+    border-radius:16px;
+    padding:18px;
+}
+.card small{
+    color:#777;
+    display:block;
+    margin-bottom:8px;
+}
+.metric{
+    font-size:22px;
+    font-weight:800;
+}
+.section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+.panel{
+    background:#fff;
+    border:1px solid #e5e5e5;
+    border-radius:18px;
+    padding:22px;
+}
+.panel h2{
+    margin:0 0 5px;
+    font-size:18px;
+}
+.panel p{
+    color:#777;
+    font-size:13px;
+}
+.rows{
+    margin-top:18px;
+    display:grid;
+    gap:10px;
+}
+.row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+}
+.row:last-child{border-bottom:0}
+.value{
+    font-weight:700;
+}
+.result{
+    display:none;
+    margin-top:20px;
+    border-top:1px solid #eee;
+    padding-top:20px;
+}
+.result.show{display:block}
+.badge{
+    display:inline-flex;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#f0f0ee;
+    font-size:12px;
+    font-weight:700;
+}
+pre{
+    margin-top:15px;
+    padding:15px;
+    background:#151515;
+    color:#eee;
+    border-radius:12px;
+    overflow:auto;
+    font-size:12px;
+    line-height:1.5;
+}
+@media(max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .section{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+    .shell{padding:14px}
+    .topbar{align-items:flex-start}
+    .hero{padding:20px}
+    .hero h1{font-size:25px}
+    .command{flex-direction:column}
+    button{height:52px}
+    .grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+    <div class="topbar">
+        <div class="brand">
+            KEMET AI
+            <span>Unified Command Center · Business Operating System</span>
+        </div>
+
+        <div class="status">
+            <span class="dot"></span>
+            Platform Online
+        </div>
+    </div>
+
+    <section class="hero">
+        <h1>Unified Command Center</h1>
+        <p>
+            Give Kemet AI a business command. The platform connects business
+            context, intelligence, decisioning, orchestration, workflow,
+            approval and execution through the existing governed architecture.
+        </p>
+
+        <div class="command">
+            <textarea id="commandInput"
+                placeholder="Tell Kemet AI what you want the business to do..."></textarea>
+            <button id="executeBtn">Execute</button>
+        </div>
+
+        <div class="examples">
+            <button class="example" data-command="Track order ORD-1024">Track order</button>
+            <button class="example" data-command="Find my hottest leads">Hottest leads</button>
+            <button class="example" data-command="Find customers at risk of churn">Churn risk</button>
+            <button class="example" data-command="تابع العميل 25">Follow customer</button>
+        </div>
+
+        <div id="result" class="result">
+            <div>
+                <span class="badge" id="resultStatus">READY</span>
+            </div>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Intent</span>
+                    <span class="value" id="intent">—</span>
+                </div>
+                <div class="row">
+                    <span>Action</span>
+                    <span class="value" id="action">—</span>
+                </div>
+                <div class="row">
+                    <span>Workflow</span>
+                    <span class="value" id="workflow">—</span>
+                </div>
+                <div class="row">
+                    <span>Approval</span>
+                    <span class="value" id="approval">—</span>
+                </div>
+            </div>
+
+            <pre id="jsonResult">{}</pre>
+        </div>
+    </section>
+
+    <section class="grid">
+        <div class="card">
+            <small>Revenue</small>
+            <div class="metric" id="kpiRevenue">—</div>
+        </div>
+
+        <div class="card">
+            <small>Sales / Leads</small>
+            <div class="metric" id="kpiSales">—</div>
+        </div>
+
+        <div class="card">
+            <small>Customers</small>
+            <div class="metric" id="kpiCustomers">—</div>
+        </div>
+
+        <div class="card">
+            <small>Support</small>
+            <div class="metric" id="kpiSupport">—</div>
+        </div>
+    </section>
+
+    <section class="section">
+
+
+        <div class="panel">
+            <h2>Action Center</h2>
+            <p>Priority business signals and recommended governed actions.</p>
+            <div class="rows" id="actionCenterRows">
+                <div class="row">
+                    <span>Loading business actions...</span>
+                    <span class="value">LIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Live Decisions</h2>
+            <p>Current business decisions from the existing decision layer.</p>
+
+            <div class="rows" id="decisionRows">
+                <div class="row">
+                    <span>Loading decisions...</span>
+                    <span class="value">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Command Intelligence</h2>
+            <p>Live business intelligence available to the command layer.</p>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Business Context</span>
+                    <span class="value" id="contextStatus">Loading...</span>
+                </div>
+                <div class="row">
+                    <span>Decision Engine</span>
+                    <span class="value">READY</span>
+                </div>
+                <div class="row">
+                    <span>Orchestrator</span>
+                    <span class="value">READY</span>
+                </div>
+                <div class="row">
+                    <span>Dispatcher</span>
+                    <span class="value">GOVERNED</span>
+                </div>
+                <div class="row">
+                    <span>Execution Boundary</span>
+                    <span class="value">PROTECTED</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="section">
+
+        <div class="panel">
+            <h2>Growth Control</h2>
+            <p>Operating areas connected to the existing Kemet AI services.</p>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Lead Intelligence</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Revenue Autopilot</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Customer Retention</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Follow-up</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Operations Control</h2>
+            <p>Core operating systems available from the unified layer.</p>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Customer Support</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Automation Engine</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Workforce</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+                <div class="row">
+                    <span>Billing & Subscriptions</span>
+                    <span class="value">ACTIVE</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+        <div class="panel">
+            <h2>Business Control</h2>
+            <p>One place to control the major operating layers.</p>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Sales & Leads</span>
+                    <span class="value" id="controlSales">Loading...</span>
+                </div>
+                <div class="row">
+                    <span>Customer Support</span>
+                    <span class="value" id="controlSupport">Loading...</span>
+                </div>
+                <div class="row">
+                    <span>Revenue Operations</span>
+                    <span class="value" id="controlRevenue">Loading...</span>
+                </div>
+                <div class="row">
+                    <span>Workforce</span>
+                    <span class="value">Connected</span>
+                </div>
+                <div class="row">
+                    <span>Automation</span>
+                    <span class="value">Connected</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Governance & Intelligence</h2>
+            <p>The command center sits above the existing protected architecture.</p>
+
+            <div class="rows">
+                <div class="row">
+                    <span>Live Business Context</span>
+                    <span class="value">READY</span>
+                </div>
+                <div class="row">
+                    <span>Decision Layer</span>
+                    <span class="value">READY</span>
+                </div>
+                <div class="row">
+                    <span>Orchestrator</span>
+                    <span class="value">READY</span>
+                </div>
+                <div class="row">
+                    <span>Dispatcher</span>
+                    <span class="value">GOVERNED</span>
+                </div>
+                <div class="row">
+                    <span>Execution Boundary</span>
+                    <span class="value">PROTECTED</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="section">
+        <div class="panel">
+            <h2>Observed Impact</h2>
+            <p>Measured business movement around governed capabilities. Observational only.</p>
+            <div class="rows" id="outcomeRows">
+                <div class="row"><span>Loading impact signals...</span><span class="value">LIVE</span></div>
+            </div>
+        </div>
+        <div class="panel">
+            <h2>Outcome Confidence</h2>
+            <p>Confidence reflects data sufficiency, not causal attribution or ROI.</p>
+            <div class="rows" id="confidenceRows">
+                <div class="row"><span>Data sufficiency</span><span class="value">—</span></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function(){
+
+    const input = document.getElementById("commandInput");
+    const executeBtn = document.getElementById("executeBtn");
+    const result = document.getElementById("result");
+
+    function setText(id, value){
+        document.getElementById(id).textContent =
+            value === null || value === undefined || value === ""
+            ? "—"
+            : String(value);
+    }
+
+    async function executeCommand(){
+
+        const command = input.value.trim();
+
+        if(!command){
+            input.focus();
+            return;
+        }
+
+        executeBtn.disabled = true;
+        executeBtn.textContent = "Executing...";
+
+        try{
+
+            const response = await fetch("/api/bos/command", {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "X-Requested-With":"XMLHttpRequest"
+                },
+                credentials:"same-origin",
+                body:JSON.stringify({command:command})
+            });
+
+            const data = await response.json();
+
+            result.classList.add("show");
+
+            setText("resultStatus", data.status || (data.success ? "SUCCESS" : "ERROR"));
+
+            setText("intent", data.intent);
+            setText("action", data.action);
+
+            const workflow =
+                data.workflow_name ||
+                data.workflow_id ||
+                "—";
+
+            setText("workflow", workflow);
+
+            setText(
+                "approval",
+                data.requires_approval
+                    ? "Required"
+                    : "Not Required"
+            );
+
+            document.getElementById("jsonResult").textContent =
+                JSON.stringify(data, null, 2);
+
+        }catch(error){
+
+            result.classList.add("show");
+
+            setText("resultStatus","ERROR");
+            setText("intent","—");
+            setText("action","—");
+            setText("workflow","—");
+            setText("approval","—");
+
+            document.getElementById("jsonResult").textContent =
+                JSON.stringify({
+                    success:false,
+                    error:"request_failed",
+                    message:error.message
+                }, null, 2);
+
+        }finally{
+
+            executeBtn.disabled = false;
+            executeBtn.textContent = "Execute";
+        }
+    }
+
+
+    async function loadBusinessKPIs(){
+
+        const endpoints = [
+            "/dashboard/api/kpis",
+            "/dashboard/api/bos/decision-summary"
+        ];
+
+        try{
+
+            const response = await fetch(endpoints[0], {
+                method:"GET",
+                credentials:"same-origin",
+                headers:{
+                    "X-Requested-With":"XMLHttpRequest"
+                }
+            });
+
+            if(!response.ok){
+                throw new Error("KPI endpoint returned " + response.status);
+            }
+
+            const data = await response.json();
+
+            const source = data.kpis || data.data || data;
+
+            const revenue =
+                source.revenue ??
+                source.total_revenue ??
+                source.revenue_total ??
+                source.monthly_revenue;
+
+            const sales =
+                source.leads ??
+                source.total_leads ??
+                source.sales ??
+                source.total_sales;
+
+            const customers =
+                source.customers ??
+                source.total_customers ??
+                source.customer_count;
+
+            const support =
+                source.open_tickets ??
+                source.tickets ??
+                source.support ??
+                source.open_support;
+
+            setText("kpiRevenue", revenue);
+            setText("kpiSales", sales);
+            setText("kpiCustomers", customers);
+            setText("kpiSupport", support);
+
+            setText(
+                "controlSales",
+                sales === null || sales === undefined ? "Connected" : String(sales)
+            );
+
+            setText(
+                "controlSupport",
+                support === null || support === undefined ? "Connected" : String(support)
+            );
+
+            setText(
+                "controlRevenue",
+                revenue === null || revenue === undefined ? "Connected" : String(revenue)
+            );
+
+        }catch(error){
+
+            setText("kpiRevenue","ONLINE");
+            setText("kpiSales","ONLINE");
+            setText("kpiCustomers","ONLINE");
+            setText("kpiSupport","ONLINE");
+
+            setText("controlSales","Connected");
+            setText("controlSupport","Connected");
+            setText("controlRevenue","Connected");
+
+            console.warn("KPI loading unavailable:", error.message);
+        }
+    }
+
+    loadBusinessKPIs();
+
+    async function loadLiveDecisions(){
+
+        const container = document.getElementById("decisionRows");
+
+        try{
+
+            const response = await fetch(
+                "/dashboard/api/bos/decisions",
+                {
+                    method:"GET",
+                    credentials:"same-origin",
+                    headers:{
+                        "X-Requested-With":"XMLHttpRequest"
+                    }
+                }
+            );
+
+            if(!response.ok){
+                throw new Error("Decision API returned " + response.status);
+            }
+
+            const data = await response.json();
+
+            const decisions =
+                Array.isArray(data)
+                    ? data
+                    : (
+                        data.decisions ||
+                        data.items ||
+                        data.data ||
+                        []
+                    );
+
+            if(!Array.isArray(decisions) || decisions.length === 0){
+
+                container.innerHTML =
+                    '<div class="row">' +
+                    '<span>No active decisions</span>' +
+                    '<span class="value">READY</span>' +
+                    '</div>';
+
+                document.getElementById("contextStatus").textContent =
+                    "READY";
+
+                return;
+            }
+
+            container.innerHTML = "";
+
+            decisions.slice(0, 5).forEach(function(decision){
+
+                const row = document.createElement("div");
+                row.className = "row";
+
+                const title =
+                    decision.title ||
+                    decision.name ||
+                    decision.reason ||
+                    decision.type ||
+                    "Business decision";
+
+                const status =
+                    decision.status ||
+                    decision.state ||
+                    "ACTIVE";
+
+                row.innerHTML =
+                    "<span></span>" +
+                    "<span class=\"value\"></span>";
+
+                row.children[0].textContent = String(title);
+                row.children[1].textContent = String(status);
+
+                container.appendChild(row);
+            });
+
+            document.getElementById("contextStatus").textContent =
+                "LIVE";
+
+        }catch(error){
+
+            container.innerHTML =
+                '<div class="row">' +
+                '<span>Decision service</span>' +
+                '<span class="value">CONNECTED</span>' +
+                '</div>';
+
+            document.getElementById("contextStatus").textContent =
+                "CONNECTED";
+
+            console.warn(
+                "Decision loading unavailable:",
+                error.message
+            );
+        }
+    }
+
+
+
+    async function openApprovalPreview(decisionId){
+        try{
+            const response = await fetch(
+                "/dashboard/api/bos/approval-preview/" +
+                encodeURIComponent(decisionId),
+                {
+                    method:"GET",
+                    credentials:"same-origin",
+                    headers:{
+                        "X-Requested-With":"XMLHttpRequest"
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if(!response.ok){
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    "Approval preview unavailable"
+                );
+            }
+
+            let existing =
+                document.getElementById("approvalPreview");
+
+            if(!existing){
+                existing = document.createElement("div");
+                existing.id = "approvalPreview";
+                existing.style.marginTop = "20px";
+                existing.style.padding = "18px";
+                existing.style.border = "1px solid #ddd";
+                existing.style.borderRadius = "12px";
+                existing.style.background = "#fff";
+
+                const host =
+                    document.getElementById("actionCenterRows");
+
+                if(host){
+                    host.parentNode.insertBefore(
+                        existing,
+                        host.nextSibling
+                    );
+                }
+            }
+
+            const decision =
+                data.decision ||
+                data.preview ||
+                data;
+
+            const title =
+                decision.title ||
+                "Decision Approval Preview";
+
+            const rationale =
+                decision.rationale ||
+                decision.reason ||
+                "";
+
+            const recommendation =
+                decision.recommended_action ||
+                decision.action ||
+                "";
+
+            const confidence =
+                decision.confidence ??
+                "—";
+
+            const impact =
+                decision.impact_score ??
+                "—";
+
+            existing.innerHTML =
+                '<strong></strong>' +
+                '<div style="margin-top:10px;"></div>' +
+                '<div style="margin-top:8px;"></div>' +
+                '<div style="margin-top:8px;font-size:13px;">' +
+                    'Confidence: <strong class="preview-confidence"></strong>' +
+                    ' · Impact: <strong class="preview-impact"></strong>' +
+                '</div>' +
+                '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">' +
+                    '<button type="button" data-transition="approve">Approve</button>' +
+                    '<button type="button" data-transition="reject">Reject</button>' +
+                    '<button type="button" data-transition="snooze">Snooze</button>' +
+                '</div>';
+
+            existing.querySelector("strong").textContent =
+                String(title);
+
+            existing.children[1].textContent =
+                String(rationale);
+
+            existing.children[2].textContent =
+                String(recommendation);
+
+            existing.querySelector(".preview-confidence").textContent =
+                String(confidence);
+
+            existing.querySelector(".preview-impact").textContent =
+                String(impact);
+
+            existing.querySelectorAll(
+                "[data-transition]"
+            ).forEach(function(button){
+                button.addEventListener(
+                    "click",
+                    function(){
+                        transitionDecision(
+                            decisionId,
+                            button.dataset.transition,
+                            existing
+                        );
+                    }
+                );
+            });
+
+            existing.scrollIntoView({
+                behavior:"smooth",
+                block:"nearest"
+            });
+
+        }catch(error){
+            console.warn(
+                "Approval preview unavailable:",
+                error.message
+            );
+        }
+    }
+
+    async function transitionDecision(
+        decisionId,
+        transition,
+        container
+    ){
+        try{
+            const response = await fetch(
+                "/dashboard/api/bos/decision-transition",
+                {
+                    method:"POST",
+                    credentials:"same-origin",
+                    headers:{
+                        "Content-Type":"application/json",
+                        "X-Requested-With":"XMLHttpRequest"
+                    },
+                    body:JSON.stringify({
+                        decision_id: decisionId,
+                        transition: transition
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if(!response.ok || !data.ok){
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    "Decision transition failed"
+                );
+            }
+
+            const result =
+                data.result ||
+                {};
+
+            container.innerHTML =
+                '<strong>Decision updated</strong>' +
+                '<div style="margin-top:8px;"></div>';
+
+            container.children[1].textContent =
+                String(
+                    result.status ||
+                    result.state ||
+                    transition
+                ).toUpperCase();
+
+        
+    async function loadOutcomeIntelligence(){
+        const outcomes = document.getElementById("outcomeRows");
+        const confidence = document.getElementById("confidenceRows");
+        if(!outcomes || !confidence) return;
+        try{
+            const response = await fetch("/api/bos/outcome-intelligence?period=30d", {credentials:"same-origin", headers:{"X-Requested-With":"XMLHttpRequest"}});
+            const data = await response.json();
+            if(!response.ok || !data.success) throw new Error(data.error || "Outcome intelligence unavailable");
+            const items = Array.isArray(data.items) ? data.items : [];
+            outcomes.innerHTML = "";
+            confidence.innerHTML = "";
+            if(!items.length){
+                outcomes.innerHTML='<div class="row"><span>No observed impact yet</span><span class="value">MONITOR</span></div>';
+                confidence.innerHTML='<div class="row"><span>Data sufficiency</span><span class="value">INSUFFICIENT</span></div>';
+                return;
+            }
+            items.slice(0,6).forEach(function(item){
+                const impact = item.observed_impact || [];
+                const changed = impact.find(function(x){ return x.direction !== "flat"; });
+                const row=document.createElement("div"); row.className="row";
+                row.innerHTML='<span></span><span class="value"></span>';
+                row.children[0].textContent=(item.capability_id||"capability")+(changed ? " · "+changed.metric : "");
+                row.children[1].textContent=changed ? String(changed.delta) : "FLAT";
+                outcomes.appendChild(row);
+                const c=document.createElement("div"); c.className="row";
+                c.innerHTML='<span></span><span class="value"></span>';
+                c.children[0].textContent=item.capability_id||"capability";
+                c.children[1].textContent=Math.round((item.confidence.score||0)*100)+"% "+String(item.confidence.level||"").toUpperCase();
+                confidence.appendChild(c);
+            });
+        }catch(error){
+            outcomes.innerHTML='<div class="row"><span>Outcome intelligence</span><span class="value">CONNECTED</span></div>';
+            confidence.innerHTML='<div class="row"><span>Confidence</span><span class="value">NOT ENOUGH DATA</span></div>';
+            console.warn("Outcome intelligence unavailable:", error.message);
+        }
+    }
+
+    loadActionCenter();
+    loadOutcomeIntelligence();
+            loadLiveDecisions();
+
+        }catch(error){
+            console.warn(
+                "Decision transition unavailable:",
+                error.message
+            );
+        }
+    }
+
+    async function loadActionCenter(){
+        const container = document.getElementById("actionCenterRows");
+        if(!container) return;
+
+        try{
+            const response = await fetch(
+                "/dashboard/api/bos/actions",
+                {
+                    method:"GET",
+                    credentials:"same-origin",
+                    headers:{
+                        "X-Requested-With":"XMLHttpRequest"
+                    }
+                }
+            );
+
+            if(!response.ok){
+                throw new Error(
+                    "Action API returned " + response.status
+                );
+            }
+
+            const data = await response.json();
+            const actions = Array.isArray(data.actions)
+                ? data.actions
+                : [];
+
+            let rankedActions = actions;
+            if(actions.length){
+                try{
+                    const priorityResponse = await fetch(
+                        "/api/bos/outcome-priority",
+                        {
+                            method:"POST",
+                            credentials:"same-origin",
+                            headers:{
+                                "Content-Type":"application/json",
+                                "X-Requested-With":"XMLHttpRequest"
+                            },
+                            body: JSON.stringify({period:"30d", decisions: actions})
+                        }
+                    );
+                    if(priorityResponse.ok){
+                        const priorityData = await priorityResponse.json();
+                        if(priorityData.success && Array.isArray(priorityData.items)){
+                            rankedActions = priorityData.items;
+                        }
+                    }
+                }catch(priorityError){
+                    console.warn("Outcome priority unavailable:", priorityError.message);
+                }
+            }
+
+            container.innerHTML = "";
+
+            if(!rankedActions.length){
+                container.innerHTML =
+                    '<div class="row">' +
+                    '<span>No priority actions detected</span>' +
+                    '<span class="value">READY</span>' +
+                    '</div>';
+                return;
+            }
+
+            rankedActions.slice(0, 6).forEach(function(item){
+                const row = document.createElement("div");
+                row.className = "row";
+                row.style.display = "block";
+
+                const title =
+                    item.title ||
+                    "Business action";
+
+                const priority =
+                    item.priority ||
+                    "low";
+
+                const type =
+                    item.type ||
+                    "signal";
+
+                const decisionId =
+                    item.decision_id ??
+                    item.id ??
+                    null;
+
+                const message =
+                    item.message ||
+                    item.recommended_action ||
+                    "";
+
+                const confidenceData = item.impact_confidence || {};
+                const confidenceScore = Number(confidenceData.score || 0);
+                const outcomeScore = Number(item.outcome_priority_score || 0);
+                const impact = Array.isArray(item.observed_impact)
+                    ? item.observed_impact.find(function(signal){
+                        return signal.direction !== "flat";
+                    })
+                    : null;
+                const approvalRequired = item.approval_required === true ||
+                    item.requires_approval === true ||
+                    item.action === "refund_request";
+
+                row.innerHTML =
+                    '<div style="display:flex;justify-content:space-between;gap:12px;">' +
+                        '<strong class="action-title"></strong>' +
+                        '<span class="value action-priority"></span>' +
+                    '</div>' +
+                    '<div style="font-size:12px;opacity:.7;margin-top:6px;" class="action-type"></div>' +
+                    '<div style="margin-top:8px;" class="action-message"></div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:12px;opacity:.85;">' +
+                        '<span class="action-outcome-score"></span>' +
+                        '<span class="action-confidence"></span>' +
+                        '<span class="action-impact"></span>' +
+                    '</div>' +
+                    '<div style="font-size:12px;margin-top:8px;opacity:.8;">' +
+                        'Governance: APPROVAL CONTROLLED' +
+                    '</div>' +
+                    '<div style="margin-top:12px;">' +
+                        '<button type="button" class="action-review" style="padding:8px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;">' +
+                            'Review Decision' +
+                        '</button>' +
+                    '</div>';
+
+                row.querySelector(".action-title").textContent =
+                    String(title);
+
+                row.querySelector(".action-priority").textContent =
+                    String(priority).toUpperCase();
+
+                row.querySelector(".action-type").textContent =
+                    String(type).toUpperCase();
+
+                row.querySelector(".action-message").textContent =
+                    String(message);
+                row.querySelector(".action-outcome-score").textContent =
+                    "Outcome score: " + Math.round(outcomeScore * 100) + "%";
+                row.querySelector(".action-confidence").textContent =
+                    "Confidence: " + Math.round(confidenceScore * 100) + "%";
+                row.querySelector(".action-impact").textContent =
+                    impact ? "Observed: " + String(impact.metric) + " " + String(impact.delta) : "Observed: flat";
+
+                const reviewButton =
+                    row.querySelector(".action-review");
+
+                if(reviewButton){
+                    reviewButton.textContent = approvalRequired
+                        ? "Review & Approve"
+                        : "Review Decision";
+                    if(decisionId === null){
+                        reviewButton.disabled = true;
+                        reviewButton.textContent = "Decision unavailable";
+                    }else{
+                        reviewButton.addEventListener("click", function(){
+                            openApprovalPreview(decisionId);
+                        });
+                    }
+                }
+
+                container.appendChild(row);
+            });
+
+        }catch(error){
+            container.innerHTML =
+                '<div class="row">' +
+                '<span>Action intelligence</span>' +
+                '<span class="value">CONNECTED</span>' +
+                '</div>';
+
+            console.warn(
+                "Action Center unavailable:",
+                error.message
+            );
+        }
+    }
+
+    loadActionCenter();
+    loadLiveDecisions();
+
+    async function loadExecutiveControl(){
+
+        const endpoints = [
+            "/dashboard/api/bos/executive-snapshot",
+            "/dashboard/api/bos/actions",
+            "/dashboard/api/bos/governance",
+            "/dashboard/api/bos/decision-summary"
+        ];
+
+        const results = {};
+
+        for(const endpoint of endpoints){
+
+            try{
+
+                const response = await fetch(
+                    endpoint,
+                    {
+                        method:"GET",
+                        credentials:"same-origin",
+                        headers:{
+                            "X-Requested-With":"XMLHttpRequest"
+                        }
+                    }
+                );
+
+                if(response.ok){
+
+                    const contentType =
+                        response.headers.get("content-type") || "";
+
+                    if(contentType.includes("application/json")){
+                        results[endpoint] = await response.json();
+                    }
+                }
+
+            }catch(error){
+
+                console.warn(
+                    "Executive endpoint unavailable:",
+                    endpoint,
+                    error.message
+                );
+            }
+        }
+
+        const decisionSummary =
+            results["/dashboard/api/bos/decision-summary"];
+
+        const snapshot =
+            results["/dashboard/api/bos/executive-snapshot"];
+
+        const actions =
+            results["/dashboard/api/bos/actions"];
+
+        const governance =
+            results["/dashboard/api/bos/governance"];
+
+        if(decisionSummary){
+
+            const source =
+                decisionSummary.summary ||
+                decisionSummary.data ||
+                decisionSummary;
+
+            const pending =
+                source.pending ??
+                source.pending_decisions ??
+                source.waiting_approval ??
+                null;
+
+            if(pending !== null){
+                const support = document.getElementById("kpiSupport");
+                if(support){
+                    support.textContent = String(pending);
+                }
+            }
+        }
+
+        if(snapshot){
+
+            const source =
+                snapshot.snapshot ||
+                snapshot.data ||
+                snapshot;
+
+            const context =
+                source.status ||
+                source.health ||
+                source.state ||
+                "LIVE";
+
+            const contextElement =
+                document.getElementById("contextStatus");
+
+            if(contextElement){
+                contextElement.textContent =
+                    String(context).toUpperCase();
+            }
+        }
+
+        if(actions){
+
+            const actionSource =
+                actions.actions ||
+                actions.items ||
+                actions.data ||
+                [];
+
+            if(Array.isArray(actionSource) && actionSource.length){
+
+                const container =
+                    document.getElementById("decisionRows");
+
+                if(container){
+
+                    actionSource
+                        .slice(0, 5)
+                        .forEach(function(action){
+
+                            const row =
+                                document.createElement("div");
+
+                            row.className = "row";
+
+                            const title =
+                                action.title ||
+                                action.name ||
+                                action.action ||
+                                action.type ||
+                                "Business action";
+
+                            const status =
+                                action.status ||
+                                action.state ||
+                                "AVAILABLE";
+
+                            row.innerHTML =
+                                "<span></span>" +
+                                "<span class=\"value\"></span>";
+
+                            row.children[0].textContent =
+                                String(title);
+
+                            row.children[1].textContent =
+                                String(status).toUpperCase();
+
+                            container.appendChild(row);
+                        });
+                }
+            }
+        }
+
+        if(governance){
+
+            const governanceSource =
+                governance.governance ||
+                governance.data ||
+                governance;
+
+            const contextElement =
+                document.getElementById("contextStatus");
+
+            if(contextElement && governanceSource){
+
+                const state =
+                    governanceSource.status ||
+                    governanceSource.state ||
+                    governanceSource.mode;
+
+                if(state){
+                    contextElement.textContent =
+                        String(state).toUpperCase();
+                }
+            }
+        }
+    }
+
+    loadExecutiveControl();
+
+
+
+    executeBtn.addEventListener("click", executeCommand);
+
+    input.addEventListener("keydown", function(event){
+        if(event.key === "Enter" && !event.shiftKey){
+            event.preventDefault();
+            executeCommand();
+        }
+    });
+
+    document.querySelectorAll(".example").forEach(function(button){
+        button.addEventListener("click", function(){
+            input.value = button.dataset.command || "";
+            input.focus();
+        });
+    });
+
+})();
+</script>
+
+<style>
+#decisionAccountabilityPanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#decisionAccountabilityPanel .accountability-item{padding:14px 0;border-bottom:1px solid #f0f0f0}
+#decisionAccountabilityPanel .accountability-item:last-child{border-bottom:0}
+#decisionAccountabilityPanel .accountability-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+#decisionAccountabilityPanel .accountability-box{padding:10px 12px;background:#f7f7f5;border-radius:10px;font-size:12px;color:#666}
+#decisionAccountabilityPanel .accountability-box strong{display:block;color:#171717;font-size:13px;margin-top:3px}
+@media(max-width:600px){#decisionAccountabilityPanel .accountability-grid{grid-template-columns:1fr}}
+</style>
+<script>
+async function loadDecisionAccountability(){
+    try{
+        const response=await fetch("/dashboard/api/bos/decision-lifecycle?period=30d",{credentials:"same-origin",headers:{"X-Requested-With":"XMLHttpRequest"}});
+        const data=await response.json();
+        if(!response.ok || !data.success) return;
+        let panel=document.getElementById("decisionAccountabilityPanel");
+        if(!panel){
+            panel=document.createElement("section");
+            panel.id="decisionAccountabilityPanel";
+            const lifecycle=document.getElementById("decisionLifecyclePanel");
+            (lifecycle||document.querySelector(".shell")||document.body).appendChild(panel);
+        }
+        const esc=window.escapeHtml||function(value){
+            const el=document.createElement("div"); el.textContent=String(value??""); return el.innerHTML;
+        };
+        const items=data.items||[];
+        panel.innerHTML='<h2>Decision Accountability</h2><p style="color:#777;font-size:13px;margin:5px 0 0">Who requested, reviewed, approved, rejected, and what execution recorded — read-only.</p>'+
+            (items.length?items.map(function(item){
+                const a=item.accountability||{};
+                const approvals=a.approvals||[];
+                const executions=a.executions||[];
+                const latest=approvals[0]||{};
+                const requester=latest.requested_by||null;
+                const decider=latest.decided_by||null;
+                const execution=executions[0]||{};
+                return '<div class="accountability-item"><strong>'+esc(item.decision_id)+'</strong><div class="accountability-grid">'+
+                    '<div class="accountability-box">Requested by<strong>'+esc(requester?requester.name:(latest.requested_by||'—'))+'</strong></div>'+ 
+                    '<div class="accountability-box">Reviewed / decided by<strong>'+esc(decider?decider.name:(a.reviewed_by&&a.reviewed_by.name)||'—')+'</strong></div>'+ 
+                    '<div class="accountability-box">Approval<strong>'+esc(latest.status||'No approval record')+'</strong></div>'+ 
+                    '<div class="accountability-box">Approval reason<strong>'+esc(latest.reason||'—')+'</strong></div>'+ 
+                    '<div class="accountability-box">Execution<strong>'+esc(execution.status||'Not executed')+'</strong></div>'+ 
+                    '<div class="accountability-box">Execution error<strong>'+esc(execution.error||'None')+'</strong></div>'+ 
+                    '</div></div>';
+            }).join(''):'<div class="accountability-item"><span>No accountability records yet.</span><strong>MONITOR</strong></div>');
+    }catch(error){
+        console.warn("Decision accountability unavailable",error);
+    }
+}
+loadDecisionAccountability();
+</script>
+
+<style>
+#decisionPerformancePanel{margin-top:18px}
+#decisionPerformancePanel .perf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+#decisionPerformancePanel .perf-card{padding:12px;border:1px solid #eee;border-radius:12px;background:#fafafa}
+#decisionPerformancePanel .perf-value{font-size:18px;font-weight:800}
+#decisionPerformancePanel .perf-label{font-size:11px;color:#777;margin-top:4px}
+#decisionPerformancePanel .perf-list{margin-top:14px}
+@media(max-width:600px){#decisionPerformancePanel .perf-grid{grid-template-columns:1fr}}
+</style>
+<script>
+async function loadDecisionPerformance(){
+ const host=document.getElementById('decisionLifecyclePanel'); if(!host)return;
+ let panel=document.getElementById('decisionPerformancePanel');
+ if(!panel){panel=document.createElement('section');panel.id='decisionPerformancePanel';panel.className='panel';host.parentNode.insertBefore(panel,host.nextSibling)}
+ try{
+  const r=await fetch('/dashboard/api/bos/decision-lifecycle?period=30d',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('lifecycle unavailable');
+  const items=Array.isArray(d.items)?d.items:[];
+  const total=items.length, observed=items.filter(x=>x.state==='outcome_observed').length, executed=items.filter(x=>['executed','outcome_observed'].includes(x.state)).length, approved=items.filter(x=>['approved','executed','outcome_observed'].includes(x.state)).length, rejected=items.filter(x=>x.state==='rejected').length;
+  const observedRate=executed?Math.round(observed/executed*100):0;
+  panel.innerHTML='<h2>Decision Performance</h2><p>Observed performance of governed decisions. No causal or ROI claims.</p><div class="perf-grid">'+[['Decisions',total],['Approved / Executed',approved],['Rejected',rejected],['Executed',executed],['Outcome Observed',observed],['Observed Rate',observedRate+'%']].map(x=>'<div class="perf-card"><div class="perf-value">'+x[1]+'</div><div class="perf-label">'+x[0]+'</div></div>').join('')+'</div><div class="perf-list rows">'+items.slice(0,5).map(x=>'<div class="row"><span>'+escapeHtml(x.decision_id||'decision')+'</span><span class="value">'+escapeHtml(String(x.state||'detected').replaceAll('_',' ').toUpperCase())+'</span></div>').join('')+'</div>';
+ }catch(e){panel.innerHTML='<h2>Decision Performance</h2><p>Performance data is currently unavailable.</p>'}
+}
+const _oldLifecycle=window.loadDecisionLifecycle;
+window.loadDecisionLifecycle=async function(){if(_oldLifecycle)await _oldLifecycle();await loadDecisionPerformance()};
+loadDecisionPerformance();
+</script>
+
+<style>
+#businessOutcomeDashboard{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#businessOutcomeDashboard .bod-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+#businessOutcomeDashboard .bod-card{border:1px solid #eee;border-radius:12px;padding:12px;background:#fafafa}
+#businessOutcomeDashboard .bod-title{font-weight:800;font-size:14px}
+#businessOutcomeDashboard .bod-meta{font-size:11px;color:#777;margin-top:4px}
+#businessOutcomeDashboard .bod-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+#businessOutcomeDashboard .bod-row:last-child{border-bottom:0}
+@media(max-width:800px){#businessOutcomeDashboard .bod-grid{grid-template-columns:1fr}}
+</style>
+<script>
+async function loadBusinessOutcomeDashboard(){
+ const anchor=document.getElementById('decisionPerformancePanel')||document.getElementById('decisionLifecyclePanel'); if(!anchor)return;
+ let panel=document.getElementById('businessOutcomeDashboard');
+ if(!panel){panel=document.createElement('section');panel.id='businessOutcomeDashboard';panel.className='panel';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/api/bos/outcome-intelligence?period=30d',{credentials:'same-origin',headers:{'X-Requested-With':'XMLHttpRequest'}});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('outcome intelligence unavailable');
+  const items=Array.isArray(d.items)?d.items:[];
+  const esc=window.escapeHtml||function(v){const e=document.createElement('div');e.textContent=String(v??'');return e.innerHTML};
+  panel.innerHTML='<h2>Business Outcome Dashboard</h2><p>Decision → capability → commercial signal → observed result. Observational only; no causal or ROI claims.</p><div class="bod-grid">'+items.map(function(item){
+   const impacts=Array.isArray(item.observed_impact)?item.observed_impact:[];
+   const conf=item.confidence||{};
+   const rows=impacts.map(function(x){const delta=Number(x.delta||0);const sign=delta>0?'+':'';return '<div class="bod-row"><span>'+esc(x.metric)+'</span><strong>'+esc(sign+delta)+'</strong></div>}).join('');
+   return '<div class="bod-card"><div class="bod-title">'+esc(item.capability_id)+'</div><div class="bod-meta">'+esc(item.baseline_window||'90d')+' → '+esc(item.observation_window||item.period||'30d')+' · Confidence '+esc(Math.round(Number(conf.score||0)*100))+'%</div>'+ (rows||'<div class="bod-row"><span>No numeric signal</span><strong>—</strong></div>')+'</div>';
+  }).join('')+'</div>';
+ }catch(e){panel.innerHTML='<h2>Business Outcome Dashboard</h2><p>Outcome data is currently unavailable.</p>'}
+}
+const _kemetLoadPerf=window.loadDecisionPerformance;
+window.loadDecisionPerformance=async function(){if(_kemetLoadPerf)await _kemetLoadPerf();await loadBusinessOutcomeDashboard()};
+loadBusinessOutcomeDashboard();
+</script>
+
+</body>
+</html>
+
+
+<style>
+#decisionLifecyclePanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#decisionLifecyclePanel .lifecycle-track{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+#decisionLifecyclePanel .lifecycle-step{padding:7px 10px;border-radius:999px;background:#f3f4f6;color:#6b7280;font-size:12px}
+#decisionLifecyclePanel .lifecycle-step.done{background:#111827;color:#fff}
+#decisionLifecyclePanel .lifecycle-item{padding:12px 0;border-bottom:1px solid #f0f0f0}
+#decisionLifecyclePanel .lifecycle-item:last-child{border-bottom:0}
+</style>
+<script>
+async function loadDecisionLifecycle(){
+    try{
+        const response=await fetch("/dashboard/api/bos/decision-lifecycle?period=30d",{credentials:"same-origin"});
+        const data=await response.json();
+        if(!data.success)return;
+        let panel=document.getElementById("decisionLifecyclePanel");
+        if(!panel){
+            panel=document.createElement("section");
+            panel.id="decisionLifecyclePanel";
+            const anchor=document.querySelector("#outcomeConfidencePanel")||document.querySelector("main")||document.body;
+            anchor.parentNode.insertBefore(panel,anchor.nextSibling);
+        }
+        const labels={detected:"Detected",ranked:"Ranked",reviewed:"Reviewed",approved:"Approved",rejected:"Rejected",executed:"Executed",outcome_observed:"Outcome Observed"};
+        panel.innerHTML=`<h2>Decision Lifecycle</h2><div class="lifecycle-item"><strong>${data.count||0}</strong> governed decision(s) tracked without autonomous execution.</div>`+
+            (data.items||[]).map(item=>`<div class="lifecycle-item"><strong>${escapeHtml(item.decision_id)}</strong><div class="lifecycle-track">${(item.timeline||[]).map(step=>`<span class="lifecycle-step ${step.complete?'done':''}">${escapeHtml(labels[step.state]||step.label||step.state)}</span>`).join('')}</div></div>`).join('');
+    }catch(error){
+        console.warn("Decision lifecycle unavailable",error);
+    }
+}
+loadDecisionLifecycle();
+</script>
+<style>
+#decisionLifecyclePanel .lifecycle-history{margin-top:10px;padding-left:14px;border-left:2px solid #e5e7eb}
+#decisionLifecyclePanel .history-event{padding:6px 0;font-size:12px;color:#6b7280}
+#decisionLifecyclePanel .history-event strong{color:#111827}
+</style>
+<script>
+(function(){
+    const original=window.loadDecisionLifecycle;
+    window.loadDecisionLifecycle=async function(){
+        if(original) await original();
+        const panel=document.getElementById("decisionLifecyclePanel");
+        if(!panel)return;
+        const response=await fetch("/dashboard/api/bos/decision-lifecycle?period=30d",{credentials:"same-origin"});
+        const data=await response.json();
+        (data.items||[]).forEach(function(item){
+            const node=[...panel.querySelectorAll(".lifecycle-item")].find(el=>el.textContent.includes(item.decision_id));
+            if(!node || node.querySelector(".lifecycle-history"))return;
+            const history=(item.history||[]).map(event=>`<div class="history-event"><strong>${escapeHtml(event.state||"")}</strong> · ${escapeHtml(event.at||"not timestamped")}</div>`).join("");
+            node.insertAdjacentHTML("beforeend",`<div class="lifecycle-history">${history||"No persisted lifecycle events yet."}</div>`);
+        });
+    };
+    loadDecisionLifecycle();
+})();
+</script>
+
+
+<style>
+#capabilityOutcomePanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#capabilityOutcomePanel .outcome-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+#capabilityOutcomePanel .outcome-card{border:1px solid #eee;border-radius:12px;padding:13px;background:#fafafa}
+#capabilityOutcomePanel .outcome-head{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+#capabilityOutcomePanel .metric{padding-top:9px;margin-top:9px;border-top:1px solid #eee;font-size:12px}
+#capabilityOutcomePanel .metric-row{display:grid;grid-template-columns:1fr repeat(3,auto);gap:10px;padding:4px 0}
+#capabilityOutcomePanel .positive{font-weight:700}
+#capabilityOutcomePanel .negative{font-weight:700}
+@media(max-width:700px){#capabilityOutcomePanel .outcome-grid{grid-template-columns:1fr}#capabilityOutcomePanel .metric-row{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+async function loadCapabilityOutcomePerformance(){
+    let panel=document.getElementById('capabilityOutcomePanel');
+    if(!panel){panel=document.createElement('section');panel.id='capabilityOutcomePanel';panel.className='panel';
+        const anchor=document.getElementById('decisionPerformancePanel')||document.getElementById('decisionLifecyclePanel');
+        (anchor?anchor.parentNode:document.body).appendChild(panel)}
+    try{
+        const r=await fetch('/api/bos/outcome-intelligence?period=30d',{credentials:'same-origin'});
+        const d=await r.json(); if(!r.ok||!d.success)throw new Error('outcome unavailable');
+        const items=Array.isArray(d.items)?d.items:[];
+        const fmt=v=>typeof v==='number'?new Intl.NumberFormat().format(v):'—';
+        const esc=window.escapeHtml||((v)=>String(v??''));
+        panel.innerHTML='<h2>Capability Outcome Performance</h2><p>Before/after movement for governed capabilities. Observational only — no causal or ROI claims.</p><div class="outcome-grid">'+
+            items.map(item=>'<div class="outcome-card"><div class="outcome-head"><span>'+esc(item.capability_id)+'</span><span>'+esc(String(item.confidence?.level||'low').toUpperCase())+'</span></div>'+ 
+            '<div class="metric">'+(item.performance?.metrics||item.observed_impact||[]).map(m=>'<div class="metric-row"><span>'+esc(m.metric)+'</span><span>'+fmt(m.before)+'</span><span>'+fmt(m.after)+'</span><span class="'+esc(m.direction)+'">'+(m.delta>0?'+':'')+fmt(m.delta)+'</span></div>').join('')+'</div></div>').join('')+'</div>';
+    }catch(e){panel.innerHTML='<h2>Capability Outcome Performance</h2><p>Outcome performance data is currently unavailable.</p>'}
+}
+loadCapabilityOutcomePerformance();
+</script>
+
+<style>
+#businessControlLoopPanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#businessControlLoopPanel .loop-track{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+#businessControlLoopPanel .loop-state{padding:7px 10px;border-radius:999px;background:#f3f4f6;font-size:11px;color:#6b7280}
+#businessControlLoopPanel .loop-state.active{background:#111827;color:#fff}
+#businessControlLoopPanel .loop-meta{font-size:12px;color:#666}
+</style>
+<script>
+async function loadBusinessControlLoop(){
+ const anchor=document.getElementById('businessOutcomeDashboard')||document.getElementById('decisionPerformancePanel');
+ if(!anchor)return;
+ let panel=document.getElementById('businessControlLoopPanel');
+ if(!panel){panel=document.createElement('section');panel.id='businessControlLoopPanel';panel.className='panel';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/api/bos/business-control-loop?period=30d',{credentials:'same-origin',headers:{'X-Requested-With':'XMLHttpRequest'}});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('control loop unavailable');
+  const states=Array.isArray(d.loop)?d.loop:[];
+  const items=Array.isArray(d.decisions)?d.decisions:[];
+  const esc=window.escapeHtml||function(v){const e=document.createElement('div');e.textContent=String(v??'');return e.innerHTML};
+  panel.innerHTML='<h2>Business Control Loop</h2><p class="loop-meta">Observed decisions move through a governed lifecycle. Intelligence learns from outcomes; execution still requires approval.</p><div class="loop-track">'+states.map(function(s){return '<span class="loop-state">'+esc(s.replaceAll('_',' '))+'</span>'}).join('')+'</div><div class="loop-meta"><strong>'+items.length+'</strong> decision(s) · Learning: '+esc(d.learning?.mode||'observational')+' · Decision Intelligence: '+(d.decision_intelligence?.enabled?'ON':'OFF')+' · Auto-execute: OFF</div>';
+ }catch(e){panel.innerHTML='<h2>Business Control Loop</h2><p class="loop-meta">Control-loop data is currently unavailable.</p>'}
+}
+loadBusinessControlLoop();
+</script>
+
+<style>
+#businessFeedbackPanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#businessFeedbackPanel .feedback-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#businessFeedbackPanel button{border:1px solid #ddd;background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
+#businessFeedbackPanel .feedback-status{margin-top:10px;font-size:12px;color:#666}
+</style>
+<script>
+async function submitBusinessFeedback(signal, decisionId, capabilityId){
+ const status=document.getElementById('businessFeedbackStatus');
+ if(status)status.textContent='Recording observational feedback...';
+ try{
+  const r=await fetch('/api/bos/business-control-loop/feedback',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({signal:signal,decision_id:decisionId,capability_id:capabilityId,period:'30d'})});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error(d.error||'feedback unavailable');
+  if(status)status.textContent='Feedback recorded as observational input. No execution was requested.';
+ }catch(e){if(status)status.textContent='Feedback could not be recorded safely.'}
+}
+async function loadBusinessFeedback(){
+ const anchor=document.getElementById('businessControlLoopPanel'); if(!anchor)return;
+ let panel=document.getElementById('businessFeedbackPanel');
+ if(!panel){panel=document.createElement('section');panel.id='businessFeedbackPanel';panel.className='panel';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/dashboard/api/bos/decision-lifecycle?period=30d',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('lifecycle unavailable');
+  const item=(d.items||[])[0]; const esc=window.escapeHtml||function(v){const e=document.createElement('div');e.textContent=String(v??'');return e.innerHTML};
+  if(!item){panel.innerHTML='<h2>Business Feedback</h2><p>No decision is currently available for observational review.</p>';return}
+  const decisionId=esc(item.decision_id||''); const capabilityId=esc(item.capability_id||'');
+  panel.innerHTML='<h2>Business Feedback</h2><p>Use explicit feedback to calibrate future recommendations. This does not approve or execute anything.</p><div class="feedback-actions"><button type="button" data-signal="positive">Positive</button><button type="button" data-signal="neutral">Neutral</button><button type="button" data-signal="negative">Negative</button></div><div id="businessFeedbackStatus" class="feedback-status">Decision: '+decisionId+' · Capability: '+capabilityId+'</div>';
+  panel.querySelectorAll('button').forEach(function(btn){btn.addEventListener('click',function(){submitBusinessFeedback(btn.dataset.signal,item.decision_id,item.capability_id)})});
+ }catch(e){panel.innerHTML='<h2>Business Feedback</h2><p>Feedback controls are currently unavailable.</p>'}
+}
+loadBusinessFeedback();
+</script>
+
+<style>
+#decisionReviewQueuePanel{margin-top:18px;border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff}
+#decisionReviewQueuePanel .rq-grid{display:grid;gap:10px;margin-top:14px}
+#decisionReviewQueuePanel .rq-card{border:1px solid #eee;border-radius:14px;padding:14px;background:#fafafa}
+#decisionReviewQueuePanel .rq-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#decisionReviewQueuePanel .rq-title{font-weight:800}
+#decisionReviewQueuePanel .rq-meta{font-size:11px;color:#777;margin-top:5px}
+#decisionReviewQueuePanel .rq-score{font-weight:800}
+#decisionReviewQueuePanel .rq-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+#decisionReviewQueuePanel button{border:1px solid #ddd;background:#fff;border-radius:9px;padding:7px 10px;cursor:pointer}
+#decisionReviewQueuePanel .rq-note{margin-top:10px;font-size:12px;color:#666}
+</style>
+<script>
+async function loadDecisionReviewQueue(){
+ const anchor=document.getElementById('businessFeedbackPanel')||document.getElementById('businessControlLoopPanel');
+ if(!anchor)return;
+ let panel=document.getElementById('decisionReviewQueuePanel');
+ if(!panel){panel=document.createElement('section');panel.id='decisionReviewQueuePanel';panel.className='panel';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/api/bos/business-control-loop?period=30d',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('queue unavailable');
+  const items=Array.isArray(d.decisions)?d.decisions:[];
+  const esc=window.escapeHtml||function(v){const e=document.createElement('div');e.textContent=String(v??'');return e.innerHTML};
+  panel.innerHTML='<h2>Decision Review Queue</h2><p class="rq-note">Prioritized advisory decisions requiring human review. Approval is the only path to governed execution.</p><div class="rq-grid">'+items.slice(0,10).map(function(item){
+   const score=item.decision_intelligence?.score??item.outcome_priority_score??0;
+   const level=item.decision_intelligence?.level||item.priority||'review';
+   const impact=item.observed_impact||[];
+   const impactText=Array.isArray(impact)&&impact.length?impact.slice(0,2).map(function(x){return esc(x.metric)+': '+esc(x.direction||'observed')}).join(' · '):'No observed impact yet';
+   return '<article class="rq-card"><div class="rq-top"><div><div class="rq-title">'+esc(item.title||item.recommended_action||item.action||'Decision')+'</div><div class="rq-meta">'+esc(item.capability_id||'')+' · '+esc(String(level).toUpperCase())+'</div></div><div class="rq-score">Score '+esc((Number(score)*100).toFixed(1))+'%</div></div><div class="rq-meta">Confidence: '+esc(String(Math.round(Number(item.confidence||0)*100)))+'% · '+impactText+'</div><div class="rq-actions"><button type="button" onclick="openApprovalPreview(\''+esc(item.decision_id||item.id||'')+'\')">Review</button></div></article>';
+  }).join('')+'</div>';
+  if(!items.length)panel.innerHTML+='<div class="rq-note">No decisions currently require review.</div>';
+ }catch(e){panel.innerHTML='<h2>Decision Review Queue</h2><p class="rq-note">Review queue data is currently unavailable.</p>'}
+}
+loadDecisionReviewQueue();
+</script>

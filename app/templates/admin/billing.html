@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+    <meta charset="utf-8">
+    <title>Kemet AI Billing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
+
+
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+</head>
+
+<body>
+
+<main>
+
+    <h1>Billing</h1>
+
+    <section>
+
+        <h2>Subscriptions</h2>
+
+        <p>Total: {{ subscriptions.total }}</p>
+        <p>Active: {{ subscriptions.active }}</p>
+        <p>Inactive: {{ subscriptions.inactive }}</p>
+
+    </section>
+
+    <section>
+
+        <h2>Payments</h2>
+
+        <p>Total: {{ payments.total }}</p>
+        <p>Paid: {{ payments.paid }}</p>
+        <p>Refunded: {{ payments.refunded }}</p>
+
+    </section>
+
+</main>
+
+</body>
+</html>
