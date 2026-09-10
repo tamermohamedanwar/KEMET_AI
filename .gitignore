@@ -51,3 +51,4 @@ backups/
 *.before_paymob_return_*
 *.before_checkout_ui_*
 .env.agent
+node_modules/
