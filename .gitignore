@@ -62,3 +62,7 @@ uploads/
 *_failed
 __pycache__
 .venv
+
+*.zip
+ops/youtube_state/client_secret.json
+ops/youtube_state/token.json

@@ -640,6 +640,54 @@ def bos_visual_directions():
         return jsonify({"success": False, "error": str(exc), "executed": False}), 400
 
 
+@command_center_bp.route("/api/bos/operate", methods=["POST"])
+@login_required
+def bos_operate():
+    """Execute a safe Command Center operation or return the canonical approval gate."""
+    organization_id = _organization_id()
+    if not organization_id:
+        return jsonify({"success": False, "error": "organization_required", "executed": False}), 400
+    payload = request.get_json(silent=True) or {}
+    command = str(payload.get("command") or payload.get("instruction") or "").strip()
+    if not command:
+        return jsonify({"success": False, "error": "command_required", "executed": False}), 400
+    try:
+        import uuid
+        task_id = f"cc-{uuid.uuid4().hex[:16]}"
+        plan = task_planner.plan(command, organization_id=int(organization_id), task_id=task_id)
+        first = plan.steps[0] if plan.steps else None
+        if first is None:
+            return jsonify({"success": False, "error": "execution_plan_empty", "executed": False}), 422
+        if plan.requires_approval:
+            return jsonify({
+                "success": True, "status": "waiting_approval", "executed": False,
+                "task_id": task_id, "action": first.action,
+                "approval_required": True,
+                "message": "Human approval is required before execution.",
+            }), 200
+        result = governed_execution_service.execute(
+            action=first.action,
+            parameters={**dict(first.parameters or {}), "organization_id": int(organization_id), "prompt": command},
+            organization_id=int(organization_id),
+            user_id=getattr(current_user, "id", None),
+            data={"command": command, "task_id": task_id},
+        )
+        return jsonify({
+            "success": bool(result.get("success")),
+            "status": result.get("status"),
+            "executed": bool(result.get("executed")),
+            "task_id": task_id,
+            "results": [result],
+            "runtime": "canonical",
+        }), 200 if result.get("success") else 422
+    except Exception:
+        return jsonify({
+            "success": False, "status": "blocked", "executed": False,
+            "error": "operation_unavailable",
+            "message": "Kemet could not safely execute this operation. No action was executed.",
+        }), 500
+
+
 @command_center_bp.route("/api/bos/plan", methods=["POST"])
 @login_required
 def bos_plan_preview():
