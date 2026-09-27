@@ -11,6 +11,10 @@ class Queue:
     def fail(self, job_id, error, **kwargs): self.failed.append((job_id, error)); return {"ok": True}
     def cancel(self, job_id, **kwargs): self.cancelled.append(job_id); return True
 
+class Coordinator:
+    def admit(self, **kwargs): return {"allowed": True, "reason": "admitted"}
+    def is_cancelled(self, **kwargs): return False
+
 def test_terminal_failure_is_persisted_as_execution_evidence():
     with application.app_context():
         db.create_all()
@@ -20,7 +24,8 @@ def test_terminal_failure_is_persisted_as_execution_evidence():
         key = f"exec-{uid}"
         queue = Queue({"job_id": 701, "job_key": key, "organization_id": org.id,
                        "payload": {"trace_id": "trace-1", "correlation_id": "corr-1"}})
-        result = GovernedWorker(queue=queue).process_one(worker_id="worker-a", plan_resolver=lambda payload: None)
+        result = GovernedWorker(queue=queue, coordinator=Coordinator()).process_one(
+            worker_id="worker-a", plan_resolver=lambda payload: None)
         assert result["status"] == "blocked"
         history = execution_evidence.history(organization_id=org.id, execution_key=key)
         stages = {(item["stage"], item["status"]) for item in history}

@@ -812,3 +812,27 @@ def bos_learning_loop():
             "error": "learning_loop_unavailable",
             "message": str(exc),
         }), 500
+
+
+@dashboard.route("/dashboard/api/federation/observability")
+@login_required
+def federation_observability():
+    """Return a tenant-safe, read-only federation health snapshot."""
+    try:
+        from app.core.provider_observability import provider_observability
+        organization_id = _current_organization_id()
+        snapshot = provider_observability.snapshot(organization_id)
+        return jsonify({
+            "success": True,
+            "mode": "read_only",
+            "approval_required": True,
+            "external_execution": False,
+            "database_mutation": False,
+            **snapshot,
+        })
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": type(exc).__name__,
+            "message": str(exc),
+        }), 500

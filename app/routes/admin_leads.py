@@ -9,9 +9,10 @@ from flask import (
     request,
     url_for,
 )
-from flask_login import current_user, login_required
+from flask_login import current_user
 
 from app import db
+from app.admin.decorators import admin_required
 from app.models.demo_lead import DemoLead
 from app.services.lead_scoring_service import score_lead
 
@@ -46,7 +47,7 @@ def organization_leads_query():
 
 
 @admin_leads.route("/admin/leads")
-@login_required
+@admin_required
 def leads():
     status = request.args.get(
         "status",
@@ -159,7 +160,7 @@ def leads():
     "/admin/leads/<int:lead_id>/status",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def update_status(lead_id):
     lead = (
         organization_leads_query()
@@ -208,7 +209,7 @@ def update_status(lead_id):
         # to an active pipeline stage.
         lead.lost_reason = None
 
-    score_lead(lead)
+    score_lead(lead, persist=True)
 
     db.session.commit()
 
@@ -227,7 +228,7 @@ def update_status(lead_id):
     "/admin/leads/<int:lead_id>/score",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def rescore_lead(lead_id):
     lead = (
         organization_leads_query()
@@ -235,7 +236,7 @@ def rescore_lead(lead_id):
         .first_or_404()
     )
 
-    result = score_lead(lead)
+    result = score_lead(lead, persist=True)
 
     db.session.commit()
 
@@ -254,7 +255,7 @@ def rescore_lead(lead_id):
     "/admin/leads/<int:lead_id>/convert",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def convert_lead(lead_id):
     lead = (
         organization_leads_query()
@@ -274,7 +275,7 @@ def convert_lead(lead_id):
     lead.status = "won"
     lead.converted_at = datetime.utcnow()
 
-    score_lead(lead)
+    score_lead(lead, persist=True)
 
     db.session.commit()
 
@@ -307,7 +308,7 @@ def organization_lead_or_404(lead_id):
     "/admin/leads/<int:lead_id>",
     methods=["GET"],
 )
-@login_required
+@admin_required
 def lead_detail(lead_id):
     lead = organization_lead_or_404(lead_id)
 
@@ -337,7 +338,7 @@ def lead_detail(lead_id):
     "/admin/leads/<int:lead_id>/activity",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def add_activity(lead_id):
     lead = organization_lead_or_404(lead_id)
 
@@ -412,7 +413,7 @@ def add_activity(lead_id):
     if lead.status == "new":
         lead.status = "contacted"
 
-    score_lead(lead)
+    score_lead(lead, persist=True)
 
     db.session.commit()
 
@@ -433,7 +434,7 @@ def add_activity(lead_id):
     "/admin/leads/<int:lead_id>/follow-up",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def schedule_follow_up(lead_id):
     lead = organization_lead_or_404(lead_id)
 
@@ -509,7 +510,7 @@ def schedule_follow_up(lead_id):
     "/admin/leads/<int:lead_id>/activity/<int:activity_id>/complete",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def complete_activity(lead_id, activity_id):
     lead = organization_lead_or_404(lead_id)
 
@@ -551,7 +552,7 @@ def complete_activity(lead_id, activity_id):
     "/admin/follow-ups/execute-due",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def execute_due_follow_ups():
     from app.services.automation_service import automation_service
 
@@ -579,7 +580,7 @@ def execute_due_follow_ups():
     "/admin/follow-ups/review",
     methods=["GET"],
 )
-@login_required
+@admin_required
 def human_review_queue():
     from datetime import datetime
 
@@ -630,7 +631,7 @@ def human_review_queue():
     "/admin/follow-ups/<int:activity_id>/approve",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def approve_follow_up(activity_id):
     activity = (
         LeadActivity.query
@@ -684,7 +685,7 @@ def approve_follow_up(activity_id):
     "/admin/follow-ups/<int:activity_id>/complete-review",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def complete_review_follow_up(activity_id):
     activity = (
         LeadActivity.query
@@ -719,7 +720,7 @@ def complete_review_follow_up(activity_id):
     "/admin/follow-ups/<int:activity_id>/skip",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def skip_follow_up(activity_id):
     activity = (
         LeadActivity.query
@@ -775,7 +776,7 @@ def skip_follow_up(activity_id):
     "/admin/follow-ups",
     methods=["GET"],
 )
-@login_required
+@admin_required
 def follow_ups():
     now = datetime.utcnow()
 
@@ -815,7 +816,7 @@ def follow_ups():
 
 # CRM_V4_DASHBOARD
 @admin_leads.route("/admin/leads/dashboard")
-@login_required
+@admin_required
 def dashboard():
     from datetime import datetime
 
@@ -890,7 +891,7 @@ def dashboard():
     )
 
 @admin_leads.route("/admin/leads/pipeline")
-@login_required
+@admin_required
 def pipeline():
     organization_id = current_user.organization_id
 
@@ -961,7 +962,7 @@ def pipeline():
 
 
 @admin_leads.route("/admin/leads/api/pipeline-intelligence")
-@login_required
+@admin_required
 def pipeline_intelligence():
     organization_id = getattr(current_user, "organization_id", None)
     from app.services.crm_pipeline_intelligence import crm_pipeline_intelligence

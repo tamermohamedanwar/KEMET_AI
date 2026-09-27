@@ -66,6 +66,11 @@ class Payment(db.Model):
         nullable=True,
     )
 
+    client_secret_encrypted = db.Column(
+        db.Text,
+        nullable=True,
+    )
+
     created_at = db.Column(
         db.DateTime,
         server_default=db.func.now(),
@@ -78,3 +83,5 @@ class Payment(db.Model):
         onupdate=db.func.now(),
         nullable=False,
     )
+
+    __table_args__ = (db.Index("ix_payments_org_created_status", "organization_id", "created_at", "status"),)

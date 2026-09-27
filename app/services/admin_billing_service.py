@@ -8,8 +8,8 @@ from app.models import Subscription, Payment
 class AdminBillingService:
 
     @staticmethod
-    def get_subscription_summary():
-        subscriptions = Subscription.query.all()
+    def get_subscription_summary(organization_id):
+        subscriptions = Subscription.query.filter_by(organization_id=int(organization_id)).all()
 
         return {
             "total": len(subscriptions),
@@ -26,8 +26,8 @@ class AdminBillingService:
         }
 
     @staticmethod
-    def get_payment_summary():
-        payments = Payment.query.all()
+    def get_payment_summary(organization_id):
+        payments = Payment.query.filter_by(organization_id=int(organization_id)).all()
 
         return {
             "total": len(payments),

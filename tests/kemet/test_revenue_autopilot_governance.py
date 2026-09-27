@@ -2,6 +2,9 @@ import json
 
 from app import create_app, db
 from app.automation.engine import engine
+from app.models.automation_execution_ledger import AutomationExecutionLedger
+from app.models.automation_outcome import AutomationOutcome
+from app.models.execution_evidence import ExecutionEvidence
 from app.models.automation import (
     AutomationAction,
     AutomationApproval,
@@ -86,6 +89,46 @@ def test_revenue_autopilot_governed_approval_to_runtime():
         assert approval.status == "approved"
         assert execution.status == "completed"
 
+        ledger = AutomationExecutionLedger.query.filter_by(
+            organization_id=1,
+        ).order_by(AutomationExecutionLedger.id.desc()).first()
+        assert ledger is not None
+        assert ledger.status == "completed"
+        assert ledger.job_id == execution.id
+        assert ledger.receipt_json
+
+        outcome = AutomationOutcome.query.filter_by(
+            organization_id=1,
+            job_id=execution.id,
+            workflow_id=str(workflow.id),
+            status="completed",
+            executed=True,
+        ).order_by(AutomationOutcome.id.desc()).first()
+        assert outcome is not None
+        assert outcome.receipt_json
+
+        evidence = ExecutionEvidence.query.filter_by(
+            organization_id=1,
+            execution_key=ledger.execution_key,
+            stage="runtime.finished",
+            status="completed",
+        ).order_by(ExecutionEvidence.id.desc()).first()
+        assert evidence is not None
+        assert evidence.receipt_json
+
+        decision = json.loads(approval.decision_json)
+        direct_resume = engine.resume_after_approval(
+            approval_id=approval.id,
+            execution_id=execution.id,
+            workflow_id=workflow.id,
+            organization_id=1,
+        )
+        assert direct_resume["success"] is True
+        assert direct_resume["status"] == "deduplicated"
+        assert direct_resume["reason"] == "execution_already_completed"
+        assert execution.status == "completed"
+        assert decision["authorization"]["one_time"] is True
+
         replay = automation_approval_service.approve(
             approval_id,
             decided_by=1,
@@ -97,6 +140,13 @@ def test_revenue_autopilot_governed_approval_to_runtime():
         result_payload = json.loads(execution.output_json or "{}")
         assert result_payload
 
+        evidence_rows = ExecutionEvidence.query.filter_by(
+            organization_id=1, execution_key=ledger.execution_key
+        ).all()
+        for row in evidence_rows:
+            db.session.delete(row)
+        db.session.delete(outcome)
+        db.session.delete(ledger)
         db.session.delete(approval)
         db.session.delete(execution)
         db.session.delete(action)

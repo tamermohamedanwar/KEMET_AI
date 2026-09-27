@@ -88,6 +88,7 @@ def test_worker_binds_execution_to_durable_ledger():
     from wsgi import application
     from app import db
     from app.models.organization import Organization
+    from app.models.subscription import Subscription
     from app.core.execution_ledger import execution_ledger
     from app.core.automation_control_plane import AutomationPlan, AutomationStep
 
@@ -97,6 +98,8 @@ def test_worker_binds_execution_to_durable_ledger():
         uid = uuid.uuid4().hex
         org = Organization(name=f"Worker Ledger {uid}", slug=f"worker-ledger-{uid}")
         db.session.add(org)
+        db.session.flush()
+        db.session.add(Subscription(organization_id=org.id, plan="business", status="active"))
         db.session.commit()
         queue = FakeQueue({"job_id": 21, "job_key": f"exec-{uid}",
                            "organization_id": org.id, "payload": {}})
@@ -115,3 +118,19 @@ def test_worker_binds_execution_to_durable_ledger():
 
 
 
+
+
+def test_worker_uses_execution_status_not_business_status():
+    queue = FakeQueue({"job_id": 31, "payload": {"actor_id": "42"}})
+    runtime = FakeRuntime({
+        "status": "processing",
+        "execution_status": "completed",
+        "business_status": "processing",
+        "executed": True,
+    })
+    result = GovernedWorker(queue=queue, runtime=runtime).process_one(
+        worker_id="w1", plan_resolver=lambda payload: object())
+    assert result["status"] == "completed"
+    assert result["executed"] is True
+    assert queue.completed == [31]
+    assert queue.failed == []

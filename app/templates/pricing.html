@@ -1,47 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-{% include "partials/kemet-white-ui.html" %}
-    <meta charset="utf-8">
-    <title>Kemet AI - Pricing</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/kemet-ui.css') }}">
-
-    <script defer
-            src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
-
-    <link rel="stylesheet"
-
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kemet — الباقات</title>
+<style>
+body{margin:0;background:#f7f8fb;color:#172033;font-family:Inter,system-ui,Tahoma,sans-serif}.wrap{max-width:1000px;margin:auto;padding:30px 18px 60px}a{text-decoration:none}.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{font-size:21px;font-weight:900}.back{color:#667085}.hero{text-align:center;margin-bottom:25px}.hero h1{font-size:42px;letter-spacing:-.04em;margin:10px 0}.hero p{color:#667085;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:24px}.card.featured{border-color:#5b5ce2;box-shadow:0 12px 35px rgba(23,32,51,.08)}.card h2{margin:0 0 8px}.price{font-size:30px;font-weight:900;margin:18px 0 8px}.muted{color:#667085;font-size:13px;line-height:1.7}.btn{display:block;text-align:center;background:#5b5ce2;color:#fff;padding:12px;border-radius:11px;font-weight:800;margin-top:18px}.secondary{background:#fff;color:#172033;border:1px solid #e5e7eb}.note{margin-top:18px;text-align:center;color:#667085;font-size:13px}@media(max-width:720px){.grid{grid-template-columns:1fr}.hero h1{font-size:34px}}
+</style>
 </head>
-
-<body>
-<main>
-    <h1>Kemet AI Pricing</h1>
-
-    <section>
-        <h2>Starter</h2>
-        <p>$49.00 / month</p>
-        <a href="/billing/subscribe/starter">Choose Starter</a>
-    </section>
-
-    <section>
-        <h2>Business</h2>
-        <p>$99.00 / month</p>
-        <a href="/billing/subscribe/business">Choose Business</a>
-    </section>
-
-    <section>
-        <h2>Enterprise</h2>
-        <p>Contact Sales</p>
-        <a href="/billing/subscribe/enterprise">Contact Sales</a>
-    </section>
-</main>
-
-<div class="k-checkout-entry">
-    <a href="/pricing" class="k-quick-action">Checkout</a>
-</div>
-
-</body>
-</html>
+<body><main class="wrap">
+<nav class="nav"><a class="brand" href="/landing">Kemet</a><a class="back" href="/landing">العودة</a></nav>
+<section class="hero"><h1>ابدأ بالقيمة، ثم وسّع.</h1><p>لأول عميل نفضّل تجربة عملية محددة النطاق. الباقات التالية هي مسار الاشتراك بعد إثبات القيمة.</p></section>
+<section class="grid">
+<article class="card"><h2>Starter</h2><div class="price">$49</div><div class="muted">شهريًا · للأعمال الصغيرة التي تحتاج تشغيلًا أساسيًا ومتابعة منظمة.</div><a class="btn secondary" href="/billing/subscribe/starter">اختيار Starter</a></article>
+<article class="card featured"><h2>Business</h2><div class="price">$99</div><div class="muted">شهريًا · للتشغيل الأوسع، الأتمتة، والتحليل المتقدم.</div><a class="btn" href="/billing/subscribe/business">اختيار Business</a></article>
+<article class="card"><h2>Enterprise</h2><div class="price">مخصص</div><div class="muted">للفرق والشركات التي تحتاج نطاقًا وتكاملات وحوكمة مخصصة.</div><a class="btn secondary" href="/demo">تحدث معنا</a></article>
+</section>
+<div class="note">هل تريد اختبار Kemet أولًا؟ <a href="/demo">اطلب Pilot عملي</a> قبل الالتزام باشتراك.</div>
+</main></body></html>

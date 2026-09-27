@@ -126,6 +126,7 @@ class WorkforceRuntime:
             "created_at": self._now(),
             "started_at": None,
             "completed_at": None,
+            "data": data,
             "result": None,
         }
 

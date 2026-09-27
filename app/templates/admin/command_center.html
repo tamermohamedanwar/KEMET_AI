@@ -183,6 +183,13 @@ button:disabled{
     padding-top:20px;
 }
 .result.show{display:block}
+.best-path-panel{margin-top:16px;padding:16px;border:1px solid #e5e5e5;border-radius:14px;background:#fafafa}
+.best-path-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.best-path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.best-path-grid>div{padding:10px;background:#fff;border:1px solid #eee;border-radius:10px}
+.best-path-grid small{display:block;color:#777;font-size:11px;margin-bottom:4px}
+.best-path-grid strong{font-size:13px}
+.best-path-note{margin-top:10px;color:#666;font-size:12px}
 .badge{
     display:inline-flex;
     padding:6px 10px;
@@ -204,6 +211,10 @@ pre{
 @media(max-width:900px){
     .grid{grid-template-columns:repeat(2,1fr)}
     .section{grid-template-columns:1fr}
+    .best-path-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+    .best-path-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
     .shell{padding:14px}
@@ -214,6 +225,18 @@ pre{
     button{height:52px}
     .grid{grid-template-columns:1fr 1fr}
 }
+
+.sales-support-panel{margin-bottom:20px}
+.sales-support-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.sales-support-stat{padding:14px;border:1px solid #eee;border-radius:12px;background:#fafafa}
+.sales-support-stat small{display:block;color:#777;margin-bottom:5px;font-size:11px}
+.sales-support-stat strong{font-size:20px}
+.sales-support-lead{margin-top:14px;padding:14px;border:1px solid #eee;border-radius:12px}
+.sales-support-lead-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sales-support-meta{font-size:12px;color:#777;margin-top:5px}
+.sales-support-action{margin-top:10px;font-size:13px}
+@media(max-width:900px){.sales-support-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.sales-support-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 
@@ -243,7 +266,7 @@ pre{
         <div class="command">
             <textarea id="commandInput"
                 placeholder="Tell Kemet AI what you want the business to do..."></textarea>
-            <button id="executeBtn">Execute</button>
+            <button id="executeBtn">Analyze &amp; Plan</button>
         </div>
 
         <div class="examples">
@@ -256,6 +279,19 @@ pre{
         <div id="result" class="result">
             <div>
                 <span class="badge" id="resultStatus">READY</span>
+            </div>
+            <div id="bestPathPanel" class="best-path-panel" hidden>
+                <div class="best-path-head">
+                    <strong>أفضل طريقة لإنجاز المهمة</strong>
+                    <span class="badge" id="planRiskBadge">—</span>
+                </div>
+                <div class="best-path-grid">
+                    <div><small>القدرة</small><strong id="planCapability">—</strong></div>
+                    <div><small>أفضل خيار</small><strong id="planBestTool">—</strong></div>
+                    <div><small>البديل</small><strong id="planFallback">—</strong></div>
+                    <div><small>الموافقة</small><strong id="planApproval">—</strong></div>
+                </div>
+                <div class="best-path-note" id="planSafetyNote">لا يوجد تنفيذ. هذه توصية تخطيطية فقط.</div>
             </div>
 
             <div class="rows">
@@ -279,6 +315,31 @@ pre{
 
             <pre id="jsonResult">{}</pre>
         </div>
+    </section>
+
+
+    <section class="panel sales-support-panel" id="salesSupportPanel" aria-live="polite">
+        <h2>Sales &amp; Support</h2>
+        <p>Live priority signals from the tenant-scoped business context.</p>
+        <div class="sales-support-grid">
+            <div class="sales-support-stat"><small>Leads</small><strong id="salesSupportTotal">—</strong></div>
+            <div class="sales-support-stat"><small>Hot</small><strong id="salesSupportHot">—</strong></div>
+            <div class="sales-support-stat"><small>Follow-ups due</small><strong id="salesSupportDue">—</strong></div>
+            <div class="sales-support-stat"><small>Pipeline</small><strong id="salesSupportPipeline">—</strong></div>
+        </div>
+        <div class="sales-support-lead" id="salesSupportTopLead">
+            <div class="sales-support-lead-top"><strong>Loading priority lead...</strong><span class="badge">LIVE</span></div>
+        </div>
+    </section>
+
+    <section class="panel" id="socialDistributionPanel" aria-live="polite" style="margin-bottom:20px">
+        <h2>Governed Content Distribution</h2>
+        <p>Build a tenant-bound distribution proposal across connected channels. Planning only; approval and the Canonical Runtime remain required.</p>
+        <div class="command" style="margin-top:14px">
+            <input id="distributionAssetUri" type="text" placeholder="Content asset URI" style="flex:1;border:1px solid #ddd;border-radius:12px;padding:15px;font:inherit;background:#fafafa">
+            <button id="distributionPlanBtn" type="button">Build distribution plan</button>
+        </div>
+        <div id="distributionPlanPreview" class="best-path-panel" hidden></div>
     </section>
 
     <section class="grid">
@@ -514,11 +575,11 @@ pre{
         }
 
         executeBtn.disabled = true;
-        executeBtn.textContent = "Executing...";
+        executeBtn.textContent = "Planning...";
 
         try{
 
-            const response = await fetch("/api/bos/command", {
+            const response = await fetch("/command-center/api/bos/plan", {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json",
@@ -551,6 +612,22 @@ pre{
                     : "Not Required"
             );
 
+            const toolPanel = document.getElementById("bestPathPanel");
+            const recommendations = data.tool_intelligence && Array.isArray(data.tool_intelligence.recommendations)
+                ? data.tool_intelligence.recommendations : [];
+            if(toolPanel){
+                toolPanel.hidden = false;
+                const best = recommendations[0] || {};
+                const fallback = Array.isArray(best.fallback_ids) && best.fallback_ids.length
+                    ? best.fallback_ids[0] : "لا يوجد بديل موثق";
+                setText("planCapability", data.tool_intelligence && data.tool_intelligence.capability);
+                setText("planBestTool", best.name || best.tool_id);
+                setText("planFallback", fallback);
+                setText("planApproval", data.requires_approval ? "مطلوبة قبل التنفيذ" : "لا يوجد تنفيذ مطلوب");
+                setText("planRiskBadge", data.risk || "ADVISORY");
+                setText("planSafetyNote", "توصية تخطيطية فقط · التنفيذ لا يبدأ من هذه الشاشة دون مسار الموافقة والـCanonical Runtime.");
+            }
+
             document.getElementById("jsonResult").textContent =
                 JSON.stringify(data, null, 2);
 
@@ -574,7 +651,7 @@ pre{
         }finally{
 
             executeBtn.disabled = false;
-            executeBtn.textContent = "Execute";
+            executeBtn.textContent = "Analyze & Plan";
         }
     }
 
@@ -661,6 +738,183 @@ pre{
             console.warn("KPI loading unavailable:", error.message);
         }
     }
+
+
+    async function loadSalesSupport(){
+        const lead = document.getElementById("salesSupportTopLead");
+        try{
+            const response = await fetch("/command-center/api/bos/sales-support", {
+                method:"GET",
+                credentials:"same-origin",
+                headers:{"X-Requested-With":"XMLHttpRequest"}
+            });
+            const data = await response.json();
+            if(!response.ok || !data.success){
+                throw new Error(data.error || "Sales support unavailable");
+            }
+            const snapshot = data.sales_support || {};
+            let distribution = null;
+            try {
+                const distributionResponse = await fetch("/command-center/api/bos/distribution?limit=1", {
+                    method:"GET", credentials:"same-origin",
+                    headers:{"X-Requested-With":"XMLHttpRequest"}
+                });
+                const distributionData = await distributionResponse.json();
+                if(distributionResponse.ok && distributionData.success){
+                    distribution = distributionData.distribution || null;
+                }
+            } catch (_) {
+                distribution = null;
+            }
+            setText("salesSupportTotal", snapshot.total_leads);
+            setText("salesSupportHot", snapshot.hot_leads);
+            setText("salesSupportDue", snapshot.follow_ups_due);
+            setText("salesSupportPipeline", snapshot.pipeline_value);
+            const top = Array.isArray(snapshot.top_leads) ? snapshot.top_leads[0] : null;
+            if(!top){
+                lead.innerHTML='<div class="sales-support-lead-top"><strong>No priority lead right now</strong><span class="badge">MONITOR</span></div>';
+                return;
+            }
+            const action = top.recommended_action || snapshot.recommended_action || "monitor";
+            lead.innerHTML='<div class="sales-support-lead-top"><strong></strong><span class="badge"></span></div>' +
+                '<div class="sales-support-meta"></div>' +
+                '<div class="sales-support-action">Recommended: <strong></strong></div>' +
+                '<div class="sales-support-meta sales-support-owner"></div>' +
+                '<div style="margin-top:12px"><button type="button" id="salesFollowupBtn">Build approval-ready follow-up</button></div>' +
+                '<div id="salesFollowupPreview" class="best-path-panel" hidden></div>';
+            lead.querySelector(".sales-support-lead-top strong").textContent = String(top.company_name || "Priority lead");
+            lead.querySelector(".badge").textContent = String(top.temperature || "priority").toUpperCase();
+            lead.querySelector(".sales-support-meta").textContent =
+                "Score " + String(top.score ?? "—") + " · Estimated value " + String(top.estimated_value ?? "—");
+            lead.querySelector(".sales-support-action strong").textContent = String(action).replaceAll("_", " ");
+            const recommendation = Array.isArray(distribution && distribution.recommendations) ? distribution.recommendations[0] : null;
+            lead.querySelector(".sales-support-owner").textContent = recommendation && recommendation.owner_name
+                ? "Suggested owner: " + String(recommendation.owner_name) + " · advisory only"
+                : "Owner routing will be suggested when eligible team members are available.";
+            const followupButton = lead.querySelector("#salesFollowupBtn");
+            const followupPreview = lead.querySelector("#salesFollowupPreview");
+            followupButton.onclick = () => buildSalesFollowup(top.id, followupButton, followupPreview);
+        }catch(error){
+            lead.innerHTML='<div class="sales-support-lead-top"><strong>Sales &amp; Support</strong><span class="badge">CONNECTED</span></div>';
+            console.warn("Sales support loading unavailable:", error.message);
+        }
+    }
+
+    async function buildSalesFollowup(leadId, button, preview){
+        button.disabled = true;
+        button.textContent = "Preparing…";
+        try{
+            const response = await fetch("/command-center/api/bos/sales-support/follow-up?lead_id=" + encodeURIComponent(leadId) + "&channel=web", {
+                method:"GET",
+                credentials:"same-origin",
+                headers:{"X-Requested-With":"XMLHttpRequest","Accept":"application/json"}
+            });
+            const data = await response.json();
+            if(!response.ok || !data.success){
+                throw new Error(data.error || "follow_up_preview_unavailable");
+            }
+            const plan = data.follow_up || {};
+            preview.hidden = false;
+            preview.innerHTML = "<div class=\"best-path-head\"><strong>Approval-ready follow-up</strong><span class=\"badge\">" +
+                String(plan.status || "REVIEW").toUpperCase() + "</span></div>" +
+                "<div class=\"best-path-note\">Channel: " + String(plan.channel || "web") +
+                " · Lead: #" + String(plan.lead_id || leadId) +
+                " · Action: " + String(plan.action || "sales_follow_up") + "</div>" +
+                "<div class=\"best-path-note\">Human approval required. No message was sent and no database or external action was executed.</div>";
+            button.textContent = "Proposal ready ✓";
+        }catch(error){
+            preview.hidden = false;
+            preview.textContent = "Follow-up proposal was stopped safely: " + String(error.message || "unavailable");
+            button.textContent = "Build approval-ready follow-up";
+        }finally{
+            button.disabled = false;
+        }
+    }
+
+    async function loadKemetCommercialControl(){
+        const anchor = document.querySelector(".hero");
+        if(!anchor) return;
+        let panel = document.getElementById("kemetCommercialControl");
+        if(!panel){
+            panel = document.createElement("section");
+            panel.id = "kemetCommercialControl";
+            panel.className = "panel";
+            panel.style.marginBottom = "20px";
+            anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+        }
+        try{
+            const [revenueResponse, worldsResponse] = await Promise.all([
+                fetch("/command-center/api/bos/revenue-center", {credentials:"same-origin"}),
+                fetch("/command-center/api/bos/kemet-worlds-intelligence", {credentials:"same-origin"})
+            ]);
+            const revenueData = await revenueResponse.json();
+            const worldsData = await worldsResponse.json();
+            const revenue = revenueData.revenue_center || {};
+            const worlds = worldsData.worlds_intelligence || {};
+            const youtube = (revenue.channels || []).find(function(x){ return x.channel_id === "youtube"; }) || {};
+            const verifiedRevenue = revenue.verified_revenue;
+            const totals = worlds.totals || {};
+            const views = totals.views;
+            const retention = totals.retention_rate;
+            panel.innerHTML = '<h2>مركز النمو والإيراد</h2><p>منديس + يوتيوب + القياس الحقيقي في مسار واحد. القيم غير المثبتة تظهر كغير متاحة.</p>' +
+                '<div class="best-path-grid">' +
+                '<div><small>عالم منديس</small><strong>ACTIVE</strong></div>' +
+                '<div><small>YouTube</small><strong>'+String(youtube.connection_status || "NOT_CONNECTED")+'</strong></div>' +
+                '<div><small>المشاهدات المثبتة</small><strong>'+String(views ?? "—")+'</strong></div>' +
+                '<div><small>الإيراد المثبت</small><strong>'+String(verifiedRevenue ?? "—")+'</strong></div>' +
+                '</div>' +
+                '<div class="best-path-note">Retention — الاحتفاظ: '+String(retention ?? "—")+' · الرصيد النقدي والدفع لا يتم تخمينهما.</div>';
+        }catch(error){
+            panel.innerHTML = '<h2>مركز النمو والإيراد</h2><p>البيانات التجارية الحية غير متاحة حاليًا. لم يتم إنشاء أي قيمة افتراضية.</p>';
+            console.warn("Commercial control unavailable:", error.message);
+        }
+    }
+
+    async function buildDistributionPlan(){
+        const assetInput = document.getElementById("distributionAssetUri");
+        const button = document.getElementById("distributionPlanBtn");
+        const preview = document.getElementById("distributionPlanPreview");
+        const assetUri = assetInput.value.trim();
+        if(!assetUri){
+            assetInput.focus();
+            return;
+        }
+        button.disabled = true;
+        button.textContent = "Preparing…";
+        try{
+            const response = await fetch("/command-center/api/bos/social-distribution/plan", {
+                method:"POST",
+                credentials:"same-origin",
+                headers:{"Content-Type":"application/json","X-Requested-With":"XMLHttpRequest","Accept":"application/json"},
+                body:JSON.stringify({asset_uri:assetUri})
+            });
+            const data = await response.json();
+            if(!response.ok || !data.success){
+                throw new Error(data.error || "distribution_planning_unavailable");
+            }
+            const plan = data.distribution_plan || {};
+            const targets = Array.isArray(plan.targets) ? plan.targets : [];
+            preview.hidden = false;
+            preview.innerHTML = "<div class=\"best-path-head\"><strong>Distribution proposal ready</strong><span class=\"badge\">PROPOSAL ONLY</span></div>" +
+                "<div class=\"best-path-note\">Asset: " + String(plan.asset_uri || assetUri) + " · Digest: " + String(plan.package_digest || "—") + "</div>" +
+                "<div class=\"best-path-grid\">" + targets.slice(0,4).map(function(target){
+                    return "<div><small>" + String(target.platform) + "</small><strong>" + String(target.connection || "not_connected") + " · approval required</strong></div>";
+                }).join("") + "</div>" +
+                "<div class=\"best-path-note\">Canonical Runtime only. No content was published, credentials were exposed, or external action executed.</div>";
+            button.textContent = "Proposal ready ✓";
+        }catch(error){
+            preview.hidden = false;
+            preview.textContent = "Distribution planning stopped safely: " + String(error.message || "unavailable");
+            button.textContent = "Build distribution plan";
+        }finally{
+            button.disabled = false;
+        }
+    }
+
+    document.getElementById("distributionPlanBtn").addEventListener("click", buildDistributionPlan);
+
+    loadKemetCommercialControl();
+    loadSalesSupport();
 
     loadBusinessKPIs();
 
@@ -1473,7 +1727,7 @@ async function loadBusinessOutcomeDashboard(){
   panel.innerHTML='<h2>Business Outcome Dashboard</h2><p>Decision → capability → commercial signal → observed result. Observational only; no causal or ROI claims.</p><div class="bod-grid">'+items.map(function(item){
    const impacts=Array.isArray(item.observed_impact)?item.observed_impact:[];
    const conf=item.confidence||{};
-   const rows=impacts.map(function(x){const delta=Number(x.delta||0);const sign=delta>0?'+':'';return '<div class="bod-row"><span>'+esc(x.metric)+'</span><strong>'+esc(sign+delta)+'</strong></div>}).join('');
+   const rows=impacts.map(function(x){const delta=Number(x.delta||0);const sign=delta>0?'+':'';return '<div class="bod-row"><span>'+esc(x.metric)+'</span><strong>'+esc(sign+delta)+'</strong></div>';}).join('');
    return '<div class="bod-card"><div class="bod-title">'+esc(item.capability_id)+'</div><div class="bod-meta">'+esc(item.baseline_window||'90d')+' → '+esc(item.observation_window||item.period||'30d')+' · Confidence '+esc(Math.round(Number(conf.score||0)*100))+'%</div>'+ (rows||'<div class="bod-row"><span>No numeric signal</span><strong>—</strong></div>')+'</div>';
   }).join('')+'</div>';
  }catch(e){panel.innerHTML='<h2>Business Outcome Dashboard</h2><p>Outcome data is currently unavailable.</p>'}
@@ -1666,4 +1920,59 @@ async function loadDecisionReviewQueue(){
  }catch(e){panel.innerHTML='<h2>Decision Review Queue</h2><p class="rq-note">Review queue data is currently unavailable.</p>'}
 }
 loadDecisionReviewQueue();
+</script>
+
+<script>
+async function loadSocialReadiness(){
+ const anchor=document.querySelector('.hero'); if(!anchor)return;
+ let panel=document.getElementById('socialReadiness');
+ if(!panel){panel=document.createElement('section');panel.id='socialReadiness';panel.className='panel';panel.style.marginBottom='20px';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/command-center/api/bos/social-connections',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('social connections unavailable');
+  const rows=Array.isArray(d.channels)?d.channels:[];
+  const labels={youtube:'YouTube',tiktok:'TikTok',instagram:'Instagram',facebook:'Facebook',telegram:'Telegram',whatsapp:'WhatsApp'};
+  panel.innerHTML='<h2>مركز ربط القنوات</h2><p>مكان واحد لإدارة كل القنوات. كل منصة تحتفظ بمسار التفويض الرسمي الخاص بها، ولا نعتبر الإعداد اتصالًا مؤكدًا.</p><div class="best-path-grid">'+rows.map(function(x){
+   const state=x.connection==='verified'?'VERIFIED':(x.configuration==='configured'?'AUTHORIZE':'SETUP');
+   const action=x.configuration==='configured'&&['tiktok','instagram','facebook'].indexOf(x.channel_id)>=0?' <button type="button" onclick="authorizeSocial(\''+x.channel_id+'\')">ربط</button>':'';
+   return '<div><small>'+labels[x.channel_id]+'</small><strong>'+state+'</strong><div class="best-path-note">'+(x.measurement_ready?'قياس جاهز':'قياس يحتاج تكامل')+' · '+esc(x.next_step||'')+action+'</div></div>';
+  }).join('')+'</div><div class="best-path-note">YouTube وTelegram وWhatsApp لها مساراتها الرسمية الخاصة. Facebook Publishing وInstagram Publishing مساران مستقلان عن تسجيل الدخول.</div>';
+ }catch(e){panel.innerHTML='<h2>مركز ربط القنوات</h2><p>حالة القنوات غير متاحة حاليًا. لم يتم افتراض أي اتصال.</p>';console.warn('Social connections unavailable:',e.message)}
+}
+async function authorizeSocial(channel){
+ const r=await fetch('/command-center/api/bos/social-connections/'+encodeURIComponent(channel)+'/authorize',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'}});
+ const d=await r.json();
+ if(d.authorize_url){window.location.href=d.authorize_url;return;}
+ alert(d.error||d.status||'تعذر بدء الربط');
+}
+loadSocialReadiness();
+</script>
+<script>
+async function loadProductionBacklot(){
+ const anchor=document.getElementById('socialReadiness')||document.querySelector('.hero'); if(!anchor)return;
+ let panel=document.getElementById('productionBacklot');
+ if(!panel){panel=document.createElement('section');panel.id='productionBacklot';panel.className='panel';panel.style.marginBottom='20px';anchor.parentNode.insertBefore(panel,anchor.nextSibling)}
+ try{
+  const r=await fetch('/command-center/api/bos/production-backlot?title=Hikayat%20Mendes',{credentials:'same-origin'});
+  const d=await r.json(); if(!r.ok||!d.success)throw new Error('backlot unavailable');
+  const b=d.production_backlot, stages=b.pipeline.stages||[], channels=b.distribution.channels||[];
+  const stateLabel={planned:'مخطط',ready:'جاهز',blocked:'متوقف',executing:'قيد التنفيذ',verified:'تم التحقق'};
+  panel.innerHTML='<h2>Production Backlot — لوحة الإنتاج الحية</h2><p>الحلقة، الأدوات، بوابات الجودة، القنوات، والنتيجة التجارية في مكان واحد.</p>'
+   +'<div class="best-path-grid">'+stages.map(function(x){return '<div><small>'+esc(x.stage)+'</small><strong>'+esc(stateLabel[x.state]||x.state)+'</strong><div class="best-path-note">'+esc(x.quality_gate)+' · '+esc(String(x.progress))+'%</div></div>'}).join('')+'</div>'
+   +'<h3 style="margin-top:18px">التوزيع الموحد</h3><div class="best-path-grid">'+channels.map(function(x){var s=x.connection==='verified'?'تم التحقق':(x.configuration==='configured'?'جاهز للربط':'يحتاج إعداد');return '<div><small>'+esc(x.name||x.channel_id)+'</small><strong>'+esc(s)+'</strong><div class="best-path-note">'+esc(x.next_step||'')+' · نشر بموافقة</div></div>'}).join('')+'</div>'
+   +'<div class="best-path-note" style="margin-top:14px">التكلفة والإيراد والمشاهدات المؤهلة تظل — حتى تصل قياسات موثقة. لا يتم النشر تلقائيًا.</div>';
+ }catch(e){panel.innerHTML='<h2>Production Backlot</h2><p>لوحة الإنتاج غير متاحة حاليًا.</p>';console.warn('Production backlot unavailable:',e.message)}
+}
+loadProductionBacklot();
+</script>
+
+<section class="panel" id="socialChannelCatalog">
+ <div class="section-head"><div><h2>جاهزية القنوات</h2><p class="sub">كل المنصات المهمة في مركز توزيع واحد — مع مسار ربط مستقل لكل منصة.</p></div><span class="badge">MULTI-CHANNEL</span></div>
+ <div class="rows"><div class="row"><span>Snapchat</span><span>مسار نشر مستقل</span></div><div class="row"><span>Pinterest</span><span>نشر + قياس</span></div><div class="row"><span>LinkedIn</span><span>منشورات الأفراد والصفحات</span></div><div class="row"><span>X</span><span>نشر + قياس</span></div><div class="row"><span>Threads</span><span>مسار Meta مستقل</span></div></div>
+</section>
+<script>
+async function loadSocialChannelCatalog(){
+ try{const r=await fetch('/command-center/api/bos/social-channel-catalog',{credentials:'same-origin'});const d=await r.json();window.kemetSocialChannelCatalog=d.social_channel_catalog||null;}catch(e){console.warn('Social channel catalog unavailable:',e.message)}
+}
+loadSocialChannelCatalog();
 </script>

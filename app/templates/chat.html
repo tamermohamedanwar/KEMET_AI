@@ -832,8 +832,11 @@ let formData = new FormData();
 formData.append("file", file);
 
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+
 const response = await fetch("/upload",{
 method:"POST",
+headers: csrfToken ? {"X-CSRFToken": csrfToken} : {},
 body:formData
 });
 

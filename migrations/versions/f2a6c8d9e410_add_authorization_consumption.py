@@ -13,6 +13,13 @@ depends_on = None
 
 
 def upgrade():
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if inspector.has_table("execution_authorization_consumption"):
+        return
+    bind = op.get_bind()
+    if sa.inspect(bind).has_table("execution_authorization_consumption"):
+        return
     op.create_table(
         "execution_authorization_consumption",
         sa.Column("id", sa.Integer(), primary_key=True),

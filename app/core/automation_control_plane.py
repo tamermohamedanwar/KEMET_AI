@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
@@ -23,16 +24,18 @@ class AutomationLimits:
 
     def validate(self) -> list[str]:
         errors: list[str] = []
+        if isinstance(self.max_steps, bool) or not isinstance(self.max_steps, int) or self.max_steps < 1:
+            errors.append("max_steps_invalid")
+        if isinstance(self.max_retries_per_step, bool) or not isinstance(self.max_retries_per_step, int) or self.max_retries_per_step < 0:
+            errors.append("max_retries_invalid")
+        if isinstance(self.max_runtime_seconds, bool) or not isinstance(self.max_runtime_seconds, int) or self.max_runtime_seconds < 1:
+            errors.append("max_runtime_invalid")
+        if isinstance(self.max_external_operations, bool) or not isinstance(self.max_external_operations, int) or self.max_external_operations < 0:
+            errors.append("max_external_operations_invalid")
+        if isinstance(self.max_estimated_cost, bool) or not isinstance(self.max_estimated_cost, (int, float)) or not math.isfinite(float(self.max_estimated_cost)) or self.max_estimated_cost < 0:
+            errors.append("max_estimated_cost_invalid")
         if self.max_steps < 1:
             errors.append("max_steps_invalid")
-        if self.max_retries_per_step < 0:
-            errors.append("max_retries_invalid")
-        if self.max_runtime_seconds < 1:
-            errors.append("max_runtime_invalid")
-        if self.max_external_operations < 0:
-            errors.append("max_external_operations_invalid")
-        if self.max_estimated_cost < 0:
-            errors.append("max_estimated_cost_invalid")
         return errors
 
 
@@ -81,8 +84,15 @@ class AutomationPlan:
 class AutomationControlPlane:
     """Plan, validate, and govern automation without performing side effects."""
 
-    VERSION = "1.0"
+    VERSION = "1.1"
+    DEFAULT_MAX_ESTIMATED_COST_CEILING = 100.0
     VALID_APPROVAL_POLICIES = frozenset({"auto_safe", "human", "human_critical", "blocked"})
+
+    def __init__(self, *, max_estimated_cost_ceiling: float | None = None):
+        ceiling = self.DEFAULT_MAX_ESTIMATED_COST_CEILING if max_estimated_cost_ceiling is None else max_estimated_cost_ceiling
+        if isinstance(ceiling, bool) or not isinstance(ceiling, (int, float)) or not math.isfinite(float(ceiling)) or ceiling < 0:
+            raise ValueError("max_estimated_cost_ceiling_invalid")
+        self.max_estimated_cost_ceiling = float(ceiling)
 
     def _risk(self, step: AutomationStep) -> str:
         return step.risk if step.risk in VALID_RISKS else "critical"
@@ -96,6 +106,8 @@ class AutomationControlPlane:
         warnings: list[str] = []
         limits_errors = plan.limits.validate()
         errors.extend(limits_errors)
+        if plan.limits.max_estimated_cost > self.max_estimated_cost_ceiling:
+            errors.append("estimated_cost_ceiling_exceeded")
 
         if plan.organization_id <= 0:
             errors.append("organization_id_required")
@@ -133,9 +145,17 @@ class AutomationControlPlane:
                 errors.append(f"retry_budget_exceeded:{step.step_id}")
             if step.max_retries < 0:
                 errors.append(f"invalid_retry:{step.step_id}")
-            if step.estimated_cost < 0:
+            if (
+                isinstance(step.estimated_cost, bool)
+                or not isinstance(step.estimated_cost, (int, float))
+                or not math.isfinite(float(step.estimated_cost))
+                or step.estimated_cost < 0
+            ):
                 errors.append(f"invalid_cost:{step.step_id}")
-            estimated_cost += step.estimated_cost
+            else:
+                estimated_cost += float(step.estimated_cost)
+                if not math.isfinite(estimated_cost):
+                    errors.append("estimated_cost_overflow")
 
             if step.connector_id or step.operation:
                 external_count += 1

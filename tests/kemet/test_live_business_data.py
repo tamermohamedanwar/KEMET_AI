@@ -86,3 +86,26 @@ def test_business_calculations():
     assert snapshot.average_deal_value == 200.0
     assert snapshot.lead_to_customer_rate == 20.0
     assert snapshot.qualification_rate == 50.0
+
+
+def test_live_business_data_uses_canonical_paid_payment_status_only():
+    from uuid import uuid4
+    from app import db
+    from app.models.payment import Payment
+    from wsgi import application
+    from app.core.context.live_business_data import LiveBusinessData
+
+    with application.app_context():
+        service = LiveBusinessData()
+        before = service.snapshot(1)
+        payments = [
+            Payment(organization_id=1, plan="business", amount=11, currency="USD", status="paid", provider="test", provider_transaction_id=f"status-paid-{uuid4().hex}"),
+            Payment(organization_id=1, plan="business", amount=22, currency="USD", status="completed", provider="test", provider_transaction_id=f"status-completed-{uuid4().hex}"),
+            Payment(organization_id=1, plan="business", amount=33, currency="USD", status="success", provider="test", provider_transaction_id=f"status-success-{uuid4().hex}"),
+        ]
+        db.session.add_all(payments)
+        db.session.commit()
+        after = service.snapshot(1)
+
+        assert after.revenue - before.revenue == 11.0
+        assert after.paid_payments - before.paid_payments == 1

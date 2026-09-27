@@ -16,7 +16,7 @@ class Conversation(db.Model):
     organization_id = db.Column(
         db.Integer,
         db.ForeignKey("organizations.id"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
 

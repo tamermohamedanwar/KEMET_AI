@@ -50,6 +50,7 @@ class AIOrchestrator:
 
     APPROVAL_ACTIONS = {
         "refund_request",
+        "sales_follow_up",
     }
 
     HIGH_RISK_ACTIONS = {
@@ -142,6 +143,7 @@ class AIOrchestrator:
             params = {}
             if numeric_id is not None:
                 params["customer_id"] = numeric_id
+                params["lead_id"] = numeric_id
 
             return OrchestratorPlan(
                 intent="customer_follow_up",

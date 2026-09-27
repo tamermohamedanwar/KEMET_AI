@@ -46,7 +46,10 @@ class BOSRuntime:
 
     def _prepare_approval(self, command, plan, playbook, workflow, organization_id, user_id):
         from app.services.automation_approval_service import automation_approval_service
-        action = playbook["steps"][0]
+        approval_step = next((step for step in playbook["steps"] if step.get("requires_approval")), None)
+        if approval_step is None:
+            approval_step = playbook["steps"][0]
+        action = approval_step
         idempotency_key = engine._build_idempotency_key(
             workflow_id=workflow.id,
             event="manual_command",
@@ -68,11 +71,17 @@ class BOSRuntime:
         )
         db.session.add(execution)
         db.session.flush()
+        workflow_action = next(
+            (item for item in workflow.actions if item.position == action.get("position") and item.action_type == action.get("action")),
+            None,
+        )
+        if workflow_action is None:
+            raise RuntimeError("Approval action is not materialized in workflow.")
         approval = automation_approval_service.create(
             organization_id=organization_id,
             action_type=action["action"],
             reason=plan.get("approval_reason") or "Human approval required before this action.",
-            request_data={"action_id": workflow.actions[0].id, "action": action["action"], "parameters": action.get("parameters") or {}, "data": {"command": command, "organization_id": organization_id, "user_id": user_id}},
+            request_data={"action_id": workflow_action.id, "action": action["action"], "parameters": action.get("parameters") or {}, "data": {"command": command, "organization_id": organization_id, "user_id": user_id}},
             workflow_id=workflow.id,
             execution_id=execution.id,
             requested_by=user_id,

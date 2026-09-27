@@ -10,6 +10,7 @@ from app.models.demo_lead import DemoLead
 from app.models.payment import Payment
 from app.models.subscription import Subscription
 from app.models.ai_usage import AIUsage
+from app.services.revenue_pipeline_service import revenue_pipeline_service
 
 
 class KPIService:
@@ -158,13 +159,23 @@ class KPIService:
             Payment.status == "failed"
         ).count()
 
-        paid_amount = (
+        paid_amount_observational = (
             payment_query
             .filter(Payment.status == "paid")
             .with_entities(func.coalesce(func.sum(Payment.amount), 0))
             .scalar()
             or 0
         )
+
+        if organization_id is not None:
+            commercial_financials = revenue_pipeline_service.dashboard(
+                organization_id=int(organization_id)
+            )["financials"]
+            paid_amount = float(commercial_financials.get("paid_revenue", 0.0) or 0.0)
+            revenue_authority = "revenue_pipeline_verified_payment_binding"
+        else:
+            paid_amount = 0.0
+            revenue_authority = "tenant_required_for_verified_commercial_revenue"
 
         # ---------------------------------------------------------
         # SUBSCRIPTIONS
@@ -248,6 +259,8 @@ class KPIService:
                 "payments_pending": payments_pending,
                 "payments_failed": payments_failed,
                 "paid_amount": float(paid_amount),
+                "paid_amount_observational": float(paid_amount_observational),
+                "revenue_authority": revenue_authority,
                 "subscriptions_total": subscriptions_total,
                 "subscriptions_active": subscriptions_active,
             },

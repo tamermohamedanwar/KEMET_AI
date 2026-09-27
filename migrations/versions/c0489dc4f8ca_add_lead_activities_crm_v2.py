@@ -16,6 +16,10 @@ depends_on = None
 
 
 def upgrade():
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if inspector.has_table("lead_activities"):
+        return
     op.create_table(
         "lead_activities",
         sa.Column(

@@ -81,14 +81,15 @@ color:#9ca3af;
 <td>{{ user.role }}</td>
 <td>{{ user.created_at }}</td>
 <td>
-<a href="{{ url_for('admin.toggle_role', user_id=user.id) }}">
-Toggle Role
-</a>
+<form method="post" action="{{ url_for('admin.toggle_role', user_id=user.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Toggle Role</button>
+</form>
 <br><br>
-<a href="{{ url_for('admin.delete_user', user_id=user.id) }}"
-onclick="return confirm('Delete this user?');">
-Delete
-</a>
+<form method="post" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('Delete this user?');">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit">Delete</button>
+</form>
 </td>
 </tr>
 

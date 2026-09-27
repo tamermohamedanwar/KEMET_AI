@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from app.core.automation_queue import automation_queue
+from app.core.workflow_runtime import WorkflowState
 
 
 class AutomationScheduler:
@@ -30,6 +31,9 @@ class AutomationScheduler:
             "event_id": event_id,
             "trigger_id": trigger_id,
             "workflow_id": intent["workflow_id"],
+            "execution_id": intent.get("execution_id"),
+            "idempotency_key": intent.get("idempotency_key") or AutomationScheduler._job_key(org_id, event_id, trigger_id),
+            "workflow_state": intent.get("workflow_state") or (WorkflowState.WAITING_APPROVAL if intent.get("execution", {}).get("approval_required") else WorkflowState.QUEUED),
             "priority": int(intent.get("priority", 100)),
             "correlation_id": correlation_id,
             "trace_id": trace_id,

@@ -245,3 +245,129 @@ Validation: 205 tests passed in tests/kemet after the foundation milestone.
 - Source registry metadata (`source_key`, `source_trust`, `source_tier`) now survives World Intelligence pipeline output.
 - Conflict detection is wired into the pipeline and flags materially different source trust for the same category/title as `review_required`.
 - World Intelligence remains read-only/advisory with no autonomous execution.
+
+
+## 2026-09-20 — Kemet Media OS / Unified Production Roadmap Lock
+
+### Strategic product direction
+- Kemet remains one governed AI-native Business Operating System; Media OS is a domain operating system inside Kemet, not a separate product/runtime.
+- Canonical media identity: **Kemet Media OS**; specialized cinematic engine: **Kemet Cinema Engine**.
+- Mission: “قل لـ Kemet ما الفيلم الذي تريد صنعه، وKemet يتولى هندسة الإنتاج كاملة.”
+- Canonical production chain: Idea → Story → Script → World → Characters → Direction → Shots → Audio → Generation → Editing → QA → Repair → Final Artifact.
+- Human remains the decision-maker; consequential external actions remain behind the Canonical Runtime and Human Approval.
+- Kemet itself remains NON-MCP. Providers, open-source models, GitHub projects, and compute backends are replaceable capabilities, not Kemet architecture.
+
+### Unified Command Surface
+- Main page starts with one intent-first command field: user states what they want in natural language.
+- Kemet infers production/business intent and dynamically presents the relevant action rail and visual choices.
+- For media requests, show visual direction cards/previews such as Cinematic, Animation, Cartoon, Motion Graphics, Photoreal, Stylized, and Custom, then progressively reveal context-specific controls.
+- Visual choices become explicit user decisions captured in canonical production state; prompts remain derived artifacts, never the source of truth.
+- Avoid static legacy domain tabs and avoid forcing users to know production terminology.
+
+### Kemet Media OS target layers
+- Creative Intelligence, Production Intelligence, Production Memory, Continuity Intelligence.
+- Cinematic Director Engine, FilmDSL, Storyboard/Previs, Character Identity, World Continuity.
+- Voice/Audio Intelligence, Editorial Intelligence, Cinematic Render Pipeline, Cinematic QA.
+- Critic → Repair → Targeted Regeneration, Capability Intelligence, Generation Routing, Compute Intelligence.
+- Golden Reference System, Episode/Film Graph, provenance/evidence, governance and approval.
+
+### Engineering roadmap
+1. Integrate intent-first Command Surface with the existing BOS planning path; no parallel runtime or executor.
+2. Replace the legacy static mode strip with a dynamic Action Rail and contextual visual-direction cards.
+3. Extend canonical production-state contracts for visual direction, style, references, continuity, and user decisions.
+4. Implement Media OS/Cinema Engine orchestration around the existing Media Factory and provider/capability fabric.
+5. Establish Golden Reference + Character Identity + World Continuity as first-class production memory.
+6. Build FilmDSL + Shot Director + Storyboard/Previs so production is engineered before generation.
+7. Add generation routing and Compute Fabric so phone is the control surface while heavy work can run on PC/GPU/cloud/provider infrastructure.
+8. Add semantic/cinematic QA and Critic → Repair → Targeted Regeneration; repair the smallest failed unit instead of regenerating everything.
+9. Prove one reproducible end-to-end cinematic pilot through the governed pipeline.
+10. Expand the same engine to advertising, animation, cartoon, motion graphics, educational video, branded films, series and shorts without creating separate generators.
+11. Package the resulting capability into the broader Kemet commercial/control-loop architecture.
+12. Run focused verification after each gate and a fresh full-suite regression before declaring release health.
+
+### Non-negotiable architecture boundaries
+- Preserve tenant isolation, billing/usage controls, evidence/provenance, idempotency, approval-first execution, and canonical execution governance.
+- Do not convert Kemet into a bundle of GitHub projects; extract patterns and implement Kemet-native capabilities.
+- Do not claim full-suite green from historical evidence; only fresh verification counts.
+- Phone = Production Console/control surface; compute may be remote and dynamically selected.
+
+### Immediate starting point
+**Start with the Unified Command Surface:** redesign the existing Command Center beneath the intent field into the dynamic Action Rail + contextual Visual Direction selection, then wire the selection into canonical planning/production state without introducing a new runtime.
+
+
+## 2026-09-20 — Dynamic Command Surface Gate Completed
+
+The first engineering gate of the Unified Command Surface roadmap is now implemented. Kemet accepts natural-language intent, derives a contextual Action Rail, and for visual requests exposes selectable Visual Direction Cards. The selection is captured as canonical production state before downstream prompt derivation.
+
+This follows current global interaction patterns around adaptive multimodal interfaces and creative systems that expose visual references, style control, consistency, and camera-oriented choices while preserving user agency. Provider-specific capabilities remain replaceable backends; Kemet owns the canonical state and governance.
+
+Implementation boundary: existing Command Center planning route remains the planning boundary; no parallel runtime or executor was added; Kemet remains NON-MCP.
+
+Verification gate: 24 focused tests passed. Full-suite status is intentionally unchanged and unclaimed.
+
+Next implementation gate: Production State → Media OS production graph → Golden Reference → Character Identity → World Continuity → Shot Director → Golden Shot.
+
+
+## 2026-09-20 — Kemet Production OS Naming Evolution
+- Canonical production-layer name is now **Kemet Production OS**.
+- **Kemet Cinema Engine** remains the specialized cinematic engine within it.
+- **Kemet Media OS** is retained only as a legacy/internal compatibility term.
+- No architectural rebuild follows from this naming change; all existing production contracts, graphs, governance, and provider abstraction remain canonical.
+- New roadmap work and new documentation should use Kemet Production OS.
+
+
+## 2026-09-20 — Production Intelligence Evolution
+The next canonical layer above Kemet Production OS is Production Intelligence: persistent typed production state, production memory, structured production specification, dynamic task orchestration, evidence-driven critic/repair, and bounded policy evolution. This extends the existing architecture rather than replacing it.
+
+Implementation sequence:
+1. Production Intelligence contract and typed state.
+2. Production Memory and trajectory evidence.
+3. Kemet-native structured production specification (FilmDSL-inspired, provider-independent).
+4. Dynamic task stack/orchestrator over the existing Production Graph.
+5. Critic/Repair evidence loop with replay and QA.
+6. Bounded learning/policy evolution with explicit validation and governance.
+7. Integrate free-first compute discovery without weakening execution controls.
+
+## 2026-09-21 — KEMET CONTINUE PROTOCOL / STABLE 100% PATH
+
+This section supersedes any older continuation wording that could be interpreted as requiring Kemet to stop engineering and wait for Telegram activity. Kemet remains the primary project and the 100% end-state remains the fixed target. Telegram is a governed channel inside Kemet, not a separate project and not a reason to pause platform completion.
+
+The permanent continuation command is KEMET CONTINUE PROTOCOL. It means: inspect the latest live/runtime truth and repository state; reconcile Constitution, Canonical Current State, Master Handoff, Project State and the 100% Master Completion Matrix; review current authoritative external sources when they materially affect the engineering decision; select the single highest-value dependency-aware closure path; bundle compatible implementation, verification, documentation and checkpoint work into one coherent pass; run focused verification and the appropriate regression level; update canonical state; and continue toward the next closure boundary.
+
+The fixed product objective is Kemet 100%: Business Understanding -> Intelligence -> Plan -> Simulate -> Approve -> Execute -> Evidence -> Content/Production -> Distribution -> Audience -> Real Lead -> Qualification -> Offer -> Payment -> Fulfillment -> Revenue -> Cost/Profit -> Learning. No feature, channel, provider, media task or temporary blocker may replace this objective.
+
+Telegram remains ready for real-world commercial proof and should be used when a genuine prospective customer is available, but Kemet engineering must not stop while waiting for a real lead. The engineering track and the real-world commercial-proof track proceed as one dependency-aware roadmap. No synthetic lead, payment, revenue, fulfillment, profit, publication or generation evidence may be created.
+
+No new AI provider is to be introduced merely to change direction or because another provider exists. Provider-neutral internal contracts remain the architecture rule. The assistant may research current technical sources and compare documented practices, but recommendations must remain subordinate to Kemet's existing architecture and 100% closure criteria.
+
+Media generation or modification remains prohibited unless the human explicitly says "اعمل فيديو". Production capability gaps may be analyzed and hardened without generating media.
+
+Bundling rule: prefer one coherent implementation/verification batch over fragmented next-step prompts. Do not restart, redesign, duplicate architecture, create parallel executors, weaken governance, or silently change the end-state.
+
+Decision rule: when several incomplete domains exist, choose the highest-value dependency closure that advances multiple downstream stages without violating a real-world boundary. When a real-world input is genuinely required, stop only at that boundary and state the exact human action required; otherwise continue engineering.
+
+State authority remains: LIVE RUNTIME / LIVE DATABASE EVIDENCE -> Constitution -> Canonical Current State -> Master Handoff -> Project State -> 100% Master Completion Matrix -> historical documents. Historical records are preserved and must be labeled rather than silently treated as current truth.
+
+## 2026-09-21 — CONTINUE AUDIT CHECKPOINT / 100% PATH RECONFIRMED
+
+KEMET CONTINUE PROTOCOL was executed against the current repository. The dependency-aware audit confirms that the stable product direction is unchanged: Kemet remains the primary workstream and Telegram remains a governed channel inside Kemet, not a separate development track.
+
+Current engineering evidence: the bundled core/business/content/commercial verification set passed 46/46. No application architecture was changed in this pass because the remaining core blockers are predominantly evidence/capability boundaries rather than a justified missing parallel feature.
+
+The current highest-value engineering rule is therefore: close existing integrations and evidence boundaries before adding new architecture. In particular, do not mark Business OS, Workforce, Knowledge, Content, Distribution, Commercial, Revenue, Profit or Learning complete merely because their services and tests exist. Closure requires the runtime evidence and downstream handoff specified by the 100% matrix.
+
+Current unresolved real-world/capability boundaries remain: first genuine commercial lead; first real approved offer; first real payment/fulfillment/revenue/profit cycle; verified real publication/measurement; real image-generation capability; verified commercial audio/TTS rights; verified AI-video compute; and real multi-shot cinematic QA/repair proof.
+
+No synthetic evidence was created. No media was generated or modified. No new AI provider was introduced. No governance boundary was weakened.
+
+Next CONTINUE pass must again inspect live truth first, then bundle the highest-value closure work that is safely executable without fabricating external evidence, while keeping the real commercial-proof path ready in parallel.
+
+## 2026-09-22 — KEMET CONTINUE PROTOCOL / EDUCATION + WORLDS + MENDES INTEGRATION VERIFICATION
+
+- Live-first runtime state remained healthy: `/api/health=200`, `/api/ready=200`, `/mcp=404` by design; repository HEAD remains `ab6ad8c5af75e343e9087b1a6b83bc6a2eb032f2` and Alembic head `e1f4b7c9d620`.
+- The dependency-aware product-extension verification bundle completed **12 passed / 0 failed in 9.67s** across `test_education_content_pipeline.py`, `test_kemet_worlds_intelligence.py`, and `test_hikayat_mendes_story_pipeline.py`.
+- This verifies the existing Education → Worlds/IP → Mendes/story integration contracts at focused-test level without creating a second content engine, parallel orchestrator, new provider, or synthetic commercial evidence.
+- No customer, offer, payment, fulfillment, revenue, profit, publication, or generation evidence was fabricated.
+- No video was generated or modified.
+- Closure remains `IMPLEMENTED BUT INCOMPLETE` under the 100% matrix because production/core closure requires real runtime evidence and downstream business/outcome proof, not tests alone.
+- Canonical direction remains bundled dependency-aware closure toward Kemet 100%, with the genuine commercial-proof track active in parallel and Lead #7 preserved as technical-test/non-commercial evidence.

@@ -7,117 +7,19 @@ from app.models.lead_activity import LeadActivity
 from app.models.payment import Payment
 from app.models.subscription import Subscription
 
-from app.services.revenue_growth_loop_service import RevenueGrowthLoopService
-
 from app.services.recurring_revenue_context_service import RecurringRevenueContextService
 
 from app.services.recurring_revenue_service import RecurringRevenueService
 from app.services.revenue_health_service import RevenueHealthService
+from app.services.revenue_pipeline_service import revenue_pipeline_service
 
-from app.services.revenue_decision_service import (
-    RevenueDecisionService,
-)
+from app.services.revenue_decision_service import RevenueDecisionService, RevenueGrowthLoopService
+from app.services.revenue_command_lead_service import RevenueCommandLeadService
 
 from app.services.ai_sales_intelligence_service import AISalesIntelligenceService
 
 
 class RevenueCommandService:
-    PERIODS = {
-        "7d": 7,
-        "30d": 30,
-        "90d": 90,
-    }
-
-    @classmethod
-    def _start_date(cls, period):
-        days = cls.PERIODS.get(period, 30)
-        return datetime.utcnow() - timedelta(days=days)
-
-    @staticmethod
-    def _lead_status(lead):
-        return (lead.status or "new").strip().lower()
-
-    @staticmethod
-    def _lead_value(lead):
-        try:
-            return float(lead.estimated_value or 0)
-        except (TypeError, ValueError):
-            return 0.0
-
-    @staticmethod
-    def _lead_score(lead):
-        try:
-            return max(0, min(int(lead.lead_score or 0), 100))
-        except (TypeError, ValueError):
-            return 0
-
-    @classmethod
-    def _next_best_action(
-        cls,
-        lead,
-        now,
-    ):
-        status = cls._lead_status(lead)
-        score = cls._lead_score(lead)
-        value = cls._lead_value(lead)
-
-        if status in {"won", "converted"}:
-            return {
-                "label": "Customer acquired",
-                "type": "success",
-                "priority": 0,
-            }
-
-        if status == "lost":
-            return {
-                "label": "Closed",
-                "type": "muted",
-                "priority": 0,
-            }
-
-        follow_up = getattr(lead, "next_follow_up_at", None)
-
-        if follow_up:
-            if follow_up <= now:
-                return {
-                    "label": "Follow up now",
-                    "type": "danger",
-                    "priority": 100,
-                }
-
-            if follow_up.date() == now.date():
-                return {
-                    "label": "Follow up today",
-                    "type": "warning",
-                    "priority": 90,
-                }
-
-        if score >= 75 and value > 0:
-            return {
-                "label": "Close high-value lead",
-                "type": "success",
-                "priority": 85,
-            }
-
-        if score >= 75:
-            return {
-                "label": "Contact immediately",
-                "type": "danger",
-                "priority": 80,
-            }
-
-        if score >= 45:
-            return {
-                "label": "Qualify opportunity",
-                "type": "warning",
-                "priority": 60,
-            }
-
-        return {
-            "label": "Nurture lead",
-            "type": "muted",
-            "priority": 30,
-        }
 
     @classmethod
     def get_dashboard(
@@ -125,8 +27,8 @@ class RevenueCommandService:
         organization_id=None,
         period="30d",
     ):
-        period = period if period in cls.PERIODS else "30d"
-        start_date = cls._start_date(period)
+        period = period if period in RevenueCommandLeadService.PERIODS else "30d"
+        start_date = RevenueCommandLeadService.start_date(period)
         now = datetime.utcnow()
 
         # =====================================================
@@ -163,9 +65,9 @@ class RevenueCommandService:
         priority_leads = []
 
         for lead in leads:
-            status = cls._lead_status(lead)
-            value = cls._lead_value(lead)
-            score = cls._lead_score(lead)
+            status = RevenueCommandLeadService.status(lead)
+            value = RevenueCommandLeadService.value(lead)
+            score = RevenueCommandLeadService.score(lead)
 
             if status in {"won", "converted"}:
                 won_leads += 1
@@ -183,7 +85,7 @@ class RevenueCommandService:
                 probability = score / 100.0
                 weighted_pipeline += value * probability
 
-                action = cls._next_best_action(
+                action = RevenueCommandLeadService.next_best_action(
                     lead,
                     now,
                 )
@@ -263,39 +165,6 @@ class RevenueCommandService:
             if won_value > 0
             else 0.0
         )
-
-        # =====================================================
-        # REVENUE HEALTH
-        # =====================================================
-
-        health_score = 0
-
-        if conversion_rate >= 30:
-            health_score += 35
-        elif conversion_rate >= 15:
-            health_score += 25
-        elif conversion_rate > 0:
-            health_score += 15
-
-        if weighted_pipeline > 0:
-            health_score += 25
-
-        if hot_leads > 0:
-            health_score += 20
-
-        if total_leads > 0:
-            health_score += 20
-
-        health_score = min(health_score, 100)
-
-        if health_score >= 75:
-            health_label = "Strong"
-        elif health_score >= 50:
-            health_label = "Healthy"
-        elif health_score >= 25:
-            health_label = "Needs attention"
-        else:
-            health_label = "At risk"
 
         # =====================================================
         # PRIORITY OPPORTUNITIES
@@ -420,7 +289,7 @@ class RevenueCommandService:
         active_lead_objects = [
             lead
             for lead in leads
-            if cls._lead_status(lead)
+            if RevenueCommandLeadService.status(lead)
             not in {"won", "converted", "lost"}
         ]
 
@@ -472,11 +341,23 @@ class RevenueCommandService:
                     ]
                 ),
                 monthly_revenue=(
-                    recurring_context[
-                        "paid_revenue"
-                    ]
+                    recurring_context.get(
+                        "monthly_recurring_revenue",
+                        0.0,
+                    )
                 ),
             )
+        )
+
+        commercial_financials = revenue_pipeline_service.dashboard(
+            organization_id=int(organization_id)
+        )["financials"] if organization_id is not None else {
+            "paid_revenue": 0.0,
+            "verified_profit": 0.0,
+            "profit_status": "not_verified",
+        }
+        verified_commercial_revenue = float(
+            commercial_financials.get("paid_revenue", 0.0) or 0.0
         )
 
         health = RevenueHealthService.calculate(
@@ -487,7 +368,7 @@ class RevenueCommandService:
                 "weighted_pipeline": weighted_pipeline,
             },
             payments={
-                "paid_amount": paid_amount,
+                "paid_amount": verified_commercial_revenue,
             },
             followups={
                 "overdue": overdue_followups,
@@ -499,6 +380,26 @@ class RevenueCommandService:
             "start_date": start_date.isoformat(),
 
             "health": health,
+
+            "measurement": {
+                "mode": "observed_and_forecast",
+                "authoritative_sources": [
+                    "demo_leads",
+                    "lead_activities",
+                    "payments",
+                    "subscriptions",
+                ],
+                "recorded_revenue_is_payment_backed": True,
+                "verified_commercial_revenue_is_pipeline_bound": True,
+                "forecast_is_not_recorded_revenue": True,
+                "causal_claim": False,
+                "observed_only_for_realized_metrics": True,
+                "advisory_only": True,
+                "auto_execute": False,
+                "external_execution": False,
+                "database_mutation": False,
+                "tenant_scoped": organization_id is not None,
+            },
 
             "growth_loop": growth_loop,
 
@@ -549,11 +450,6 @@ class RevenueCommandService:
                 ),
             },
 
-            "health": {
-                "score": health_score,
-                "label": health_label,
-            },
-
             "ai_sales": {
                 "ranked_leads": ai_ranked_leads,
                 "action_distribution": ai_actions,
@@ -578,6 +474,11 @@ class RevenueCommandService:
                     float(paid_amount),
                     2,
                 ),
+                "verified_commercial_revenue": round(
+                    verified_commercial_revenue,
+                    2,
+                ),
+                "revenue_authority": "revenue_pipeline_verified_payment_binding",
             },
 
             "subscriptions": {
@@ -596,5 +497,9 @@ class RevenueCommandService:
                         if item["decision"]["priority"] != "none"
                     ]
                 ),
+                "decision_basis": "lead_score_estimated_value_followup_state",
+                "advisory_only": True,
+                "causal_claim": False,
+                "auto_execute": False,
             },
         }

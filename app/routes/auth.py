@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
+import hmac
+import secrets
+import time
 from flask_login import login_user, logout_user, login_required, current_user
 
 from app.models.user import User
@@ -13,11 +16,31 @@ from app.services.social_auth_service import (
     facebook_login,
 )
 from app.forms import LoginForm, RegisterForm
+from app.core.rate_limit import limiter
 
 auth = Blueprint("auth", __name__)
 
 
+_OAUTH_STATE_TTL = 600
+
+def _create_login_oauth_state(provider: str) -> str:
+    state = secrets.token_urlsafe(32)
+    session["kemet_oauth_login_state"] = {"provider": provider, "state": state, "expires_at": int(time.time()) + _OAUTH_STATE_TTL}
+    return state
+
+def _consume_login_oauth_state(provider: str, supplied: str) -> bool:
+    saved = session.pop("kemet_oauth_login_state", None)
+    if not isinstance(saved, dict) or saved.get("provider") != provider:
+        return False
+    if int(saved.get("expires_at") or 0) < int(time.time()):
+        return False
+    expected = str(saved.get("state") or "")
+    supplied = str(supplied or "")
+    return bool(expected and supplied) and hmac.compare_digest(expected, supplied)
+
+
 @auth.route("/register", methods=["GET", "POST"])
+@limiter.limit("10 per minute", methods=["POST"])
 def register():
     form = RegisterForm()
 
@@ -70,6 +93,7 @@ def register():
 
 
 @auth.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute", methods=["POST"])
 def login():
     form = LoginForm()
 
@@ -91,6 +115,7 @@ def login():
 
 
 @auth.route("/change-password", methods=["GET", "POST"])
+@limiter.limit("5 per minute", methods=["POST"])
 @login_required
 def change_password():
     if form := None:
@@ -127,7 +152,7 @@ def logout():
 @auth.route("/auth/google")
 def google():
     try:
-        return redirect(google_authorize_url())
+        return redirect(google_authorize_url(state=_create_login_oauth_state("google")))
     except Exception as e:
         flash(str(e))
         return redirect(url_for("auth.login"))
@@ -136,6 +161,11 @@ def google():
 @auth.route("/auth/google/callback")
 def google_callback():
     code = request.args.get("code", "").strip()
+    state = request.args.get("state", "").strip()
+
+    if not _consume_login_oauth_state("google", state):
+        flash("Google login state validation failed.")
+        return redirect(url_for("auth.login"))
 
     if not code:
         flash("Google login was cancelled or failed.")
@@ -159,7 +189,7 @@ def google_callback():
 @auth.route("/auth/facebook")
 def facebook():
     try:
-        return redirect(facebook_authorize_url())
+        return redirect(facebook_authorize_url(state=_create_login_oauth_state("facebook")))
     except Exception as e:
         flash(str(e))
         return redirect(url_for("auth.login"))
@@ -168,6 +198,11 @@ def facebook():
 @auth.route("/auth/facebook/callback")
 def facebook_callback():
     code = request.args.get("code", "").strip()
+    state = request.args.get("state", "").strip()
+
+    if not _consume_login_oauth_state("facebook", state):
+        flash("Facebook login state validation failed.")
+        return redirect(url_for("auth.login"))
 
     if not code:
         flash("Facebook login was cancelled or failed.")

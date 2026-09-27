@@ -1,9 +1,10 @@
 import json
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 from app import db
+from app.admin.decorators import admin_required
 from app.models.automation import (
     AutomationWorkflow,
     AutomationAction,
@@ -23,7 +24,7 @@ admin_automation_bp = Blueprint(
 
 
 @admin_automation_bp.route("/toggle/<int:workflow_id>", methods=["POST"])
-@login_required
+@admin_required
 def toggle_automation(workflow_id):
     organization_id = current_user.organization_id
 
@@ -63,7 +64,7 @@ def toggle_automation(workflow_id):
 # ============================================================
 
 @admin_automation_bp.route("/approvals")
-@login_required
+@admin_required
 def automation_approvals():
     organization_id = current_user.organization_id
 
@@ -102,7 +103,7 @@ def automation_approvals():
     "/approvals/<int:approval_id>",
     methods=["GET"],
 )
-@login_required
+@admin_required
 def automation_approval_detail(approval_id):
     organization_id = current_user.organization_id
 
@@ -153,7 +154,7 @@ def automation_approval_detail(approval_id):
     "/approvals/<int:approval_id>/approve",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def approve_automation_approval(approval_id):
     organization_id = current_user.organization_id
 
@@ -212,7 +213,7 @@ def approve_automation_approval(approval_id):
     "/approvals/<int:approval_id>/reject",
     methods=["POST"],
 )
-@login_required
+@admin_required
 def reject_automation_approval(approval_id):
     organization_id = current_user.organization_id
 
@@ -274,7 +275,7 @@ def reject_automation_approval(approval_id):
 
 
 @admin_automation_bp.route("/dashboard")
-@login_required
+@admin_required
 def automation_dashboard():
     organization_id = current_user.organization_id
 
@@ -345,7 +346,7 @@ def automation_dashboard():
     )
 
 @admin_automation_bp.route("/analytics")
-@login_required
+@admin_required
 def automation_analytics():
     organization_id = current_user.organization_id
 
@@ -424,7 +425,7 @@ def automation_analytics():
 
 
 @admin_automation_bp.route("/automation-marketplace/install/<string:key>", methods=["POST"])
-@login_required
+@admin_required
 def install_marketplace_automation(key):
     organization_id = current_user.organization_id
 
@@ -538,7 +539,7 @@ MARKETPLACE_AUTOMATIONS = [
 ]
 
 @admin_automation_bp.route("/")
-@login_required
+@admin_required
 def index():
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -576,7 +577,7 @@ def index():
 
 
 @admin_automation_bp.route("/create", methods=["POST"])
-@login_required
+@admin_required
 def create():
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -662,7 +663,7 @@ def create():
     "/template/<template_type>",
     methods=["POST"]
 )
-@login_required
+@admin_required
 def use_template(template_type):
     organization_id = getattr(
         current_user,
@@ -784,7 +785,7 @@ def use_template(template_type):
 
 
 @admin_automation_bp.route("/<int:workflow_id>/executions")
-@login_required
+@admin_required
 def execution_history(workflow_id):
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -815,7 +816,7 @@ def execution_history(workflow_id):
 @admin_automation_bp.route(
     "/<int:workflow_id>/executions/<int:execution_id>"
 )
-@login_required
+@admin_required
 def execution_detail(workflow_id, execution_id):
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -857,7 +858,7 @@ def execution_detail(workflow_id, execution_id):
 
 
 @admin_automation_bp.route("/<int:workflow_id>/run", methods=["POST"])
-@login_required
+@admin_required
 def run(workflow_id):
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -912,7 +913,7 @@ def run(workflow_id):
     "/<int:workflow_id>/edit",
     methods=["GET", "POST"],
 )
-@login_required
+@admin_required
 def edit(workflow_id):
 
     organization_id = getattr(
@@ -1045,7 +1046,7 @@ def edit(workflow_id):
 # ============================================================
 
 @admin_automation_bp.route("/builder", methods=["GET", "POST"])
-@login_required
+@admin_required
 def automation_builder():
     organization_id = getattr(current_user, "organization_id", None)
 
@@ -1151,7 +1152,7 @@ AUTOMATION_TEMPLATES = {
 
 
 @admin_automation_bp.route("/templates", methods=["GET"])
-@login_required
+@admin_required
 def automation_templates():
     current_plan = get_plan(organization_id)
 
@@ -1170,7 +1171,7 @@ def automation_templates():
 # ============================================================
 
 @admin_automation_bp.route("/workforce")
-@login_required
+@admin_required
 def workforce_center():
     organization_id = current_user.organization_id
 

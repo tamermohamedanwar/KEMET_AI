@@ -155,7 +155,7 @@ class LiveBusinessData:
         ).scalar()
 
         paid_payments_query = query(Payment).filter(
-            func.lower(Payment.status).in_(["paid", "completed", "success"])
+            func.lower(Payment.status) == "paid"
         )
 
         pending_payments_query = query(Payment).filter(

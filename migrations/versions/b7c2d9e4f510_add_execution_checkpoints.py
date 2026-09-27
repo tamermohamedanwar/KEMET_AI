@@ -13,6 +13,10 @@ depends_on = None
 
 
 def upgrade():
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if inspector.has_table("automation_execution_checkpoints"):
+        return
     op.create_table(
         "automation_execution_checkpoints",
         sa.Column("id", sa.Integer(), primary_key=True),

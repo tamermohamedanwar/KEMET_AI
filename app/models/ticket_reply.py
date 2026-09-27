@@ -44,3 +44,5 @@ class TicketReply(db.Model):
         db.DateTime,
         default=datetime.utcnow
     )
+
+    __table_args__ = (db.Index("ix_ticket_replies_created_ticket_ai_staff", "created_at", "ticket_id", "is_ai", "is_staff"),)

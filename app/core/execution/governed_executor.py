@@ -23,7 +23,10 @@ class GovernedExecutionService:
     APPROVAL_REQUIRED_ACTIONS = {
         "refund_request", "revenue_autopilot_run", "sales_follow_up",
         "send_notification", "create_ticket", "customer_retention",
-        "payment_issue", "account_help", "smart_ticket_ai",
+        "whatsapp_send_text", "whatsapp_send_template", "bosta_create_delivery",
+        "payment_issue", "account_help", "smart_ticket_ai", "federated_command",
+        "youtube_publish", "tiktok_publish", "instagram_publish", "facebook_publish", "linkedin_publish",
+        "telegram_publish", "whatsapp_publish",
     }
 
     def _policy(self, action: str) -> str:

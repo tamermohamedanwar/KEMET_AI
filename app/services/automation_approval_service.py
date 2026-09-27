@@ -6,6 +6,9 @@ from app.models.automation import (
     AutomationApproval,
     AutomationExecution,
 )
+from app.models.automation_queue import AutomationQueueJob
+from app.core.workflow_runtime import WorkflowState
+from app.core.workflow_coordinator import workflow_coordinator
 
 
 class AutomationApprovalService:
@@ -20,6 +23,19 @@ class AutomationApprovalService:
         execution_id=None,
         requested_by=None,
     ):
+        try:
+            organization_id = int(organization_id)
+            workflow_id = int(workflow_id) if workflow_id is not None else None
+            execution_id = int(execution_id) if execution_id is not None else None
+            requested_by = int(requested_by) if requested_by is not None else None
+        except (TypeError, ValueError):
+            return {
+                "success": False,
+                "status": "blocked",
+                "message": "Approval identity fields must use canonical integer database identifiers.",
+                "error": "approval_identity_invalid",
+            }
+
         approval = AutomationApproval(
             organization_id=organization_id,
             workflow_id=workflow_id,
@@ -36,6 +52,21 @@ class AutomationApprovalService:
         )
 
         db.session.add(approval)
+        db.session.flush()
+
+        if execution_id is not None:
+            job = AutomationQueueJob.query.filter_by(
+                organization_id=int(organization_id), execution_id=str(execution_id)
+            ).order_by(AutomationQueueJob.id.desc()).first()
+            if job is not None and job.workflow_state != WorkflowState.WAITING_APPROVAL:
+                workflow_coordinator.transition_job(
+                    job.id, WorkflowState.WAITING_APPROVAL,
+                    reason="human_approval_requested",
+                    actor="approval_service",
+                    metadata={"approval_id": approval.id},
+                    commit=False,
+                )
+
         db.session.commit()
 
         return {
@@ -105,8 +136,21 @@ class AutomationApprovalService:
             "data": data,
         }
 
+        queue_job = None
+        if approval.execution_id:
+            queue_job = AutomationQueueJob.query.filter_by(
+                organization_id=int(approval.organization_id),
+                execution_id=str(approval.execution_id),
+            ).order_by(AutomationQueueJob.id.desc()).first()
+        execution_key = str(queue_job.job_key) if queue_job is not None else f"approval:{approval.id}"
+
         try:
             from app.core.execution.authorization import execution_authorization
+
+            if queue_job is not None:
+                plan["job_id"] = int(queue_job.id)
+                plan["execution_key"] = execution_key
+                plan["idempotency_key"] = str(queue_job.idempotency_key or execution_key)
 
             authorization = execution_authorization.create_authorization(
                 plan,
@@ -115,6 +159,24 @@ class AutomationApprovalService:
 
             plan["plan_id"] = authorization["plan_id"]
             plan["plan_hash"] = authorization["plan_hash"]
+            from app.core.execution.approval_gate_adapter import create_runtime_handoff
+            handoff = create_runtime_handoff(
+                plan, approver_id=decided_by, execution_key=execution_key
+            )
+            authorization["gate_handoff"] = handoff.as_dict()
+            authorization["execution_key"] = execution_key
+            from app.core.federation.execution_envelope import execution_envelope
+            envelope = execution_envelope.build(
+                approval_package_hash=handoff.package_hash,
+                decision_hash=handoff.decision_hash,
+                handoff_hash=handoff.handoff_hash,
+                authorization=authorization,
+                execution_key=execution_key,
+                provider_id="kemet",
+                action=action_type,
+            )
+            authorization["execution_envelope"] = envelope
+            plan["execution_envelope"] = envelope
 
         except Exception as exc:
             db.session.rollback()
@@ -145,7 +207,35 @@ class AutomationApprovalService:
         )
 
         db.session.add(approval)
-        db.session.commit()
+
+        if queue_job is not None:
+            execution_key = str(authorization.get("execution_key") or queue_job.job_key)
+            plan_hash = str(authorization.get("plan_hash") or plan.get("plan_hash") or "")
+            from app.core.automation_queue import automation_queue
+            automation_queue.bind_execution_envelope(
+                queue_job.id, plan=plan, authorization=authorization, commit=False
+            )
+            workflow_coordinator.transition_approval(
+                queue_job.id, WorkflowState.APPROVED,
+                approval_id=approval.id, reason="human_approval_granted",
+                metadata={"plan_hash": plan_hash, "execution_key": execution_key, "decision_hash": handoff.decision_hash},
+                commit=False,
+            )
+            workflow_coordinator.transition_execution(
+                queue_job.id, WorkflowState.QUEUED,
+                execution_key=execution_key, reason="approved_for_execution",
+                metadata={"approval_id": approval.id, "plan_hash": plan_hash, "decision_hash": handoff.decision_hash},
+                commit=False,
+            )
+            db.session.commit()
+            return {
+                "success": True,
+                "approval_id": approval.id,
+                "status": "approved",
+                "action": approval.action_type,
+                "execution": {"status": "queued", "job_id": queue_job.id},
+                "authorization": authorization,
+            }
 
         execution_result = None
 
@@ -230,30 +320,48 @@ class AutomationApprovalService:
                 "status": approval.status,
             }
 
-        approval.status = "rejected"
-        approval.decided_by = decided_by
-        approval.decided_at = datetime.utcnow()
-
-        if reason:
-            approval.decision_json = json.dumps(
-                {"reason": reason},
-                ensure_ascii=False,
-            )
-
-        # A rejected approval must not remain waiting forever.
+        queue_job = None
         if approval.execution_id:
-            execution = AutomationExecution.query.get(
-                approval.execution_id
-            )
+            queue_job = AutomationQueueJob.query.filter_by(
+                organization_id=int(approval.organization_id),
+                execution_id=str(approval.execution_id),
+            ).order_by(AutomationQueueJob.id.desc()).first()
 
-            if execution is not None:
-                execution.status = "rejected"
-                execution.error_message = reason or "Human approval rejected."
-                execution.completed_at = datetime.utcnow()
+        try:
+            if queue_job is not None and queue_job.workflow_state == WorkflowState.WAITING_APPROVAL:
+                workflow_coordinator.transition_approval(
+                    queue_job.id, WorkflowState.REJECTED,
+                    approval_id=approval.id,
+                    reason=reason or "human_approval_rejected",
+                    commit=False,
+                )
 
-                db.session.add(execution)
+            approval.status = "rejected"
+            approval.decided_by = decided_by
+            approval.decided_at = datetime.utcnow()
 
-        db.session.commit()
+            if reason:
+                approval.decision_json = json.dumps(
+                    {"reason": reason},
+                    ensure_ascii=False,
+                )
+
+            if approval.execution_id:
+                execution = db.session.get(
+                    AutomationExecution, approval.execution_id
+                )
+
+                if execution is not None:
+                    execution.status = "rejected"
+                    execution.error_message = reason or "Human approval rejected."
+                    execution.completed_at = datetime.utcnow()
+                    db.session.add(execution)
+
+            db.session.add(approval)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
 
         return {
             "success": True,

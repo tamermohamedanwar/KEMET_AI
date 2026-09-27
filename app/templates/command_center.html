@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,35 +10,278 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:inherit;text-decoration:none}.app{min-height:100vh}.top{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.03em}.mark{width:34px;height:34px;border-radius:10px;background:var(--text);color:#fff;display:grid;place-items:center;font-weight:900}.top-right{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12px}.online{display:flex;gap:7px;align-items:center}.online i{width:7px;height:7px;border-radius:50%;background:#25a56f}.avatar{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:800}.wrap{max-width:1180px;margin:auto;padding:30px 22px 56px}.hero{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.hero-main{padding:30px}.eyebrow{color:var(--accent);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.03;letter-spacing:-.055em;margin:8px 0 10px}.hero p{color:var(--muted);max-width:680px;line-height:1.6;margin:0 0 22px}.command{display:flex;gap:9px;border:1px solid var(--line);padding:7px;border-radius:15px;background:#fbfcfe}.command input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:12px;font:inherit;color:var(--text)}button{border:0;border-radius:11px;padding:0 19px;background:var(--accent);color:#fff;font-weight:750;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{background:#f6f7fa;color:#4a5568;border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer}.pulse{padding:24px}.pulse-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.pulse h3{margin:0;font-size:15px}.live{color:var(--ok);font-size:11px;font-weight:800}.big{font-size:42px;font-weight:850;letter-spacing:-.05em}.pulse small{color:var(--muted)}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.kpi{padding:18px}.kpi label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.kpi strong{font-size:24px;letter-spacing:-.04em}.kpi span{display:block;color:var(--muted);font-size:11px;margin-top:5px}.workspace{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}.panel{padding:22px}.panel h2{font-size:16px;margin:0 0 5px}.sub{color:var(--muted);font-size:12px;margin:0 0 18px}.plan{display:none;border:1px solid var(--line);border-radius:15px;padding:16px;background:#fbfcff}.plan.show{display:block}.plan-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.plan-title{font-size:14px;font-weight:800}.state{padding:5px 9px;border-radius:999px;background:#edf9f3;color:var(--ok);font-size:10px;font-weight:800}.state.warn{background:#fff8e8;color:var(--warn)}.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.plan-item{background:#f7f8fb;border-radius:11px;padding:11px}.plan-item label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}.plan-item strong{font-size:13px}.plan-note{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5}.plan-actions{display:flex;gap:8px;margin-top:14px}.secondary{background:#fff;color:#4a5568;border:1px solid var(--line)}.rows{display:grid;gap:0}.row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--line)}.row:first-child{border-top:0}.row span:first-child{color:#4a5568}.value{font-weight:750}.badge{padding:5px 9px;border-radius:999px;background:#f1f2f5;color:#596273;font-size:10px;font-weight:800}.badge.ok{background:#edf9f3;color:var(--ok)}.badge.warn{background:#fff8e8;color:var(--warn)}.areas{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.area{padding:14px;background:#fafbfc;border:1px solid var(--line);border-radius:13px}.area b{display:block;font-size:13px;margin-bottom:4px}.area span{color:var(--muted);font-size:11px}.footer{margin-top:18px;text-align:center;color:#9aa4b2;font-size:11px}.toast{position:fixed;right:18px;bottom:18px;background:#172033;color:#fff;border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);display:none}.toast.show{display:block}@media(max-width:850px){.hero,.workspace{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.top{padding:0 15px}.top-right .online{display:none}.wrap{padding:18px 13px 40px}.hero-main{padding:22px}.hero h1{font-size:31px}.command{flex-direction:column}.command button{height:46px}.kpis{grid-template-columns:1fr 1fr}.plan-grid{grid-template-columns:1fr}.areas{grid-template-columns:1fr}.panel{padding:18px}}
+</style><style>
+.surface-nav{position:sticky;top:68px;z-index:4;display:flex;gap:6px;overflow:auto;padding:10px 22px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+.surface-link{flex:0 0 auto;border:1px solid transparent;border-radius:12px;background:transparent;color:#596273;padding:9px 12px;font:700 12px Inter,ui-sans-serif,system-ui;cursor:pointer;white-space:nowrap}
+.surface-link span{display:block;font-size:9px;font-weight:600;color:#9aa4b2;margin-top:2px}
+.surface-link.active{background:var(--soft);border-color:#dcdcff;color:var(--accent)}
+.surface-settings{margin-left:auto}
+.lang-btn{background:#fff;color:#596273;border:1px solid var(--line);padding:7px 10px;border-radius:10px;font-size:11px}
+.surface-active{display:block!important}
+.wrap>.card,.wrap>.hero,.wrap>.workspace{display:none}
+.wrap>.surface-active{display:block!important}
+body[data-surface="command"] .hero{display:grid!important}
+body[data-surface="command"] .workspace{display:grid!important}
+body[data-surface="command"] > .app > .wrap > section.kpis{display:grid!important}
+body[data-surface] #pageGuidePanel{display:none!important}
+body[data-surface="command"] #decisionFlow{display:block!important}
+body[data-surface="work"] #contentStudioPanel,body[data-surface="work"] #kemetWorldsPanel,body[data-surface="work"] #visibilityIntelligencePanel,body[data-surface="work"] #researchPanel,body[data-surface="work"] #externalIntelligencePanel,body[data-surface="work"] #corporateForcePanel,body[data-surface="work"] #taskLifecyclePanel{display:block!important}
+body[data-surface="connections"] #socialConnectionsPanel,body[data-surface="connections"] #contentStudioPanel{display:block!important}
+body[data-surface="results"] #revenueCenterPanel,body[data-surface="results"] #outcomePanel,body[data-surface="results"] #commercialTracePanel,body[data-surface="results"] #learningLoop,body[data-surface="results"] #mlEvaluationGovernancePanel{display:block!important}
+body[data-surface="approvals"] #approvalInbox{display:block!important}
+body[data-surface="content"] #contentStudioPanel{display:block!important}
+html[dir="rtl"] .studio-grid{direction:rtl}html[dir="rtl"] .studio-actions{direction:rtl}
+.studio-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.studio-form{display:grid;gap:10px}.studio-form label{display:grid;gap:5px;color:#596273;font-size:11px;font-weight:750}.studio-form input,.studio-form textarea,.studio-form select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;color:var(--text);font:inherit}.studio-form textarea{min-height:120px;resize:vertical}.studio-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}.studio-platforms{display:flex;gap:7px;flex-wrap:wrap}.studio-platform{border:1px solid var(--line);background:#fafbfc;color:#596273;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer}.studio-platform.active{background:var(--soft);border-color:#dcdcff;color:var(--accent)}.studio-preview{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fbfcfe;min-height:220px}.studio-preview h3{margin:0 0 8px;font-size:18px}.studio-preview p{margin:0;color:#596273;line-height:1.6;white-space:pre-wrap}.studio-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.studio-meta .plan-item{min-width:0}.studio-status{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.studio-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.studio-claims{display:grid;gap:7px;margin-top:10px}.studio-claim{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff;font-size:11px}.studio-claim small{display:block;color:var(--muted);margin-top:3px}.studio-connectors{display:grid;gap:7px}.studio-connector{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11px}.studio-connector b{font-size:12px}.studio-note{color:var(--muted);font-size:11px;line-height:1.5;margin-top:10px}@media(max-width:850px){.studio-grid{grid-template-columns:1fr}.studio-meta{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.studio-inline{grid-template-columns:1fr}.studio-meta{grid-template-columns:1fr 1fr}.studio-actions button{width:100%;min-height:42px}}
+html[dir="rtl"] .surface-nav{direction:rtl}html[dir="rtl"] .surface-settings{margin-left:0;margin-right:auto}html[dir="rtl"] #outcomeSummary{text-align:left}
+@media(max-width:760px){.surface-nav{top:58px;padding:8px 12px}.surface-link{padding:8px 10px}.surface-link span{font-size:8px}.surface-settings{margin-left:0}}
+</style><style>.world-flow{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;align-items:stretch;margin-top:16px}.world-flow .flow-step{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fafbfc;text-align:center;font-size:11px;position:relative}.world-flow .flow-step b{display:block;font-size:12px;margin-bottom:4px}.world-flow .flow-step span{color:var(--muted);line-height:1.35}.world-bars{display:grid;gap:9px;margin-top:14px}.world-bar{display:grid;grid-template-columns:120px 1fr 90px;gap:10px;align-items:center;font-size:11px}.world-bar-track{height:9px;background:#edf0f5;border-radius:999px;overflow:hidden}.world-bar-fill{height:100%;background:var(--accent);border-radius:999px}.world-bar-value{text-align:right;font-weight:750}.world-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}@media(max-width:850px){.world-flow{grid-template-columns:repeat(4,1fr)}}@media(max-width:560px){.world-flow{grid-template-columns:repeat(2,1fr)}.world-bar{grid-template-columns:90px 1fr 70px}}</style><style>.approval-wrap{margin:18px 0}.approval-inbox{display:grid;gap:10px}.approval-card{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fff}.approval-top{display:flex;justify-content:space-between;align-items:center}.approval-action{font-weight:800;margin:8px 0 4px}.approval-meta,.approval-scope{color:var(--muted);font-size:12px;line-height:1.5}.approval-scope{margin-top:6px}.risk{padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}.risk.low{background:#edf9f3;color:var(--ok)}.risk.medium{background:#fff8e8;color:var(--warn)}.risk.high{background:#fff0f0;color:#b42318}.approval-actions{display:flex;gap:8px;margin-top:12px}.approval-actions button{min-height:36px}.approval-empty{padding:16px;border:1px dashed var(--line);border-radius:13px;color:var(--muted);font-size:12px}</style>
+<style>.research-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.research-card{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fafbfc;cursor:pointer}.research-card:hover{border-color:#c9ccef}.research-card b{display:block;font-size:13px;margin-bottom:4px}.research-card span{display:block;color:var(--muted);font-size:11px;line-height:1.45}.research-form{display:flex;gap:8px}.research-form input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;color:var(--text);font:inherit}.research-result{display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}.research-result.show{display:block}.research-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.research-kpi{background:#f7f8fb;border-radius:10px;padding:10px}.research-kpi label{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.research-kpi strong{font-size:16px}.research-claims{margin-top:12px}.research-claim{padding:10px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.5}.research-claim small{display:block;color:var(--muted);margin-top:3px}@media(max-width:850px){.research-grid{grid-template-columns:repeat(2,1fr)}.research-kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.research-grid{grid-template-columns:1fr}.research-form{flex-direction:column}.research-form button{height:44px}}</style>
+<style>.provider-decision-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.provider-decision-note{color:var(--muted);font-size:11px;line-height:1.45}.provider-decision-record{border-top:1px solid var(--line);padding-top:14px}.provider-decision-record .value{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all;max-width:62%;text-align:right}</style>
+
+<style>
+/* Product polish: Arabic-first command center, restrained navigation, no decorative controls. */
+.lang-btn{display:none!important}
+.surface-nav{scrollbar-width:none;box-shadow:0 4px 18px rgba(23,32,51,.04)}
+.surface-nav::-webkit-scrollbar{display:none}
+.surface-link{min-width:118px;text-align:center}
+.surface-link.active{box-shadow:0 4px 14px rgba(91,92,226,.10)}
+.wrap>.surface-active{animation:kemetSurfaceIn .16s ease-out}
+@keyframes kemetSurfaceIn{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(max-width:560px){.surface-link{min-width:104px}.surface-nav{gap:5px}.studio-actions{display:grid}.studio-actions button{width:100%}}
 </style>
+<style>.visual-rail{margin-top:14px;border:1px solid var(--line);border-radius:16px;padding:14px;background:#fbfcff}.visual-rail-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:11px}.visual-rail-head b{display:block;font-size:13px}.visual-rail-head span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.visual-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.visual-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;text-align:right;cursor:pointer}.visual-card:hover,.visual-card.selected{border-color:#c8c9f7;background:var(--soft)}.visual-card b{display:block;font-size:12px}.visual-card small{display:block;color:var(--muted);font-size:10px;line-height:1.4;margin-top:4px}.visual-score{display:inline-block;margin-top:7px;font-size:9px;color:var(--accent);font-weight:800}.visual-detail{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.visual-detail-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}.visual-detail-head span{color:var(--muted);font-size:10px}.visual-detail-groups{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.visual-detail-group{border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff}.visual-detail-group b{display:block;font-size:10px;margin-bottom:7px;color:#596273}.visual-option{border:1px solid var(--line);background:#fafbfc;color:#596273;border-radius:999px;padding:6px 9px;margin:2px;font-size:10px;cursor:pointer}.visual-option.selected{background:var(--soft);color:var(--accent);border-color:#c8c9f7}@media(max-width:850px){.visual-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.visual-cards,.visual-detail-groups{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <div class="app">
-<header class="top"><a class="brand" href="/command-center/"><span class="mark">K</span><span>Kemet AI</span></a><div class="top-right"><span class="online"><i></i>Platform online</span><span class="avatar">{{ current_user.email[0]|upper if current_user.is_authenticated else 'K' }}</span></div></header>
+<header class="top"><a class="brand" href="/command-center/"><span class="mark">K</span><span>Kemet</span></a><div class="top-right"><span class="online"><i></i>مساحة العمل متصلة</span><button class="lang-btn" id="langToggle" type="button">عربي</button><a class="avatar" href="/settings" aria-label="Settings">{{ current_user.email[0]|upper if current_user.is_authenticated else 'K' }}</a></div></header>
+<nav class="surface-nav" id="surfaceNav" aria-label="تنقل مركز القيادة">
+  <button class="surface-link active" data-surface="command">الرئيسية</button>
+  <button class="surface-link" data-surface="work">العمل</button>
+  <button class="surface-link" data-surface="approvals">الموافقات</button>
+  <button class="surface-link" data-surface="connections">الاتصالات</button>
+  <button class="surface-link" data-surface="results">النتائج</button>
+  <a class="surface-link surface-settings" href="/settings">الإعدادات</a>
+</nav>
 <main class="wrap">
 <section class="hero">
-<div class="card hero-main"><div class="eyebrow">AI Business Operating System</div><h1>Run your business from one command.</h1><p>Tell Kemet what you want to accomplish. Kemet understands the goal, builds a governed plan, and shows you exactly what will happen before execution.</p>
-<div class="command"><input id="commandInput" placeholder="What do you want Kemet to do?" autocomplete="off"><button id="planBtn">Create plan</button></div>
-<div class="chips"><button class="chip" data-command="Analyze my business performance">Business analysis</button><button class="chip" data-command="Find my hottest leads">Hottest leads</button><button class="chip" data-command="Find customers at risk of churn">Churn risk</button><button class="chip" data-command="Track order ORD-1024">Track order</button></div>
-<div id="plan" class="plan"><div class="plan-head"><span class="plan-title">Execution plan</span><span id="planState" class="state">READY</span></div><div class="plan-grid"><div class="plan-item"><label>Intent</label><strong id="pIntent">—</strong></div><div class="plan-item"><label>Action</label><strong id="pAction">—</strong></div><div class="plan-item"><label>Confidence</label><strong id="pConfidence">—</strong></div><div class="plan-item"><label>Risk</label><strong id="pRisk">—</strong></div></div><div class="plan-note"><b>Expected result</b><div id="pResult">—</div></div><div class="plan-note" id="pNote">—</div><div class="plan-actions"><button id="operateBtn">Run with Kemet</button><button class="secondary" id="clearBtn">Clear</button></div></div>
+<div class="card hero-main"><div class="eyebrow">Kemet AI BOS</div><h1>أدر أعمالك من مركز قيادة واحد.</h1><p>اكتب الهدف بلغة طبيعية. يفهم كيمت المطلوب، يبني خطة منضبطة، ويعرض ما سيحدث قبل أي تنفيذ.</p>
+<div class="command"><input id="commandInput" placeholder="ماذا تريد من كيمت أن ينجز؟" autocomplete="off"><button id="planBtn">إنشاء خطة</button></div>
+<div id="visualDirectionRail" class="visual-rail" style="display:none"><div class="visual-rail-head"><div><b>اختر الاتجاه</b><span>الاختيار يُضاف إلى Canonical Production State — الحالة الإنتاجية الأساسية.</span></div><span id="visualRailState" class="badge">اقتراحات</span></div><div id="visualDirectionCards" class="visual-cards"></div><div id="visualDetailPanel" class="visual-detail" style="display:none"><div class="visual-detail-head"><b id="visualDetailTitle">الاتجاه</b><span id="visualDetailHint">اختر التفاصيل التي تريدها</span></div><div id="visualDetailGroups" class="visual-detail-groups"></div><div class="plan-note"><b>قاعدة كيمت</b><div>لا يتحول الاختيار إلى Prompt مباشر. Kemet يضيفه إلى الحالة الأساسية ثم يشتق منه Story / Shots / Audio / Generation Plans.</div></div><button type="button" class="secondary" id="applyVisualDirectionBtn">اعتماد الاتجاه داخل الخطة</button></div></div>
+<div class="chips"><button class="chip" data-command="Analyze my business performance">تحليل الأعمال</button><button class="chip" data-command="Find my hottest leads">أقوى العملاء المحتملين</button><button class="chip" data-command="Find customers at risk of churn">خطر فقد العميل</button><button class="chip" data-command="تتبع الطلب ORD-1024">تتبع الطلب</button></div><div class="studio-actions" style="margin-top:14px"><button type="button" id="openConnectionsBtn">ربط القنوات الخارجية</button><span class="studio-note">YouTube والقنوات المدعومة تبدأ من هنا. الربط لا يمنح صلاحية النشر.</span></div>
+<div id="plan" class="plan"><div class="plan-head"><span class="plan-title">خطة التنفيذ</span><span id="planState" class="state">جاهز</span></div><div class="plan-grid"><div class="plan-item"><label>النية</label><strong id="pIntent">—</strong></div><div class="plan-item"><label>الإجراء</label><strong id="pAction">—</strong></div><div class="plan-item"><label>الثقة</label><strong id="pConfidence">—</strong></div><div class="plan-item"><label>المخاطر</label><strong id="pRisk">—</strong></div></div><div class="plan-note"><b>النتيجة المتوقعة</b><div id="pResult">—</div></div><div class="plan-note" id="pNote">—</div><div class="plan-actions"><button id="operateBtn">تشغيل عبر كيمت</button><button class="secondary" id="approveBtn" style="display:none">اعتماد وتنفيذ</button><button class="secondary" id="rejectBtn" style="display:none">رفض</button><button class="secondary" id="clearBtn">مسح</button></div></div>
 </div>
-<div class="card pulse"><div class="pulse-head"><h3>Business pulse</h3><span class="live">● LIVE</span></div><div class="big" id="pulseValue">—</div><small id="pulseText">Connected to your workspace</small><div class="rows" style="margin-top:22px"><div class="row"><span>Approvals</span><span class="badge" id="approvalCount">0</span></div><div class="row"><span>Automations</span><span class="badge ok" id="automationCount">0</span></div><div class="row"><span>Subscriptions</span><span class="badge" id="subscriptionCount">0</span></div></div></div>
-</section><section class="kpis"><div class="card kpi"><label>Workflows</label><strong id="workflows">0</strong><span>Business automations</span></div><div class="card kpi"><label>Tickets</label><strong id="tickets">0</strong><span>Support activity</span></div><div class="card kpi"><label>Payments</label><strong id="payments">0</strong><span>Financial activity</span></div><div class="card kpi"><label>AI usage</label><strong id="usage">0</strong><span>Workspace activity</span></div></section>
-<section class="card panel outcome" id="outcomePanel"><div class="pulse-head"><div><h2>Business outcome</h2><p class="sub">Verified workspace signals and next-best actions.</p></div><span id="outcomeState" class="badge">LOADING</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>Health</label><strong id="outcomeHealth">—</strong><span id="outcomeStatus">—</span></div><div class="kpi"><label>Revenue</label><strong id="outcomeRevenue">—</strong><span>Observed paid amount</span></div><div class="kpi"><label>Automation</label><strong id="outcomeAutomation">—</strong><span>Execution success rate</span></div><div class="kpi"><label>Open tickets</label><strong id="outcomeTickets">—</strong><span>Current support load</span></div></div><div class="rows"><div class="row"><span>Executive summary</span><span class="value" id="outcomeSummary">—</span></div></div><div id="nextActions" class="rows" style="margin-top:8px"></div></section><section class="card panel" id="decisionFlow"><div class="pulse-head"><div><h2>Decision control loop</h2><p class="sub">One governed trail from decision to measured outcome.</p></div><span id="decisionFlowState" class="badge">LOADING</span></div><div id="decisionTimeline" class="rows"><div class="row"><span>Loading decision lifecycle…</span></div></div></section><section class="card panel" id="learningLoop"><div class="pulse-head"><div><h2>Evaluation & learning</h2><p class="sub">Read-only signals that improve decision quality without changing policy or executing actions.</p></div><span id="learningState" class="badge">LOADING</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>Quality</label><strong id="learningQuality">—</strong><span>Evaluation pass rate</span></div><div class="kpi"><label>Observed</label><strong id="learningObserved">—</strong><span>Outcome coverage</span></div><div class="kpi"><label>Review</label><strong id="learningReview">—</strong><span>Needs measurement/review</span></div><div class="kpi"><label>Signals</label><strong id="learningSignals">—</strong><span>Actionable learning signals</span></div></div><div id="learningSummary" class="rows"><div class="row"><span>Loading learning signals…</span></div></div></section><section class="workspace"><div class="card panel"><h2>What Kemet can run</h2><p class="sub">One command surface. Many business capabilities.</p><div class="areas"><div class="area"><b>Sales & Growth</b><span>Leads, qualification, follow-up, retention</span></div><div class="area"><b>Operations</b><span>Workflows, support, tickets, notifications</span></div><div class="area"><b>Intelligence</b><span>KPIs, business insights, opportunities</span></div><div class="area"><b>Finance</b><span>Payments and approval-controlled actions</span></div></div><div class="rows" style="margin-top:18px"><div class="row"><span>Decision Engine</span><span class="badge ok">READY</span></div><div class="row"><span>Governance</span><span class="badge ok">PROTECTED</span></div><div class="row"><span>Execution Runtime</span><span class="badge ok">CANONICAL</span></div><div class="row"><span>Human approval</span><span class="badge warn">REQUIRED WHEN NEEDED</span></div></div></div>
-<div class="card panel"><h2>Workspace status</h2><p class="sub">Live signals from your organization.</p><div class="rows"><div class="row"><span>Pending approvals</span><span class="value" id="pending">0</span></div><div class="row"><span>Active workflows</span><span class="value" id="activeWorkflows">0</span></div><div class="row"><span>Subscriptions</span><span class="value" id="subs">0</span></div><div class="row"><span>Platform</span><span class="badge ok">ONLINE</span></div></div></div></section>
-<div class="footer">Kemet AI BOS · Intelligence → Plan → Approval → Execution → Outcome</div>
+<div class="card pulse"><div class="pulse-head"><h3>نبض الأعمال</h3><span class="live">● مباشر</span></div><div class="big" id="pulseValue">—</div><small id="pulseText">متصل بمساحة عملك</small><div class="rows" style="margin-top:22px"><div class="row"><span>الموافقات</span><span class="badge" id="approvalCount">0</span></div><div class="row"><span>الأتمتة</span><span class="badge ok" id="automationCount">0</span></div><div class="row"><span>الاشتراكات</span><span class="badge" id="subscriptionCount">0</span></div></div></div>
+</section><section class="card panel" id="contentStudioPanel" style="margin-bottom:18px">
+<div class="pulse-head"><div><h2>استوديو المحتوى</h2><p class="sub">أنشئ المحتوى، افحصه، راجعه، اعتمده، وجهّز طلب نشر منضبط من سطح واحد. لا يتم النشر الخارجي هنا خارج حدّ الموافقة المعياري.</p></div><span id="studioState" class="badge">مسودة</span></div>
+<div class="studio-grid">
+<div>
+<div class="studio-form">
+<label>الهدف<input id="studioObjective" value="Build a high-trust educational content asset" maxlength="300"></label>
+<div class="studio-inline"><label>الجمهور<input id="studioAudience" value="Arabic-speaking business owners" maxlength="300"></label><label>مرحلة المسار<select id="studioFunnel"><option value="awareness">Awareness</option><option value="consideration">Consideration</option><option value="conversion">Conversion</option><option value="retention">Retention</option></select></label></div>
+<div class="studio-inline"><label>الموضوع<input id="studioTopic" placeholder="مثال: تشغيل ذكاء اصطناعي منضبط للشركات الصغيرة والمتوسطة" maxlength="300"></label><label>اللغة<select id="studioLanguage"><option value="ar-EG">Arabic · Egypt</option><option value="en-US">English · US</option></select></label></div>
+<label>الرسالة الرئيسية<textarea id="studioMessage" placeholder="ما الذي يجب أن يفهمه الجمهور بعد استهلاك هذا المحتوى؟"></textarea></label>
+<label>الدعوة إلى الإجراء<input id="studioCta" placeholder="مثال: اطلب تقييماً تجارياً منضبطاً" maxlength="240"></label>
+<label>قنوات التوزيع<div class="studio-platforms" id="studioPlatforms">${["instagram","facebook","tiktok","youtube","linkedin"].map(x=>`<button type="button" class="studio-platform active" data-studio-platform="${x}">${x}</button>`).join("")}</div></label>
+<div class="studio-actions"><button id="studioBuildBtn" type="button">إنشاء مسودة منضبطة</button><button id="studioValidateBtn" class="secondary" type="button" disabled>فحص</button><button id="studioApproveBtn" class="secondary" type="button" disabled>اعتماد النسخة المحددة</button><button id="studioPublishBtn" class="secondary" type="button" disabled>طلب النشر</button></div>
+<div class="studio-note">Workflow: IDEA → مسودة → VALIDATE → REVIEW → APPROVE → PUBLISH REQUEST → PUBLISHED → MEASURE. الموافقة binds to the exact content version and digest.</div>
+</div>
+</div>
+<div>
+<div class="studio-preview" id="studioPreview"><div class="studio-status"><span id="studioLifecycle" class="badge">IDEA</span><span id="studioVersion" class="badge">الإصدار —</span><span id="studioDigest" class="badge">بصمة الدليل —</span></div><h3 id="studioPreviewTitle">معاينة المحتوى</h3><p id="studioPreviewBody">أنشئ مسودة لمعاينة النسخة الدقيقة التي يمكن اعتمادها لاحقاً.</p><div class="studio-meta"><div class="plan-item"><label>النوع</label><strong id="studioType">—</strong></div><div class="plan-item"><label>الجمهور</label><strong id="studioPreviewAudience">—</strong></div><div class="plan-item"><label>الحقوق</label><strong id="studioRights">—</strong></div><div class="plan-item"><label>الموافقة</label><strong id="studioApproval">قيد الانتظار</strong></div></div><div class="studio-claims"><div class="studio-claim"><b>دلالات الادعاءات والأدلة</b><small>المرصود تبقى الوقائع ومدخلات الأعمال والمقاييس المشتقة والتوقعات والتوصيات منفصلة. الادعاءات غير المدعومة تتطلب مراجعة بشرية، ويُمنع اختلاق الدليل الاجتماعي.</small></div><div class="studio-claim"><b>حد النشر</b><small id="studioBoundary">لم يتم إنشاء طلب نشر بعد.</small></div></div></div>
+<div class="card panel" style="padding:15px;margin-top:12px"><div class="pulse-head"><div><h3 style="margin:0">جاهزية القنوات</h3><p class="sub" style="margin:4px 0 0">حالة الاتصال الفعلية فقط؛ لا يتم عرض بيانات الاعتماد.</p></div><span id="studioConnectorState" class="badge">جارٍ التحميل</span></div><div id="studioConnectors" class="studio-connectors"><div class="studio-connector"><span>جارٍ تحميل القنوات…</span></div></div></div>
+</div></div></section>
+
+<section class="card panel" id="socialConnectionsPanel" style="margin-bottom:18px"><div class="pulse-head"><div><h2>الاتصالات والقنوات</h2><p class="sub">الحسابات والقنوات الخارجية التي يمكن ربطها بكيمت. الحالة المعروضة مأخوذة من وقت التشغيل فقط.</p></div><span id="socialConnectionsState" class="badge">جارٍ التحميل</span></div><div id="socialConnectionsRows" class="rows"><div class="row"><span>جارٍ تحميل القنوات…</span></div></div><div class="plan-note"><b>الحد التنفيذي</b><div>الربط لا يعني صلاحية النشر. أي نشر خارجي يظل خلف الموافقة البشرية ووقت التشغيل المعياري.</div></div></section>
+<section class="card panel" id="revenueCenterPanel" style="margin-bottom:18px"><div class="pulse-head"><div><h2>مركز الإيرادات</h2><p class="sub">مكان واحد لمعرفة قنوات الدخل، حالة الربح، الرصيد، طريقة التحصيل، والحساب المطلوب ربطه. لا نعرض أي رصيد غير مؤكد.</p></div><span id="revenueCenterState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>الرصيد الإجمالي</label><strong id="revenueTotal">—</strong><span>الأموال الموثقة فقط</span></div><div class="kpi"><label>دفعة معلقة</label><strong id="revenuePending">—</strong><span>بانتظار التحصيل</span></div><div class="kpi"><label>الإيراد الموثق</label><strong id="revenueVerified">—</strong><span>مدعوم بالأدلة</span></div><div class="kpi"><label>القنوات المتصلة</label><strong id="revenueConnected">0</strong><span>الحسابات المهيأة</span></div></div><div id="revenueRows" class="rows"><div class="row"><span>جارٍ تحميل قنوات الإيرادات…</span></div></div><div class="plan-note" style="margin-top:12px"><b>تحصيل الأموال</b><div id="revenueGovernance">Kemet يعرض حالة التحصيل فقط. ربط الحسابات وتنفيذ المدفوعات سيبقيان خلف حدود الأمان والاعتماد الصريح.</div></div></section>
+<section class="card panel" id="pageGuidePanel" style="margin-bottom:18px"><div class="pulse-head"><div><h2>كيف يعمل مركز القيادة؟</h2><p class="sub">دليل سريع يشرح الهدف، لماذا نستخدم الصفحة، وما الخطوات التي ستحدث قبل أي تنفيذ.</p></div><span class="badge ok">دليل</span></div><div class="areas"><div class="area"><b>1 · Tell Kemet — اكتب طلبك</b><span>اكتب ما تريد بلغة طبيعية. لا تحتاج معرفة اسم الأداة أو الخطوة التقنية.</span></div><div class="area"><b>2 · Understand & Plan — فهم وتخطيط</b><span>كيمت يحول الهدف إلى خطة واضحة ويعرض النتيجة المتوقعة والمخاطر.</span></div><div class="area"><b>3 · موافقة — الموافقة</b><span>الإجراءات المؤثرة لا تُنفذ لمجرد أن الطلب كُتب؛ تحتاج موافقة صريحة عندما تتطلب السياسة ذلك.</span></div><div class="area"><b>4 · Execute & المراجعة — تنفيذ ومراجعة</b><span>التنفيذ يمر عبر وقت التشغيل المركزي، ثم تظهر النتيجة والأدلة والتعلم.</span></div></div><div class="plan-actions"><a class="secondary" style="padding:10px 14px;border-radius:11px" href="/command-center/guide?lang=ar" target="_blank">📘 الدليل العربي</a><a class="secondary" style="padding:10px 14px;border-radius:11px" href="/command-center/guide?lang=en" target="_blank">📘 الدليل الإنجليزي</a></div></section>
+<section class="card panel" id="kemetWorldsPanel" style="margin-bottom:18px"><div class="pulse-head"><div><h2>عوالم كيمت</h2><p class="sub">من المحتوى إلى الجمهور ثم المشاهدة والاحتفاظ والمشاهدة المؤهلة وتحقيق الدخل والإيراد. عالم Mendes هو عالم داخل المنظومة وليس المنظومة كلها.</p></div><span id="worldsState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>المشاهدات</label><strong id="worldsViews">—</strong><span>ملاحظات موثقة</span></div><div class="kpi"><label>الاحتفاظ</label><strong id="worldsRetention">—</strong><span>إشارة جودة الجمهور</span></div><div class="kpi"><label>المشاهدات المؤهلة</label><strong id="worldsQualified">—</strong><span>مشاهدات ذات صلة تجارية</span></div><div class="kpi"><label>الإيراد</label><strong id="worldsRevenue">—</strong><span>بالأدلة الموثقة فقط</span></div></div><div class="rows"><div class="row"><span><b>المؤشر التجاري الرئيسي</b><small style="display:block;color:var(--muted);margin-top:3px">الإيراد لكل 1000 المشاهدات المؤهلة — الإيراد لكل 1000 مشاهدة مؤهلة</small></span><span class="value" id="worldsRpm">—</span></div></div><div id="worldsChannels" class="rows" style="margin-top:8px"><div class="row"><span>جارٍ تحميل القنوات…</span></div></div><div class="world-flow" aria-label="مسار كيمت من المحتوى إلى الإيراد"><div class="flow-step"><b>فكرة</b><span>فكرة</span></div><div class="flow-step"><b>قصة</b><span>قصة</span></div><div class="flow-step"><b>إنتاج</b><span>إنتاج</span></div><div class="flow-step"><b>موافقة</b><span>موافقة</span></div><div class="flow-step"><b>نشر</b><span>نشر</span></div><div class="flow-step"><b>مشاهدة</b><span>مشاهدة</span></div><div class="flow-step"><b>تحقيق الدخل</b><span>تحقيق دخل</span></div><div class="flow-step"><b>تعلّم</b><span>تعلم</span></div></div><div class="world-bars" id="worldsBars"></div><div class="world-actions"><a class="secondary" style="padding:10px 14px;border-radius:11px" href="/command-center/guide?lang=ar&topic=kemet-worlds" target="_blank">📘 دليل عوالم كيمت بالعربية</a><a class="secondary" style="padding:10px 14px;border-radius:11px" href="/command-center/guide?lang=en&topic=kemet-worlds" target="_blank">📘 دليل عوالم كيمت</a></div><div class="plan-note"><b>تحليل كيمت</b><div id="worldsAnalysisNote">القيم غير المتصلة أو غير المؤكدة ستظل فارغة. التحليل لا يدّعي علاقة سببية من مجرد الارتباط بين المشاهدات والإيرادات.</div></div></section>
+<section class="card panel" id="visibilityIntelligencePanel" style="margin-bottom:18px"><div class="pulse-head"><div><h2>ذكاء الظهور</h2><p class="sub">هل يجد الناس Kemet ومحتواه في البحث وإجابات الأنظمة الذكية؟ نقيس الظهور أولاً ثم نحوله إلى فرص محتوى وتوزيع.</p></div><span id="visibilityState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>الاستعلامات المراقبة</label><strong id="visibilityQueries">—</strong><span>ملاحظات موثقة</span></div><div class="kpi"><label>ذكر العلامة</label><strong id="visibilityMentions">—</strong><span>البحث + أسطح الذكاء</span></div><div class="kpi"><label>معدل الظهور</label><strong id="visibilityRate">—</strong><span>الحضور في الاستعلامات المراقبة</span></div><div class="kpi"><label>فجوات الظهور</label><strong id="visibilityGaps">—</strong><span>فرص تحتاج بحثاً</span></div></div><div id="visibilityRows" class="rows"><div class="row"><span>جارٍ تحميل أسطح الظهور…</span></div></div><div class="plan-note"><b>حلقة النمو</b><div>Content → Distribution → Visibility → الجمهور → المشاهدات المؤهلة → الإيراد → تعلّمing</div><small style="display:block;color:var(--muted);margin-top:5px">لا نعتبر الظهور مشاهدة، ولا نعتبر الارتباط سببية. كل رقم يحتاج مصدراً موثقاً قبل عرضه.</small></div><div class="world-actions"><a class="secondary" style="padding:10px 14px;border-radius:11px" href="/command-center/guide?lang=ar&topic=command-center" target="_blank">📘 كيف نستخدم ذكاء الظهور؟</a></div></section>
+<section class="kpis"><div class="card kpi"><label>سير العمل</label><strong id="workflows">0</strong><span>أتمتة الأعمال</span></div><div class="card kpi"><label>التذاكر</label><strong id="tickets">0</strong><span>نشاط الدعم</span></div><div class="card kpi"><label>المدفوعات</label><strong id="payments">0</strong><span>Financial activity</span></div><div class="card kpi"><label>استخدام الذكاء</label><strong id="usage">0</strong><span>نشاط مساحة العمل</span></div></section>
+<section class="card panel" id="approvalInbox" data-approval-state="PENDING HUMAN APPROVAL">
+<div class="pulse-head"><div><h2>صندوق الموافقات</h2><p class="sub">الإجراءات عالية التأثير تنتظر قرارك الصريح هنا.</p></div><span id="approvalInboxState" class="badge">جارٍ التحميل</span></div>
+<div id="approvalRows" class="rows"><div class="row"><span>جارٍ تحميل الموافقات…</span></div></div>
+</section>
+
+<section class="card panel outcome" id="outcomePanel"><div class="pulse-head"><div><h2>نتائج الأعمال</h2><p class="sub">إشارات موثقة من مساحة العمل وأفضل الإجراءات التالية.</p></div><span id="outcomeState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>الصحة</label><strong id="outcomeHealth">—</strong><span id="outcomeStatus">—</span></div><div class="kpi"><label>الإيراد</label><strong id="outcomeRevenue">—</strong><span>مدفوعات مرصودة</span></div><div class="kpi"><label>الأتمتة</label><strong id="outcomeAutomation">—</strong><span>معدل نجاح التنفيذ</span></div><div class="kpi"><label>التذاكر المفتوحة</label><strong id="outcomeTickets">—</strong><span>عبء الدعم الحالي</span></div></div><div class="rows"><div class="row"><span>الملخص التنفيذي</span><span class="value" id="outcomeSummary">—</span></div></div><div id="nextActions" class="rows" style="margin-top:8px"></div></section><section class="card panel" id="commercialTracePanel"><div class="pulse-head"><div><h2>مسار النتيجة التجارية</h2><p class="sub">مدعوم بالأدلة من نية العميل إلى الإجراء المنضبط ثم النتيجة التجارية المسجلة.</p></div><span id="commercialTraceState" class="badge">للقراءة فقط</span></div><div class="command"><input id="commercialTraceKey" placeholder="مفتاح التنفيذ" autocomplete="off"><button id="commercialTraceBtn">عرض المسار</button></div><div class="kpis" style="margin:14px 0"><div class="kpi"><label>الإيراد</label><strong id="traceRevenue">—</strong><span id="traceRevenueStatus">مسجل فقط</span></div><div class="kpi"><label>التكلفة</label><strong id="traceCost">—</strong><span>تكلفة التنفيذ المسجلة</span></div><div class="kpi"><label>العائد على الاستثمار</label><strong id="traceRoi">—</strong><span id="traceRoiStatus">غير مثبت</span></div><div class="kpi"><label>زمن الوصول إلى النتيجة</label><strong id="traceTime">—</strong><span>المدة المقاسة</span></div></div><div id="commercialTraceLifecycle" class="rows"><div class="row"><span>أدخل مفتاح التنفيذ لعرض دورة النتيجة التجارية المنضبطة.</span><span class="badge">للقراءة فقط</span></div></div><div class="plan-note" style="margin-top:12px"><b>الحوكمة</b><div id="commercialTraceGovernance">للقراءة فقط، ضمن مساحة المؤسسة، ومدعوم بالأدلة. لا ينفذ هذا السطح أي إجراء ولا يغيّر قاعدة البيانات.</div></div></section><section class="card panel" id="decisionFlow"><div class="pulse-head"><div><h2>حلقة القرار والنتيجة</h2><p class="sub">مسار منضبط واحد من القرار إلى النتيجة المقاسة.</p></div><span id="decisionFlowState" class="badge">جارٍ التحميل</span></div><div id="decisionTimeline" class="rows"><div class="row"><span>جارٍ تحميل دورة القرار…</span></div></div></section>
+<section class="card panel" id="providerDecisionEvidencePanel"><div class="pulse-head"><div><h2>أدلة قرار المزوّد</h2><p class="sub">مراجعة القرار الحالي داخل مساحة المؤسسة مع مزوّد موثوق، مع حفظ سجل القرار والمصدر وملخص الأدلة والتكلفة وحالة التنفيذ معاً.</p></div><span id="providerDecisionState" class="badge">جاهز</span></div><div class="provider-decision-actions"><button id="providerDecisionReviewBtn" type="button">مراجعة القرار الحالي</button><span class="provider-decision-note">استشاري فقط. يطلب هذا الزر تحليل المزوّد ولا يعتمد أو ينفذ أي إجراء.</span></div><div id="providerDecisionEmpty" class="approval-empty">لم يتم طلب مراجعة للمزوّد في هذه الجلسة.</div><div id="providerDecisionRecord" class="provider-decision-record" style="display:none"><div class="plan-grid"><div class="plan-item"><label>الحالة</label><strong id="providerDecisionStatus">—</strong></div><div class="plan-item"><label>المزوّد</label><strong id="providerDecisionProvider">—</strong></div><div class="plan-item"><label>التكلفة</label><strong id="providerDecisionCost">—</strong></div><div class="plan-item"><label>التنفيذ</label><strong id="providerDecisionExecution">—</strong></div></div><div class="rows" style="margin-top:12px"><div class="row"><span>ملخص القرار</span><span class="value" id="providerDecisionDigest">—</span></div><div class="row"><span>ملخص الأدلة</span><span class="value" id="providerEvidenceDigest">—</span></div><div class="row"><span>ملخص المصدر</span><span class="value" id="providerProvenanceDigest">—</span></div><div class="row"><span>الموافقة</span><span class="badge warn" id="providerDecisionApproval">قيد الانتظار</span></div></div><div class="plan-note"><b>سلسلة أدلة التحكم</b><div id="providerDecisionChain">—</div></div><div class="plan-note"><b>الحوكمة</b><div id="providerDecisionGovernance">—</div></div></div></section><section class="card panel" id="mlEvaluationGovernancePanel">
+<div class="pulse-head"><div><h2>ML Evaluation الحوكمة</h2><p class="sub">Authorized data → evaluation evidence → decision review. No training, deployment, policy mutation, or execution authority.</p></div><span id="mlEvaluationState" class="badge">جارٍ التحميل</span></div>
+<div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>اعتماد مجموعة البيانات</label><strong id="mlDatasetAuthorization">—</strong><span>مصدر تمت مراجعته بشرياً مطلوب</span></div><div class="kpi"><label>المعيار</label><strong id="mlStandardStatus">—</strong><span>محجوب حتى تتوفر بيانات معتمدة</span></div><div class="kpi"><label>التنفيذ authority</label><strong id="mlExecutionAuthority">—</strong><span>وقت التشغيل المعياري غير متأثر</span></div><div class="kpi"><label>المراجعة البشرية</label><strong id="mlHumanReview">—</strong><span>مطلوبة لقرارات التقييم</span></div></div>
+<div id="mlEvaluationRows" class="rows"><div class="row"><span>جارٍ تحميل حوكمة تقييم النماذج…</span></div></div>
+<div class="plan-note"><b>سلسلة أدلة التحكم</b><div id="mlEvaluationChain">قرار → موافقة → تنفيذ → دليل → نتيجة → تعلّم</div></div>
+</section>
+<section class="card panel" id="learningLoop"><div class="pulse-head"><div><h2>التقييم والتعلّم</h2><p class="sub">إشارات للقراءة فقط لتحسين جودة القرار دون تغيير السياسة أو تنفيذ إجراءات.</p></div><span id="learningState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>الجودة</label><strong id="learningQuality">—</strong><span>معدل نجاح التقييم</span></div><div class="kpi"><label>المرصود</label><strong id="learningObserved">—</strong><span>تغطية النتائج</span></div><div class="kpi"><label>المراجعة</label><strong id="learningReview">—</strong><span>تحتاج قياساً أو مراجعة</span></div><div class="kpi"><label>الإشارات</label><strong id="learningSignals">—</strong><span>إشارات تعلم قابلة للتنفيذ</span></div></div><div id="learningSummary" class="rows"><div class="row"><span>جارٍ تحميل إشارات التعلّم…</span></div></div></section><section class="card panel" id="federationPanel"><div class="pulse-head"><div><h2>اتحاد مزوّدي الذكاء</h2><p class="sub">المتخصصون المتاحون لكيمت، مع التحقق قبل الاستخدام المنضبط.</p></div><span id="federationState" class="badge">جارٍ التحميل</span></div><div id="federationRows" class="rows"><div class="row"><span>جارٍ تحميل حالة المزوّدين…</span></div></div></section><section class="card panel" id="corporateForcePanel"><div class="pulse-head"><div><h2>القوة المؤسسية</h2><p class="sub">كل عضو يظهر ككارت محكوم بالدور، المهام، النتائج، الأدلة وحدود السلطة.</p></div><span id="corporateForceState" class="badge">جارٍ التحميل</span></div><div class="kpis" style="margin-bottom:14px"><div class="kpi"><label>الأعضاء</label><strong id="corporateForceMembers">—</strong><span>قوى العمل المرتبطة بالأدوار</span></div><div class="kpi"><label>المهام</label><strong id="corporateForceTasks">—</strong><span>المهام المنضبطة الحالية</span></div><div class="kpi"><label>النتائج</label><strong id="corporateForceResults">—</strong><span>نتائج منسوبة بوضوح</span></div><div class="kpi"><label>السلطة</label><strong id="corporateForceAuthority">اقتراح</strong><span>وقت التشغيل المعياري فقط</span></div></div><div id="corporateForceRows" class="rows"><div class="row"><span>جارٍ تحميل بطاقات القوة المؤسسية…</span></div></div><div class="plan-note"><b>الحوكمة</b><div>نطاق الدور → عقد المهمة → حد الموافقة → التنفيذ المعياري → نتيجة مدعومة بالدليل → قياس → تعلّم. لا يوجد تنفيذ تلقائي.</div></div></section>
+<section class="card panel" id="projectIntelligencePanel"><div class="pulse-head"><div><h2>ذكاء المشروع</h2><p class="sub">استمرارية المشروع ونقاط التحقق والسياق المنضبط المستخدم في قرارات التطوير.</p></div><span id="projectIntelligenceState" class="badge">جارٍ التحميل</span></div><div id="projectIntelligenceRows" class="rows"><div class="row"><span>جارٍ تحميل استمرارية المشروع…</span></div></div></section><section class="card panel" id="researchPanel"><div class="pulse-head"><div><h2>أبحاث الأعمال</h2><p class="sub">حوّل سؤال العمل إلى أدلة ومصادر مؤيدة وتعارضات وموجز قرار جاهز للمراجعة.</p></div><span id="researchState" class="badge">جاهز</span></div><div class="command"><input id="researchQuestion" placeholder="اطلب من كيمت تحليل سوق أو منافس أو صوت العميل أو اتجاه" autocomplete="off"><button id="researchBtn">بحث</button></div><div class="chips" style="margin-bottom:14px"><button class="chip" data-research="market_intelligence">ذكاء السوق</button><button class="chip" data-research="competitor_radar">رادار المنافسين</button><button class="chip" data-research="customer_voice">صوت العميل</button><button class="chip" data-research="trend_radar">رادار الاتجاهات</button></div><div id="researchResult" class="plan"><div class="plan-head"><span class="plan-title" id="researchTitle">بحث result</span><span id="researchDecision" class="state">—</span></div><div class="plan-grid"><div class="plan-item"><label>المصادر</label><strong id="researchSources">—</strong></div><div class="plan-item"><label>الادعاءات</label><strong id="researchClaims">—</strong></div><div class="plan-item"><label>الثقة</label><strong id="researchConfidence">—</strong></div><div class="plan-item"><label>التعارضات</label><strong id="researchConflicts">—</strong></div></div><div class="plan-note"><b>حالة الأدلة</b><div id="researchSummary">—</div></div><div id="researchCitations" class="rows" style="margin-top:8px"></div><div id="executiveBrief" class="plan" style="margin-top:12px"><div class="plan-head"><span class="plan-title">موجز القرار التنفيذي</span><span id="briefDecision" class="state warn">تحتاج مراجعة</span></div><div class="plan-note"><b>ما وجدناه</b><div id="briefSummary">—</div></div><div class="plan-grid"><div class="plan-item"><label>الفرص</label><strong id="briefOpportunities">0</strong></div><div class="plan-item"><label>المخاطر</label><strong id="briefRisks">0</strong></div><div class="plan-item"><label>الثقة</label><strong id="briefConfidence">—</strong></div><div class="plan-item"><label>قابلية التتبع</label><strong id="briefTraceability">مرتبط</strong></div></div><div class="plan-note"><b>الخطوة التالية المقترحة</b><div id="briefRecommendation">—</div></div><div class="plan-note"><b>الحوكمة</b><div>المراجعة البشرية required. لا يوجد تنفيذ تلقائي.</div></div></div></div></section><section class="card panel" id="externalIntelligencePanel"><div class="pulse-head"><div><h2>شبكة الذكاء الخارجي</h2><p class="sub">مصادر عامة ومصرّح بها لذكاء السوق والعملاء والمنافسين والأبحاث.</p></div><span id="externalIntelligenceState" class="badge">جارٍ التحميل</span></div><div id="externalIntelligenceRows" class="rows"><div class="row"><span>جارٍ تحميل مصادر الذكاء…</span></div></div></section><section class="card panel" id="taskLifecyclePanel"><div class="pulse-head"><div><h2>دورة مهام الخبراء الخارجيين</h2><p class="sub">رؤية للقراءة فقط لأعمال المتخصصين المنضبطة. التحديث لا ينشئ مهمة جديدة.</p></div><span id="taskLifecycleState" class="badge">جاهز</span></div><div class="command"><input id="taskExecutionKey" placeholder="مفتاح التنفيذ" autocomplete="off"><button id="taskRefreshBtn">تحديث الحالة</button></div><div id="taskLifecycleRows" class="rows" style="margin-top:12px"><div class="row"><span>لم يتم اختيار مهمة خارجية.</span><span class="badge">للقراءة فقط</span></div></div></section><section class="workspace"><div class="card panel"><h2>قدرات كيمت</h2><p class="sub">سطح قيادة واحد لقدرات الأعمال الأساسية.</p><div class="areas"><div class="area"><b>المبيعات والنمو</b><span>العملاء المحتملون، التأهيل، المتابعة، الاحتفاظ</span></div><div class="area"><b>العمليات</b><span>سير العمل, الدعم، التذاكر، الإشعارات</span></div><div class="area"><b>الذكاء</b><span>مؤشرات الأداء، رؤى الأعمال، الفرص</span></div><div class="area"><b>المالية</b><span>المدفوعات والإجراءات الخاضعة للموافقة</span></div></div><div class="rows" style="margin-top:18px"><div class="row"><span>محرك القرار</span><span class="badge ok">جاهز</span></div><div class="row"><span>الحوكمة</span><span class="badge ok">محمي</span></div><div class="row"><span>وقت التشغيل</span><span class="badge ok">معياري</span></div><div class="row"><span>الموافقة البشرية</span><span class="badge warn">مطلوبة عند الحاجة</span></div></div></div>
+<div class="card panel"><h2>حالة مساحة العمل</h2><p class="sub">إشارات حية من مساحة مؤسستك.</p><div class="rows"><div class="row"><span>الموافقات المعلقة</span><span class="value" id="pending">0</span></div><div class="row"><span>سير العمل النشط</span><span class="value" id="activeWorkflows">0</span></div><div class="row"><span>الاشتراكات</span><span class="value" id="subs">0</span></div><div class="row"><span>المنصة</span><span class="badge ok">متصل</span></div></div></div></section>
+<div class="footer">Kemet AI BOS · الذكاء → Plan → الموافقة → التنفيذ → Outcome</div>
 </main><div id="toast" class="toast"></div></div>
 <script>
+
+(function initPhase4SurfaceShell(){
+  const groups={
+    command:['.hero','#decisionFlow','#providerDecisionEvidencePanel','#projectIntelligencePanel','.workspace'],
+    work:['#contentStudioPanel','#kemetWorldsPanel','#visibilityIntelligencePanel','#researchPanel','#externalIntelligencePanel','#corporateForcePanel','#taskLifecyclePanel'],
+    approvals:['#approvalInbox'],
+    connections:['#socialConnectionsPanel','#contentStudioPanel'],
+    results:['#revenueCenterPanel','#outcomePanel','#commercialTracePanel','#mlEvaluationGovernancePanel','#learningLoop']
+  };
+  const allSelectors=Object.values(groups).flat();
+  const activate=(surface,updateUrl=true)=>{
+    allSelectors.forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.remove('surface-active')));
+    (groups[surface]||groups.command).forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.add('surface-active')));
+    document.querySelectorAll('.surface-link[data-surface]').forEach(el=>el.classList.toggle('active',el.dataset.surface===surface));
+    document.body.dataset.surface=surface;
+    if(updateUrl){history.replaceState(null,'',`/command-center/?surface=${encodeURIComponent(surface)}`);}
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  window.addEventListener('DOMContentLoaded',()=>{
+    document.querySelectorAll('.surface-link[data-surface]').forEach(el=>el.addEventListener('click',()=>activate(el.dataset.surface)));
+    const initial=new URLSearchParams(location.search).get('surface');
+    activate(groups[initial]?initial:'command',false);
+    const lang=document.getElementById('langToggle');
+    lang?.addEventListener('click',()=>{
+      const ar=document.documentElement.lang!=='ar';
+      document.documentElement.lang=ar?'ar':'en';
+      document.documentElement.dir=ar?'rtl':'ltr';
+      lang.textContent=ar?'English':'عربي';
+      localStorage.setItem('kemet-lang',ar?'ar':'en');
+    });
+    const saved=localStorage.getItem('kemet-lang');
+    if(saved==='ar'){document.documentElement.lang='ar';document.documentElement.dir='rtl';if(lang)lang.textContent='English';}
+  });
+})();
+
+async function loadKemetWorldsIntelligence(){
+  try{
+    const r=await fetch("/command-center/api/bos/kemet-worlds-intelligence",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"worlds_intelligence_unavailable");
+    const d=j.worlds_intelligence||{},t=d.totals||{};
+    const fmt=v=>v==null?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    $("worldsViews").textContent=fmt(t.views);$("worldsQualified").textContent=fmt(t.qualified_views);$("worldsRevenue").textContent=t.revenue==null?"—":fmt(t.revenue)+" EGP";
+    $("worldsRetention").textContent=t.retention_rate==null?"—":(Number(t.retention_rate)*100).toFixed(1)+"%";
+    $("worldsRpm").textContent=t.revenue_per_1000_qualified_views==null?"—":fmt(t.revenue_per_1000_qualified_views)+" EGP";
+    const connected=(d.channels||[]).filter(x=>x.status==="connected").length;$("worldsState").textContent=connected?`${connected} متصل`:"MEASUREMENT جاهز";$("worldsBars").innerHTML=(d.channels||[]).map(x=>{const v=x.views==null?null:Number(x.views);const max=Math.max(...(d.channels||[]).map(c=>c.views==null?0:Number(c.views)),1);const pct=v==null?0:Math.min(100,(v/max)*100);return `<div class="world-bar"><span>${escapeHtml(x.name)}</span><div class="world-bar-track"><div class="world-bar-fill" style="width:${pct}%"></div></div><span class="world-bar-value">${v==null?'—':fmt(v)}</span></div>`}).join("");$("worldsState").className=connected?"badge ok":"badge warn";
+    $("worldsChannels").innerHTML=(d.channels||[]).map(x=>`<div class="row"><span><b>${escapeHtml(x.name)}</b><small style="display:block;color:var(--muted);margin-top:3px">المشاهدات: ${fmt(x.views)} · الاحتفاظ: ${x.retention_rate==null?"—":(Number(x.retention_rate)*100).toFixed(1)+"%"} · الإيراد: ${x.revenue==null?"—":fmt(x.revenue)+" EGP"}</small></span><span class="badge ${x.status==='connected'?'ok':'warn'}">${escapeHtml((x.status||"not connected").toUpperCase())}</span></div>`).join("");
+  }catch(e){$("worldsState").textContent="غير متاح";$("worldsState").className="badge warn";$("worldsChannels").innerHTML="<div class='row'><span>World intelligence is temporarily unavailable. No publishing or financial action was executed.</span></div>"}
+}
+
+async function loadYouTubeEvidence(){
+  try{
+    const r=await fetch("/command-center/api/bos/youtube-evidence",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"youtube_evidence_unavailable");
+    const e=j.youtube_evidence||{}, rows=Array.isArray(e.evidence?.rows)?e.evidence.rows:[], headers=Array.isArray(e.evidence?.headers)?e.evidence.headers:[];
+    const row=rows[0]||[]; const value=(name)=>{const i=headers.findIndex(h=>h.name===name);return i>=0?row[i]:null};
+    const fmt=v=>v==null?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    $("youtubeViews").textContent=fmt(value("views"));$("youtubeWatchTime").textContent=fmt(value("estimatedMinutesWatched"));$("youtubeRevenue").textContent=value("estimatedRevenue")==null?"—":fmt(value("estimatedRevenue"))+" EGP";
+    $("youtubeEvidenceDigest").textContent=String(e.evidence_digest||"").slice(0,16)||"—";
+    $("youtubeEvidenceState").textContent=e.verified?"VERIFIED":"UNVERIFIED";$("youtubeEvidenceState").className=e.verified?"badge ok":"badge warn";
+    $("youtubeEvidenceRows").innerHTML=`<div class="row"><span>Source</span><span class="value">${escapeHtml(e.source||"—")}</span></div><div class="row"><span>Period</span><span class="value">${escapeHtml(JSON.stringify(e.evidence?.period||{}))}</span></div><div class="row"><span>Evidence contract</span><span class="value">${escapeHtml(e.evidence_contract||"—")}</span></div>`;
+  }catch(e){$("youtubeEvidenceState").textContent="غير متاح";$("youtubeEvidenceState").className="badge warn";$("youtubeEvidenceRows").innerHTML=`<div class="row"><span>${escapeHtml(e.message||"Measurement unavailable")}</span><span class="badge warn">لا يوجد ادعاء</span></div>`;}
+}
+
+async function loadVisibilityIntelligence(){
+  try{
+    const r=await fetch("/command-center/api/bos/visibility-intelligence?market=global",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"visibility_intelligence_unavailable");
+    const d=j.visibility_intelligence||{},t=d.totals||{};
+    const fmt=v=>v==null?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    $("visibilityQueries").textContent=fmt(t.queries_monitored);
+    $("visibilityMentions").textContent=fmt(t.brand_mentions);
+    $("visibilityRate").textContent=t.visibility_rate==null?"—":(Number(t.visibility_rate)*100).toFixed(1)+"%";
+    $("visibilityGaps").textContent=fmt(t.visibility_gap_count);
+    const surfaces=d.surfaces||[];
+    const connected=surfaces.filter(x=>x.status==="connected"||x.status==="verified").length;
+    $("visibilityState").textContent=connected?`${connected} متصل`:"MEASUREMENT جاهز";
+    $("visibilityState").className=connected?"badge ok":"badge warn";
+    $("visibilityRows").innerHTML=surfaces.map(x=>`<div class="row"><span><b>${escapeHtml(x.name)}</b><small style="display:block;color:var(--muted);margin-top:4px">Mentions: ${fmt(x.mentions)} · Queries: ${fmt(x.queries_monitored)} · Presence: ${x.position_or_presence==null?"—":escapeHtml(String(x.position_or_presence))}</small></span><span class="badge ${x.source_verified?'ok':'warn'}">${escapeHtml((x.status||"unverified").toUpperCase())}</span></div>`).join("");
+  }catch(e){
+    $("visibilityState").textContent="غير متاح";$("visibilityState").className="badge warn";$("visibilityRows").innerHTML="<div class='row'><span>Visibility intelligence is temporarily unavailable. No external action was executed.</span></div>";
+  }
+}
+async function loadRevenueCenter(){
+  try{
+    const r=await fetch("/command-center/api/bos/revenue-center",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"revenue_center_unavailable");
+    const d=j.revenue_center||{};
+    const money=v=>v==null?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:2})+" "+(d.currency||"EGP");
+    $("revenueTotal").textContent=money(d.total_balance);$("revenuePending").textContent=money(d.pending_payout);$("revenueVerified").textContent=money(d.verified_revenue);
+    const channels=d.channels||[];const connected=channels.filter(x=>x.connection_status==="connected").length;$("revenueConnected").textContent=connected;
+    $("revenueCenterState").textContent=d.status==="ready"?"مباشر":(connected?"PARTIAL":"SETUP مطلوب");$("revenueCenterState").className=connected?"badge ok":"badge warn";
+    $("revenueRows").innerHTML=channels.map(x=>{const ready=x.connection_status==="connected";const status=ready?"متصل":"NOT متصل";return `<div class="row"><span><b>${escapeHtml(x.name)}</b><small style="display:block;color:var(--muted);margin-top:4px">Monetization: ${escapeHtml((x.monetization||[]).join(" · "))} · Payout: ${escapeHtml(x.payout_provider||"—")}</small></span><span><span class="badge ${ready?'ok':'warn'}">${status}</span><small style="display:block;color:var(--muted);margin-top:4px">Balance: ${money(x.balance)} · ${escapeHtml(x.payout_destination||"not configured")}</small></span></div>`}).join("");
+    $("revenueGovernance").textContent=`Read-only: ${!!d.governance?.read_only} · Tenant scoped: ${!!d.governance?.tenant_scoped} · No payout execution: ${!!d.governance?.no_payout_execution} · No balance fabrication: ${!!d.governance?.no_balance_fabrication}`;
+  }catch(e){$("revenueCenterState").textContent="غير متاح";$("revenueCenterState").className="badge warn";$("revenueRows").innerHTML="<div class='row'><span>مركز الإيرادات غير متاح مؤقتاً. لم يتم تنفيذ أي إجراء مالي.</span></div>"}
+}
 const $=id=>document.getElementById(id);const input=$("commandInput");
+let visualDirections=[];let selectedVisual=null;let visualDetails={};let selectedVisualDetails={};
+function renderVisualRail(j){visualDirections=j.directions||[];visualDetails=j.detail_options||{};const rail=$("visualDirectionRail");const cards=$("visualDirectionCards");if(!visualDirections.length){rail.style.display="none";return}rail.style.display="block";cards.innerHTML=visualDirections.map(x=>`<button type="button" class="visual-card" data-visual-id="${x.id}"><b>${x.ar||x.label}</b><small>${x.description||""}</small><span class="visual-score">${x.score||0} relevance</span></button>`).join("");document.querySelectorAll("[data-visual-id]").forEach(b=>b.onclick=()=>selectVisual(b.dataset.visualId));}
+function selectVisual(id){const item=visualDirections.find(x=>x.id===id);if(!item)return;selectedVisual={...item,selected_by:"human",selection_stage:"planning"};selectedVisualDetails={};document.querySelectorAll("[data-visual-id]").forEach(b=>b.classList.toggle("selected",b.dataset.visualId===id));$("visualDetailPanel").style.display="block";$("visualDetailTitle").textContent=item.ar||item.label;const groups=visualDetails[id]||{};$("visualDetailGroups").innerHTML=Object.entries(groups).map(([key,values])=>`<div class="visual-detail-group"><b>${key.replaceAll("_"," ")}</b>${values.map(v=>`<button type="button" class="visual-option" data-detail-group="${key}" data-detail-value="${String(v).replaceAll('"','&quot;')}">${v}</button>`).join("")}</div>`).join("");document.querySelectorAll("[data-detail-group]").forEach(b=>b.onclick=()=>{const g=b.dataset.detailGroup;selectedVisualDetails[g]=b.dataset.detailValue;document.querySelectorAll(`[data-detail-group="${g}"]`).forEach(x=>x.classList.toggle("selected",x===b));});}
+async function loadVisualDirections(command){try{const r=await fetch("/command-center/api/bos/visual-directions",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command,visual_direction:selectedVisual?{...selectedVisual,details:selectedVisualDetails}:undefined})});const j=await r.json();if(r.ok&&j.success)renderVisualRail(j);}catch(e){$("visualDirectionRail").style.display="none"}}
+
 function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
 async function loadOverview(){try{const r=await fetch("/command-center/api/overview",{credentials:"same-origin",headers:{Accept:"application/json"}});const j=await r.json();const d=j.data||{};$("pending").textContent=d.pending_approvals||0;$("approvalCount").textContent=d.pending_approvals||0;$("automationCount").textContent=d.automations||0;$("activeWorkflows").textContent=d.workflows||0;$("subs").textContent=d.subscriptions||0;$("workflows").textContent=d.workflows||0;$("tickets").textContent=d.tickets||0;$("payments").textContent=d.payments||0;$("usage").textContent=d.ai_usage||0;$("pulseValue").textContent=(d.workflows||0)+(d.automations||0);$("pulseText").textContent="Active business operations"}catch(e){toast("Workspace data is temporarily unavailable")}}
-async function createPlan(){const command=input.value.trim();if(!command){input.focus();return}const b=$("planBtn");b.disabled=true;b.textContent="Planning…";try{const r=await fetch("/api/bos/plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command})});const j=await r.json();$("plan").classList.add("show");$("pIntent").textContent=j.intent||"Unmapped";$("pAction").textContent=j.action||"—";$("pConfidence").textContent=j.confidence!=null?Math.round(j.confidence*100)+"%":"—";$("pRisk").textContent=(j.risk||"—").toUpperCase();$("pResult").textContent=j.expected_result||"—";$("pNote").textContent=j.approval_reason||j.reason||(j.message)||"Plan validated against Kemet's registered capabilities.";$("planState").textContent=!r.ok?"BLOCKED":j.requires_approval?"APPROVAL REQUIRED":"READY";$("planState").className="state"+(j.requires_approval||!r.ok?" warn":"");$("operateBtn").style.display="inline-block";if(!r.ok)toast(j.message||"Kemet could not safely map this command");}catch(e){$("plan").classList.add("show");$("pNote").textContent="Planner unavailable. No action was executed.";$("operateBtn").style.display="inline-block";toast("No action was executed") }finally{b.disabled=false;b.textContent="Create plan"}}
+let pendingPlan=null;
+async function createPlan(){const command=input.value.trim();if(!command){input.focus();return}await loadVisualDirections(command);const b=$("planBtn");b.disabled=true;b.textContent="جارٍ التخطيط…";try{const r=await fetch("/command-center/api/bos/plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command})});const j=await r.json();$("plan").classList.add("show");$("pIntent").textContent=j.intent||"Unmapped";$("pAction").textContent=j.action||"—";$("pConfidence").textContent=j.confidence!=null?Math.round(j.confidence*100)+"%":"—";$("pRisk").textContent=(j.risk||"—").toUpperCase();$("pResult").textContent=j.expected_result||"—";const ti=j.tool_intelligence||{};const picks=(ti.recommendations||[]).slice(0,2).map(x=>x.name).join(" · ");$("pNote").textContent=(j.approval_reason||j.reason||(j.message)||"Plan validated against Kemet's registered capabilities.")+(picks?` Recommended capability path: ${picks}.`:"");$("planState").textContent=!r.ok?"BLOCKED":j.requires_approval?"APPROVAL مطلوب":"جاهز";$("planState").className="state"+(j.requires_approval||!r.ok?" warn":"");pendingPlan=j.success?{task_id:j.task_id,approval_package_hash:j.approval_package?.package_hash||"",command}:null;$("operateBtn").style.display=j.success&&!j.requires_approval?"inline-block":"none";$("approveBtn").style.display=j.success&&j.requires_approval?"inline-block":"none";$("rejectBtn").style.display=j.success&&j.requires_approval?"inline-block":"none";if(!r.ok)toast(j.message||"Kemet could not safely map this command");}catch(e){$("plan").classList.add("show");$("pNote").textContent="Planner unavailable. No action was executed.";$("operateBtn").style.display="none";toast("No action was executed") }finally{b.disabled=false;b.textContent="إنشاء خطة"}}
 $("planBtn").onclick=createPlan;input.addEventListener("keydown",e=>{if(e.key==="Enter")createPlan()});
 $("commandInput").setAttribute("aria-label","Business command");$("operateBtn").setAttribute("aria-label","Run governed business operation");
-$("operateBtn").textContent="Run with Kemet";document.querySelectorAll("[data-command]").forEach(x=>x.onclick=()=>{input.value=x.dataset.command;createPlan()});$("clearBtn").onclick=()=>{$("plan").classList.remove("show");input.value="";input.focus()};
+$("operateBtn").textContent="تشغيل عبر كيمت";document.querySelectorAll("[data-command]").forEach(x=>x.onclick=()=>{input.value=x.dataset.command;createPlan()});$("clearBtn").onclick=()=>{$("plan").classList.remove("show");input.value="";input.focus()};
+$("applyVisualDirectionBtn").onclick=async()=>{if(!selectedVisual){toast("اختر اتجاهًا بصريًا أولاً");return}const command=input.value.trim();if(!command)return;selectedVisual={...selectedVisual,details:selectedVisualDetails};const b=$("applyVisualDirectionBtn");b.disabled=true;b.textContent="جارٍ ربط الاتجاه…";try{const r=await fetch("/command-center/api/bos/plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command,visual_direction:selectedVisual})});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"visual_direction_binding_failed");$("plan").classList.add("show");$("pIntent").textContent=j.intent||"—";$("pAction").textContent=j.action||"—";$("pConfidence").textContent=j.confidence!=null?Math.round(j.confidence*100)+"%":"—";$("pRisk").textContent=(j.risk||"—").toUpperCase();$("pResult").textContent=j.expected_result||"—";$("pNote").textContent="تم ربط الاتجاه البصري بالحالة الإنتاجية الأساسية. لا يوجد تنفيذ.";$("planState").textContent="PLANNED";$("planState").className="state";pendingPlan=j.success?{task_id:j.task_id,approval_package_hash:j.approval_package?.package_hash||"",command,visual_direction:selectedVisual}:null;toast("تمت إضافة الاتجاه إلى Canonical Production State");}catch(e){toast(e.message||"تعذر ربط الاتجاه")}finally{b.disabled=false;b.textContent="اعتماد الاتجاه داخل الخطة"}};
 $("operateBtn").onclick=operateCommand;
 const csrf=document.querySelector('meta[name="csrf-token"]')?.content||"";
 function postHeaders(){return {"Content-Type":"application/json","X-Requested-With":"XMLHttpRequest",...(csrf?{"X-CSRFToken":csrf}: {})}}
+async function loadApprovalInbox(){
+  try{
+    const r=await fetch("/command-center/api/approvals",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success) throw new Error(j.error||"approval_unavailable");
+    const items=(j.data||[]).filter(x=>x.status==="pending"||x.status==="waiting_approval");
+    $("approvalInboxState").textContent=items.length?`${items.length} قيد الانتظار`:"CLEAR";
+    $("approvalInboxState").className=items.length?"badge warn":"badge ok";
+    $("approvalRows").innerHTML=items.length?items.map(x=>`<div class="row"><span><b>${escapeHtml(x.action||"Operation")}</b><small style="display:block;color:var(--muted);margin-top:4px">${escapeHtml(x.reason||"الموافقة البشرية required")} · #${x.id}</small></span><span class="value">${escapeHtml(String(x.risk||"REVIEW"))}</span></div>`).join(""):"<div class='row'><span>No operations are waiting for approval.</span><span class='badge ok'>CLEAR</span></div>";
+    await loadContentApprovalStatus();
+    await loadMLDecisionReview();
+  }catch(e){
+    $("approvalInboxState").textContent="غير متاح";$("approvalInboxState").className="badge warn";
+    $("approvalRows").innerHTML="<div class='row'><span>الموافقة inbox is temporarily unavailable. No action was executed.</span></div>";
+  }
+}
+
+async function loadContentApprovalStatus(){
+  const marker="contentApprovalStatus";
+  document.getElementById(marker)?.remove();
+  try{
+    const r=await fetch("/command-center/api/bos/content-final-approval",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"content_approval_status_unavailable");
+    const x=j.approval_packet; const f=j.publication_preflight||{}; x.publication_requested=x.approval?.publication_requested; x.external_publication=x.execution?.external_publication; x.execution_authority=x.execution?.execution_authority; x.human_approval_required=x.approval?.approver_required; const card=document.createElement("div"); card.id=marker; card.className="approval-card";
+    card.innerHTML=x?`<div class="approval-top"><b>Content Experiment #001</b><span class="badge warn">بانتظار الموافقة البشرية</span></div><div class="approval-action">الخاتم الأزرق — مراجعة حزمة النشر</div><div class="approval-scope">Artifact SHA-256: ${escapeHtml(x.artifact_digest||"—")}</div><div class="approval-scope">Episode package digest: ${escapeHtml(x.episode_package_digest||"—")}</div><div class="approval-scope">Publication requested: ${escapeHtml(String(x.publication_requested))} · External publication: ${escapeHtml(String(x.external_publication))}</div><div class="approval-scope">التنفيذ authority: ${escapeHtml(String(x.execution_authority))} · الموافقة البشرية required: ${escapeHtml(String(x.human_approval_required))}</div><div class="approval-scope">الحالة-only surface: the full packet is not reconstructed or auto-approved here.</div>`:`<div class="approval-top"><b>Content Experiment #001</b><span class="badge warn">غير جاهز</span></div><div class="approval-meta">No verified local production artifact is available for this tenant.</div>`;
+    const preflight=document.createElement("div"); preflight.className="approval-scope"; preflight.textContent="Publication Preflight: "+(f.status||"BLOCKED")+" · Ready: "+String(!!f.ready)+" · Blockers: "+((f.blockers||[]).slice(0,6).join(" · ")||"—"); card.appendChild(preflight);
+    $("approvalRows").prepend(card);
+  }catch(e){ const card=document.createElement("div"); card.id=marker; card.className="approval-card"; card.innerHTML=`<div class="approval-top"><b>Content Experiment #001</b><span class="badge warn">غير متاح</span></div><div class="approval-meta">Content approval status is temporarily unavailable. No publication or approval was executed.</div>`; $("approvalRows").prepend(card); }
+}
+
+async function loadMLDecisionReview(){
+  const marker="mlApprovalDecisionReview";
+  document.getElementById(marker)?.remove();
+  try{
+    const r=await fetch("/api/bos/ml-decision-review",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"ml_decision_review_unavailable");
+    const x=j.review||{};
+    const chain=(x.control_evidence_chain||[]).map(s=>`${escapeHtml(s.stage)}:${escapeHtml(s.status)}`).join(" → ");
+    const card=document.createElement("div");
+    card.id=marker; card.className="approval-card";
+    card.innerHTML=`<div class="approval-top"><b>ML Decision المراجعة</b><span class="badge warn">REVIEW ONLY · للمراجعة فقط</span></div><div class="approval-action">مدعوم بالأدلة evaluation decision</div><div class="approval-meta">Decision ${escapeHtml(x.decision_status)} · الموافقة ${escapeHtml(x.approval_status)} · التنفيذ ${escapeHtml(x.execution_status)}</div><div class="approval-scope">اعتماد مجموعة البيانات: ${escapeHtml(x.authorized_dataset_present?"معتمد":"مطلوب")} · المعيار: ${escapeHtml(x.benchmark_status)}</div><div class="approval-scope">Decision ID: ${escapeHtml(x.decision_id||"—")} · Evaluation ID: ${escapeHtml(x.evaluation_id||"—")}</div><div class="approval-scope">Authorization reference: ${escapeHtml(x.authorization_reference||"—")}</div><div class="approval-scope">Dataset SHA-256: ${escapeHtml(x.dataset_sha256||"—")}</div><div class="approval-scope">ملخص الأدلة: ${escapeHtml(x.evidence_digest||"—")}</div><div class="approval-scope">Evidence completion: ${escapeHtml(x.evidence_completion_status||"—")} · Digest: ${escapeHtml(x.evidence_completion_digest||"—")}</div><div class="approval-scope">Leakage: ${escapeHtml(x.leakage_evidence_status||"—")} · Generalization: ${escapeHtml(x.generalization_evidence_status||"—")} · Error analysis: ${escapeHtml(x.error_analysis_status||"—")} · Provenance: ${escapeHtml(x.provenance_binding_status||"—")}</div><div class="approval-scope"><b>Control Evidence Chain</b><br>${chain}</div><div class="approval-scope">المراجعة البشرية required · التنفيذ authority: ${escapeHtml(x.execution_authority||"none")} · No approval or execution is created by this surface.</div>`;
+    $("approvalRows").prepend(card);
+  }catch(e){
+    const card=document.createElement("div"); card.id=marker; card.className="approval-card";
+    card.innerHTML=`<div class="approval-top"><b>ML Decision المراجعة</b><span class="badge warn">غير متاح</span></div><div class="approval-meta">المراجعة surface unavailable. No ML approval or execution was created.</div>`;
+    $("approvalRows").prepend(card);
+  }
+}
+
 async function loadOutcome(){
   try{
     const r=await fetch("/api/bos/outcome?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
@@ -50,45 +293,107 @@ async function loadOutcome(){
     $("outcomeAutomation").textContent=rate==null?"—":Number(rate).toFixed(1)+"%";
     $("outcomeTickets").textContent=Number(j.business?.open_tickets||0).toLocaleString();
     $("outcomeStatus").textContent=(j.status||"monitor").replaceAll("_"," ").toUpperCase();
-    $("outcomeState").textContent="LIVE";$("outcomeState").className="badge ok";
+    $("outcomeState").textContent="مباشر";$("outcomeState").className="badge ok";
     $("outcomeSummary").textContent=j.executive_summary||"No executive summary is available yet.";
     const actions=j.next_best_actions||[];
-    $("nextActions").innerHTML=actions.length?actions.map((a,i)=>`<div class="row action-row"><span><b>${escapeHtml(a.title||"Next best action")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(a.expected_outcome||"")}</small></span><button class="secondary outcome-plan" data-index="${i}">Review & plan</button></div>`).join(""):"<div class='row'><span>No priority actions are available.</span></div>";
+    $("nextActions").innerHTML=actions.length?actions.map((a,i)=>`<div class="row action-row"><span><b>${escapeHtml(a.title||"Next best action")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(a.expected_outcome||"")}</small></span><button class="secondary outcome-plan" data-index="${i}">مراجعة وتخطيط</button></div>`).join(""):"<div class='row'><span>لا توجد إجراءات ذات أولوية حالياً.</span></div>";
     document.querySelectorAll(".outcome-plan").forEach((btn,i)=>btn.onclick=()=>reviewOutcomeAction(actions[i]));
-  }catch(e){$("outcomeState").textContent="UNAVAILABLE";$("outcomeState").className="badge warn"}
+  }catch(e){$("outcomeState").textContent="غير متاح";$("outcomeState").className="badge warn"}
 }
 function escapeHtml(value){return String(value).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;", "'":"&#39;"}[c]))}
 function reviewOutcomeAction(action){const command=action?.action;if(!command){toast("This recommendation has no executable command mapping yet");return}input.value=command;createPlan();window.scrollTo({top:0,behavior:"smooth"})}
+async function reviewCurrentProviderDecision(){
+  const button=$("providerDecisionReviewBtn");
+  button.disabled=true;button.textContent="المراجعةجاري…";
+  try{
+    const r=await fetch("/api/bos/decision-intelligence?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"decision_intelligence_unavailable");
+    const decision=(j.decisions||[])[0];
+    if(!decision)throw new Error("no_decision_available");
+    const payload={tenant_id:j.organization_id,lead_id:decision.lead_id,confidence:decision.confidence,decision:{decision:decision.decision||decision.status,rationale:decision.rationale,recommended_next_step:decision.recommended_next_step,evidence:decision.evidence||[]},missing_data:decision.missing_data||[],schema:"kemet.business_intelligence.v1"};
+    const review=await fetch("/api/bos/provider-decision-review",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({business_intelligence:payload})});
+    const body=await review.json();
+    if(!review.ok||!body.success)throw new Error(body.error||"provider_decision_review_unavailable");
+    const x=body.result||{},record=x.decision_record||{},chain=x.control_evidence_chain||{},stages=chain.stages||[];
+    $("providerDecisionEmpty").style.display="none";$("providerDecisionRecord").style.display="block";
+    $("providerDecisionState").textContent="REVIEW جاهز";$("providerDecisionState").className="badge ok";
+    $("providerDecisionStatus").textContent=record.status||"review_required";$("providerDecisionProvider").textContent=`${record.provider||x.provider||"—"} / ${record.model||x.model||"—"}`;
+    $("providerDecisionCost").textContent=record.cost_status||x.cost_status||"not_observed";
+    const execution=(stages.find(s=>s.stage==="execution")||{}).status||"not_executed";$("providerDecisionExecution").textContent=execution;
+    $("providerDecisionDigest").textContent=record.digest||"—";$("providerEvidenceDigest").textContent=record.evidence_digest||x.evidence_digest||"—";$("providerProvenanceDigest").textContent=record.provenance_digest||x.provenance_lineage?.digest||"—";
+    $("providerDecisionApproval").textContent=(stages.find(s=>s.stage==="approval")||{}).status||"pending";
+    $("providerDecisionChain").textContent=stages.map(s=>`${s.stage}: ${s.status}`).join(" → ")||"—";
+    const g=record.governance||x.governance||{};$("providerDecisionGovernance").textContent=`Advisory: ${!!g.advisory} · Read-only: ${!!g.read_only} · External execution: ${!!g.external_execution} · Auto-execute: ${!!g.auto_execute} · الموافقة البشرية: ${!!g.human_approval_required}`;
+  }catch(e){$("providerDecisionState").textContent="غير متاح";$("providerDecisionState").className="badge warn";toast(e.message||"المزوّد review unavailable. No action was executed")}
+  finally{button.disabled=false;button.textContent="مراجعة القرار الحالي"}
+}
+$("providerDecisionReviewBtn").onclick=reviewCurrentProviderDecision;
+let pendingApprovalId=null;
+async function submitApprovalDecision(approved){
+  if(!pendingPlan){toast("Create and review a plan first");return}
+  const reason=approved?"":(prompt("Reason for rejection:")||"").trim();
+  if(!approved&&!reason){toast("A rejection reason is required");return}
+  const button=approved?$("approveBtn"):$("rejectBtn");button.disabled=true;
+  try{
+    const r=await fetch("/command-center/api/bos/decide-plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({
+      command:pendingPlan.command,task_id:pendingPlan.task_id,approval_package_hash:pendingPlan.approval_package_hash,approved,reason
+    })});
+    const j=await r.json();
+    if(!r.ok||!j.success){toast(j.message||j.error||"الموافقة decision was blocked");return}
+    $("planState").textContent=approved?"COMPLETED":"REJECTED";
+    if(approved&&j.task_id){$("taskExecutionKey").value=j.task_id;loadTaskLifecycle(false)}
+    $("planState").className=approved?"state":"state warn";
+    $("pNote").textContent=approved?"موافقةd and executed through the canonical governed runtime. Evidence was recorded.":"رفضed. No business action was executed.";
+    $("approveBtn").style.display="none";$("rejectBtn").style.display="none";$("operateBtn").style.display="inline-block";
+    $("operateBtn").textContent=approved?"Completed ✓":"تشغيل عبر كيمت";pendingPlan=null;pendingApprovalId=null;
+    toast(approved?"Operation completed":"Operation rejected");loadOverview();loadOutcome();loadDecisionLifecycle();
+  }catch(e){toast("The approval decision could not be completed")}
+  finally{button.disabled=false}
+}
 async function operateCommand(){
-  const command=input.value.trim();
-  if(!command){toast("Enter a business command first");return}
-  const b=$("operateBtn");b.disabled=true;b.textContent="Running…";
+  const command=input.value.trim();if(!command){toast("Enter a business command first");return}
+  const b=$("operateBtn");b.disabled=true;b.textContent="جارٍ التجهيز…";
   try{
     const r=await fetch("/api/bos/operate",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({command})});
     const j=await r.json();
-    if(!r.ok||!j.success){toast(j.message||j.error||"Kemet stopped the operation");return}
-    const results=j.results||[];const first=results[0]||{};
-    if(first.status==="waiting_approval"){
-      const approval=first.approval_id;
-      $("planState").textContent="APPROVAL REQUIRED";$("planState").className="state warn";
-      $("pNote").textContent="This operation is ready but requires an authorized human approval before the business action executes. Approval #"+(approval||"—");
-      b.textContent="Approve required";b.disabled=true;
-      if(approval && confirm("This action requires approval. Approve and execute it now?")){
-        const ar=await fetch("/api/bos/approvals/"+approval+"/approve",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:"{}"});
-        const aj=await ar.json();
-        if(ar.ok&&aj.success){$("planState").textContent="COMPLETED";$("planState").className="state";$("pNote").textContent="Approved and executed through the governed runtime.";b.textContent="Completed ✓";toast("Operation completed");loadOverview();}
-        else{toast(aj.message||aj.error||"Approved execution failed");b.textContent="Approve required"}
-      }
-      return;
+    if(!r.ok){toast(j.message||j.error||"Kemet stopped before execution");return}
+    const waiting=(j.status==="waiting_approval")||(j.results||[]).some(x=>x.status==="waiting_approval");
+    const approval=j.approval_id||(j.results||[]).find(x=>x.status==="waiting_approval")?.approval_id;
+    if(waiting){
+      pendingApprovalId=approval||null;$("planState").textContent="APPROVAL مطلوب";$("planState").className="state warn";
+      $("pNote").textContent="Kemet prepared this operation but will not execute it until an authorized human reviews and approves it. الموافقة #"+(approval||"—");
+      b.style.display="none";$("approveBtn").style.display="inline-block";$("rejectBtn").style.display="inline-block";toast("المراجعة the plan before approving");return;
     }
-    if(first.status==="completed"||first.status==="deduplicated"){
-      $("planState").textContent=first.status.toUpperCase();$("planState").className="state";
-      $("pNote").textContent="Kemet completed the operation through the governed canonical runtime.";
-      b.textContent="Completed ✓";toast("Operation completed");loadOverview();return;
+    const first=(j.results||[])[0]||j;
+    if(first.status==="completed"||first.status==="deduplicated"||j.status==="completed"){
+      $("planState").textContent="COMPLETED";$("planState").className="state";$("pNote").textContent="Kemet completed the operation through the governed canonical runtime.";b.textContent="Completed ✓";toast("Operation completed");loadOverview();loadOutcome();return;
     }
-    toast(first.error||"Operation was blocked safely");
-  }catch(e){toast("No unsafe action was executed")}finally{if(b.textContent!=="Completed ✓")b.disabled=false;if(b.textContent==="Running…")b.textContent="Run with Kemet"}
+    toast(j.message||first.error||"Operation was blocked safely");
+  }catch(e){toast("No unsafe action was executed")}finally{if(b.textContent!=="Completed ✓"&&b.style.display!=="none")b.disabled=false;if(b.textContent==="جارٍ التجهيز…")b.textContent="تشغيل عبر كيمت"}
 }
+$("approveBtn").onclick=()=>submitApprovalDecision(true);
+$("rejectBtn").onclick=()=>submitApprovalDecision(false);
+
+async function loadCommercialTrace(){
+  const key=$("commercialTraceKey").value.trim();
+  if(!key){toast("Enter an execution key first");return}
+  const button=$("commercialTraceBtn");button.disabled=true;button.textContent="جارٍ التحميل…";
+  try{
+    const r=await fetch("/api/bos/execution-trace/"+encodeURIComponent(key),{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"commercial_trace_unavailable");
+    const t=j.trace||{};const b=t.business||{};const m=t.measurement||{};const g=t.governance||{};
+    const rev=b.revenue;$("traceRevenue").textContent=rev?`${rev.amount} ${rev.currency||""}`.trim():"—";$("traceRevenueStatus").textContent=rev?"RECORDED":"NOT AVAILABLE";
+    $("traceCost").textContent=b.cost==null?"—":String(b.cost);$("traceRoi").textContent=b.roi==null?"—":(Number(b.roi)*100).toFixed(2)+"%";$("traceRoiStatus").textContent=m.roi_status||"not_proven";$("traceTime").textContent=m.time_to_outcome_ms==null?"—":String(m.time_to_outcome_ms)+" ms";
+    const labels=["customer","intent","lead","qualification","opportunity","decision","approval","action","outcome"];
+    $("commercialTraceLifecycle").innerHTML=labels.map(k=>{const v=b[k];const display=v==null?"Not available":(typeof v==='object'?JSON.stringify(v):String(v));const status=v==null?"NOT AVAILABLE":"RECORDED";return `<div class="row"><span><b>${escapeHtml(k.replaceAll("_"," ").toUpperCase())}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(display)}</small></span><span class="badge ${v==null?'warn':'ok'}">${status}</span></div>`}).join("");
+    $("commercialTraceState").textContent=g.read_only&&g.tenant_scoped?"للقراءة فقط · TENANT SCOPED":"GOVERNED";$("commercialTraceState").className="badge ok";
+    $("commercialTraceGovernance").textContent=`Read-only: ${!!g.read_only} · Tenant scoped: ${!!g.tenant_scoped} · External execution: ${!!g.external_execution} · Database mutation: ${!!g.database_mutation} · Causal claim: ${!!m.causal_claim}`;
+  }catch(e){$("commercialTraceState").textContent="غير متاح";$("commercialTraceState").className="badge warn";$("commercialTraceLifecycle").innerHTML=`<div class="row"><span>${escapeHtml(e.message)}</span><span class="badge warn">NO ACTION</span></div>`;toast(e.message||"Commercial trace unavailable")}
+  finally{button.disabled=false;button.textContent="عرض المسار"}
+}
+$("commercialTraceBtn").onclick=loadCommercialTrace;$("commercialTraceKey").addEventListener("keydown",e=>{if(e.key==="Enter")loadCommercialTrace()});
 async function loadDecisionLifecycle(){
   try{
     const r=await fetch("/dashboard/api/bos/decision-lifecycle?period=30d",{credentials:"same-origin",headers:{Accept:"application/json"}});
@@ -105,14 +410,38 @@ async function loadDecisionLifecycle(){
       const capability=escapeHtml(x.capability_id||"No capability mapped");
       const approval=x.approval||{};
       const execution=x.execution||{};
-      const approvalText=approval.status?`Approval: ${escapeHtml(String(approval.status))}`:"Approval: not requested";
-      const executionText=execution.status?`Execution: ${escapeHtml(String(execution.status))}`:"Execution: not started";
+      const approvalText=approval.status?`الموافقة: ${escapeHtml(String(approval.status))}`:"الموافقة: not requested";
+      const executionText=execution.status?`التنفيذ: ${escapeHtml(String(execution.status))}`:"التنفيذ: not started";
       const outcome=(x.observed_outcome||[]).length?"Outcome: observed":"Outcome: pending";
       return `<div class="row"><span><b>${title}</b><small style="display:block;color:var(--muted);margin-top:3px">${capability}<br>${approvalText} · ${executionText} · ${outcome}</small></span><span class="badge">${state.toUpperCase()}</span></div>`;
     }).join(""):"<div class='row'><span>No decision history is available yet.</span></div>";
   }catch(e){
-    $("decisionFlowState").textContent="UNAVAILABLE";$("decisionFlowState").className="badge warn";
+    $("decisionFlowState").textContent="غير متاح";$("decisionFlowState").className="badge warn";
     $("decisionTimeline").innerHTML="<div class='row'><span>Decision lifecycle is temporarily unavailable. No action was executed.</span></div>";
+  }
+}
+async function loadMLEvaluationGovernance(){
+  try{
+    const r=await fetch("/api/bos/ml-evaluation-readiness",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success) throw new Error(j.error||"ml_evaluation_readiness_unavailable");
+    const d=j.decision_review||{}; const g=j.governance||{};
+    $("mlDatasetAuthorization").textContent=String(d.dataset_authorization||"required").replaceAll("_"," ").toUpperCase();
+    $("mlStandardStatus").textContent=String(d.benchmark_status||"blocked").replaceAll("_"," ").toUpperCase();
+    $("mlExecutionAuthority").textContent=String(d.execution_authority||"none").toUpperCase();
+    $("mlHumanReview").textContent=d.human_review_required?"مطلوب":"NOT مطلوب";
+    $("mlEvaluationState").textContent=d.authorized_dataset_present?"جاهز للمراجعة":"DATA GATE";
+    $("mlEvaluationState").className=d.authorized_dataset_present?"badge ok":"badge warn";
+    $("mlEvaluationRows").innerHTML=[
+      ["Advisory",g.advisory?"ENABLED":"DISABLED"],
+      ["Read-only",g.read_only?"YES":"NO"],
+      ["External execution",g.external_execution?"ALLOWED":"DISABLED"],
+      ["Auto-train / Auto-deploy",`${g.auto_train?"TRAIN":"NO TRAIN"} · ${g.auto_deploy?"DEPLOY":"NO DEPLOY"}`],
+      ["Authorized dataset present",d.authorized_dataset_present?"YES":"NO — no production benchmark claimed"]
+    ].map(([k,v])=>`<div class="row"><span>${escapeHtml(k)}</span><span class="badge">${escapeHtml(v)}</span></div>`).join("");
+  }catch(e){
+    $("mlEvaluationState").textContent="غير متاح"; $("mlEvaluationState").className="badge warn";
+    $("mlEvaluationRows").innerHTML="<div class='row'><span>ML evaluation governance is temporarily unavailable. No training or execution was triggered.</span></div>";
   }
 }
 async function loadLearningLoop(){
@@ -125,14 +454,165 @@ async function loadLearningLoop(){
     $("learningObserved").textContent=(Number(s.outcome_observation_rate||0)*100).toFixed(0)+"%";
     $("learningReview").textContent=(Number(s.review_rate||0)*100).toFixed(0)+"%";
     $("learningSignals").textContent=(j.learning_signals||[]).length;
-    $("learningState").textContent=j.items?.length?"MONITORED":"READY";
+    $("learningState").textContent=j.items?.length?"MONITORED":"جاهز";
     $("learningState").className="badge ok";
     const signals=j.learning_signals||[];
     $("learningSummary").innerHTML=signals.length?signals.map(s=>`<div class="row"><span><b>${escapeHtml(s.type||"learning")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(s.action||"")}</small></span><span class="badge">${escapeHtml(String(s.priority||"low").toUpperCase())}</span></div>`).join(""):"<div class='row'><span>No learning signals require attention.</span></div>";
   }catch(e){
-    $("learningState").textContent="UNAVAILABLE";$("learningState").className="badge warn";
-    $("learningSummary").innerHTML="<div class='row'><span>Learning signals are temporarily unavailable. No policy or execution change was made.</span></div>";
+    $("learningState").textContent="غير متاح";$("learningState").className="badge warn";
+    $("learningSummary").innerHTML="<div class='row'><span>تعلّمing signals are temporarily unavailable. No policy or execution change was made.</span></div>";
   }
 }
-loadOverview();loadOutcome();loadDecisionLifecycle();loadLearningLoop();setInterval(()=>{loadOverview();loadOutcome();loadDecisionLifecycle();loadLearningLoop()},30000);
-</script></body></html>
+async function verifyFederationProvider(providerId, button){
+  button.disabled=true;button.textContent="جارٍ التحقق…";
+  try{
+    const r=await fetch(`/api/federation/connections/${encodeURIComponent(providerId)}/verify`,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({live:true})});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"provider_verification_failed");
+    const v=j.verification||{};
+    toast(v.verified?`${providerId} verified successfully`:`${providerId} verification needs attention`);
+    await loadFederation();
+loadExternalIntelligence();
+  }catch(e){toast(e.message||"المزوّد verification failed");}
+  finally{button.disabled=false;button.textContent="Verify"}
+}
+async function loadFederation(){
+  try{
+    const r=await fetch("/api/federation/connections/status",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"federation_unavailable");
+    const providers=j.providers||[];
+    const ready=providers.filter(p=>p.execution_ready).length;
+    const verified=providers.filter(p=>p.verified).length;
+    $("federationState").textContent=ready?`${ready} EXECUTION جاهز`:(verified?`${verified} VERIFIED`:(providers.length?"AWAITING VERIFICATION":"غير متاح"));
+    $("federationState").className=ready?"badge ok":verified?"badge":"badge warn";
+    $("federationRows").innerHTML=providers.map(p=>{
+      const state=p.execution_ready?"جاهز":(p.verified?"VERIFIED":(p.configured?"CONFIGURED":"NOT متصل"));
+      const cls=p.execution_ready?"ok":(p.verified?"":"warn");
+      const caps=(p.capabilities||[]).slice(0,4).join(" · ");
+      const action=p.configured&&!p.verified?`<button class="secondary" style="padding:6px 10px;font-size:10px" data-verify-provider="${escapeHtml(p.provider_id)}">Verify</button>`:"";
+      return `<div class="row"><span><b>${escapeHtml(p.display_name||p.provider_id)}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(caps)}${p.execution_ready?" · execution ready":p.verified?" · connection verified":p.configured?" · credentials detected":" · connection required"}</small></span><span style="display:flex;align-items:center;gap:8px"><span class="badge ${cls}">${escapeHtml(state)}</span>${action}</span></div>`;
+    }).join("")||"<div class='row'><span>No providers are registered.</span></div>";
+    document.querySelectorAll("[data-verify-provider]").forEach(btn=>btn.onclick=()=>verifyFederationProvider(btn.dataset.verifyProvider,btn));
+  }catch(e){
+    $("federationState").textContent="غير متاح";$("federationState").className="badge warn";
+    $("federationRows").innerHTML="<div class='row'><span>Federation status is temporarily unavailable. No provider was selected.</span></div>";
+  }
+}
+async function loadProjectIntelligence(){
+  try{
+    const r=await fetch("/command-center/api/bos/project-intelligence",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"project_intelligence_unavailable");
+    const p=j.project_intelligence||{};const s=p.current_state||{};const c=p.continuity||{};
+    const checkpoints=s.latest_checkpoints||[];const gaps=s.recovered_gaps||[];
+    $("projectIntelligenceState").textContent=`${s.checkpoint_count||0} CHECKPOINTS`;$("projectIntelligenceState").className="badge ok";
+    $("projectIntelligenceRows").innerHTML=`<div class="row"><span>Project continuity</span><span class="value">${escapeHtml(String(c.conversation_count||0))} linked conversations</span></div><div class="row"><span>Latest milestone</span><span class="value">${escapeHtml(checkpoints[checkpoints.length-1]||"No checkpoint recorded")}</span></div><div class="row"><span>Active gap register</span><span class="value">${escapeHtml(String(gaps.length))} tracked items</span></div><div class="row"><span>Context identity</span><span class="badge ok">${escapeHtml(String(p.context_hash||"").slice(0,12))}</span></div>`;
+  }catch(e){
+    $("projectIntelligenceState").textContent="غير متاح";$("projectIntelligenceState").className="badge warn";
+    $("projectIntelligenceRows").innerHTML="<div class='row'><span>Project continuity is temporarily unavailable. No action was executed.</span></div>";
+  }
+}
+async function runResearch(workflow){const q=$("researchQuestion").value.trim();if(!q){$("researchQuestion").focus();return}const b=$("researchBtn");b.disabled=true;b.textContent="جارٍ البحث…";$("researchState").textContent="RUNNING";$("researchState").className="badge";try{const r=await fetch(`/api/federation/research/workflows/${encodeURIComponent(workflow)}/run`,{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({question:q,task_id:"cc-research-"+Date.now()})});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||j.message||"research_failed");const syn=j.synthesis||{};$("researchResult").classList.add("show");$("researchTitle").textContent=(j.workflow?.name||workflow)+" · موجز الأدلة";$("researchDecision").textContent=String(syn.status||"review_required").replaceAll("_"," ").toUpperCase();$("researchDecision").className="state"+(syn.status==="review_required"?" warn":"");$("researchSources").textContent=syn.source_count??(j.sources||[]).length;$("researchClaims").textContent=syn.claim_count??(j.claims||[]).length;$("researchConfidence").textContent=Math.round(Number(syn.confidence||0)*100)+"%";$("researchConflicts").textContent=syn.contradiction_count??(j.contradictions||[]).length;$("researchSummary").textContent=syn.decision_readiness+" · "+(syn.recommendation_policy||"المراجعة البشرية تظل مطلوبة.");const rows=(j.sources||[]).slice(0,5).map(x=>`<div class="row"><span><b>${escapeHtml(x.title||x.source_id||"Source")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(x.source_id||"")}</small></span><span class="badge">${Math.round(Number(x.confidence||0)*100)}%</span></div>`).join("");$("researchCitations").innerHTML=rows||"<div class='row'><span>لم يتم العثور على دليل مصدر. لا ينبغي اعتبار أي قرار حقيقة مؤكدة.</span></div>";const brief=j.executive_brief||{};$("executiveBrief").classList.add("show");$("briefDecision").textContent=String(brief.decision?.status||"review_required").replaceAll("_"," ").toUpperCase();$("briefSummary").textContent=brief.executive_summary||"Evidence is available for business review.";$("briefOpportunities").textContent=(brief.opportunities||[]).length;$("briefRisks").textContent=(brief.risks||[]).length;$("briefConfidence").textContent=Math.round(Number(brief.confidence||0)*100)+"%";$("briefTraceability").textContent=brief.traceability?.research_evidence_digest?"مرتبط":"قيد الانتظار";$("briefRecommendation").textContent=brief.decision?.recommendation||"افحص الأدلة قبل أي إجراء.";$("researchState").textContent="COMPLETE";$("researchState").className="badge ok";toast("اكتمل البحث — راجع الأدلة")}catch(e){$("researchState").textContent="BLOCKED";$("researchState").className="badge warn";$("researchResult").classList.add("show");$("researchSummary").textContent="تم إيقاف البحث بأمان. لم يتم تنفيذ أي إجراء.";toast(e.message||"البحث غير متاح")}finally{b.disabled=false;b.textContent="بحث"}}
+$("researchBtn").onclick=()=>runResearch("market_intelligence");$("researchQuestion").addEventListener("keydown",e=>{if(e.key==="Enter")runResearch("market_intelligence")});document.querySelectorAll("[data-research]").forEach(x=>x.onclick=()=>{const w=x.dataset.research;runResearch(w)});
+async function loadExternalIntelligence(){
+  try{
+    const r=await fetch("/api/federation/sources",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"sources_unavailable");
+    const sources=j.sources||[];
+    const ready=sources.filter(x=>x.enabled).length;
+    $("externalIntelligenceState").textContent=`${ready} CHANNELS`;$("externalIntelligenceState").className="badge ok";
+    $("externalIntelligenceRows").innerHTML=sources.map(x=>{
+      const auth=x.auth_required?"معتمد CONNECTION":"PUBLIC";
+      return `<div class="row"><span><b>${escapeHtml(x.display_name||x.source_id)}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml((x.capabilities||[]).join(" · "))}</small></span><span class="badge">${auth}</span></div>`;
+    }).join("");
+  }catch(e){
+    $("externalIntelligenceState").textContent="غير متاح";$("externalIntelligenceState").className="badge warn";
+    $("externalIntelligenceRows").innerHTML="<div class='row'><span>External intelligence is unavailable. No external action was executed.</span></div>";
+  }
+}
+async function loadCorporateForce(){
+  try{
+    const r=await fetch("/api/workforce/corporate-force",{credentials:"same-origin",headers:{Accept:"application/json"}});
+    const j=await r.json();
+    if(!r.ok||!j.governance)throw new Error(j.error||"corporate_force_unavailable");
+    const cards=j.cards||[];
+    const taskTotal=cards.reduce((n,c)=>n+Number(c.tasks?.state?.total||0),0);
+    const resultTotal=cards.reduce((n,c)=>n+Number(c.results?.observed?.total||0),0);
+    $("corporateForceMembers").textContent=j.card_count??cards.length;
+    $("corporateForceTasks").textContent=taskTotal;
+    $("corporateForceResults").textContent=resultTotal;
+    $("corporateForceAuthority").textContent=j.governance.execution_authority?"EXECUTION":"اقتراح";
+    $("corporateForceState").textContent=`${cards.length} MEMBERS`;
+    $("corporateForceState").className="badge ok";
+    $("corporateForceRows").innerHTML=cards.map(c=>{
+      const role=c.role?.name||"—";
+      const tasks=c.tasks?.state?.total||0;
+      const results=c.results?.observed?.total||0;
+      const approval=(c.role?.approval_actions||[]).length;
+      const durable=c.tasks?.state?.durable||{};
+      const durableTotal=Number(durable.total||0);
+      return `<div class="row"><span><b>${escapeHtml(c.identity?.name||c.identity?.id||"Workforce")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(role)} · ${tasks} runtime tasks · ${durableTotal} durable tasks · ${results} attributed results · ${approval} approval-gated actions</small></span><span class="badge ok">DURABLE</span></div>`;
+    }).join("");
+  }catch(e){
+    $("corporateForceState").textContent="غير متاح";
+    $("corporateForceState").className="badge warn";
+    $("corporateForceRows").innerHTML="<div class='row'><span>Corporate Force is temporarily unavailable. No execution was triggered.</span><span class='badge warn'>للقراءة فقط</span></div>";
+  }
+}
+
+async function loadTaskLifecycle(refresh=true){
+  const key=$("taskExecutionKey").value.trim();
+  if(!key){toast("Enter an execution key first");return}
+  const button=$("taskRefreshBtn");button.disabled=true;button.textContent="جارٍ التحديث…";
+  try{
+    const url="/command-center/api/bos/task-status/"+encodeURIComponent(key)+"?refresh="+(refresh?"1":"0");
+    const r=await fetch(url,{credentials:"same-origin",headers:{Accept:"application/json"}});const j=await r.json();
+    if(!r.ok||!j.success)throw new Error(j.error||"task_status_unavailable");
+    const t=j.task||{};const life=t.lifecycle||{};
+    $("taskLifecycleState").textContent=String(t.status||"UNKNOWN").toUpperCase();
+    $("taskLifecycleState").className="badge "+(life.terminal?"ok":life.ambiguous?"warn":"");
+    $("taskLifecycleRows").innerHTML=`<div class="row"><span>الحالة</span><span class="value">${escapeHtml(t.status||"—")}</span></div><div class="row"><span>المزوّد</span><span class="value">${escapeHtml(t.provider_id||"—")}</span></div><div class="row"><span>External task</span><span class="value">${escapeHtml(t.external_task_id||"—")}</span></div><div class="row"><span>نتيجة</span><span class="value">${escapeHtml(t.result==null?"—":JSON.stringify(t.result))}</span></div><div class="row"><span>Evidence</span><span class="badge ok">مرتبط</span></div>`;
+  }catch(e){$("taskLifecycleState").textContent="غير متاح";$("taskLifecycleState").className="badge warn";$("taskLifecycleRows").innerHTML=`<div class="row"><span>${escapeHtml(e.message)}</span><span class="badge warn">للقراءة فقط</span></div>`}
+  finally{button.disabled=false;button.textContent="تحديث الحالة"}
+}
+$("taskRefreshBtn").onclick=()=>loadTaskLifecycle(true);
+$("taskExecutionKey").addEventListener("keydown",e=>{if(e.key==="Enter")loadTaskLifecycle(true)});
+async function previewFederationRouting(command){
+  const url="/api/federation/routing/preview?prompt="+encodeURIComponent(command);
+  const r=await fetch(url,{credentials:"same-origin",headers:{Accept:"application/json"}});
+  const j=await r.json();
+  if(!r.ok||!j.success)throw new Error(j.error||"routing_preview_unavailable");
+  const p=j.preview||{};
+  const route=p.provider;
+  const specialist=p.specialist;
+  const selected=route?`${route.provider_id}${route.model_id?" / "+route.model_id:""}`:specialist?`${specialist.provider_id} specialist`:"No verified provider";
+  const guard=p.approval_required?"الموافقة البشرية required before execution.":"No approval gate required by classification.";
+  $("pNote").textContent=`Routing preview: ${selected}. ${guard}`;
+  return p;
+}
+const originalCreatePlan=createPlan;
+createPlan=async function(){
+  await originalCreatePlan();
+  const command=input.value.trim();
+  if(!command)return;
+  try{await previewFederationRouting(command)}catch(e){toast("Routing preview unavailable; no action was executed")}
+};
+let studioPackage=null;let studioAsset=null;let studioApproval=null;let studioIntent=null;
+function studioSelectedPlatforms(){return Array.from(document.querySelectorAll("[data-studio-platform].active")).map(x=>x.dataset.studioPlatform)}
+function studioSetState(label,kind=""){const el=$("studioState");el.textContent=label;el.className="badge "+kind}
+function studioDigestShort(v){return v?String(v).slice(0,16):"—"}
+function studioRenderPackage(pkg){const c=pkg?.content||{};studioPackage=pkg;$("studioPreviewTitle").textContent=c.title||"معاينة المحتوى";$("studioPreviewBody").textContent=c.premise||"—";$("studioType").textContent=c.content_type||"—";$("studioPreviewAudience").textContent=c.audience||"—";$("studioRights").textContent=c.rights_status||"—";$("studioVersion").textContent=`الإصدار ${c.version||1}`;$("studioDigest").textContent=`بصمة الدليل ${studioDigestShort(pkg.package_digest)}`;$("studioLifecycle").textContent=String(c.lifecycle_state||"مسودة");$("studioApproval").textContent=pkg.approval?.decision||"قيد الانتظار";$("studioBoundary").textContent=(pkg.distribution?.targets||[]).map(x=>`${x.platform}:${x.connection||"not_connected"}`).join(" · ")||"لا توجد قنوات نشر";$("studioValidateBtn").disabled=false;$("studioApproveBtn").disabled=pkg.quality_gate?.status!=="PASS";studioSetState(pkg.quality_gate?.status==="PASS"?"جاهز للمراجعة":"BLOCKED",pkg.quality_gate?.status==="PASS"?"ok":"warn")}
+async function buildStudioDraft(){const topic=$("studioTopic").value.trim();const message=$("studioMessage").value.trim();if(!topic||!message){toast("Topic and key message are required");return}const b=$("studioBuildBtn");b.disabled=true;b.textContent="جارٍ الإنشاء…";try{const r=await fetch("/command-center/api/bos/content-factory/plan",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({title:topic,premise:message,audience:$("studioAudience").value,content_type:"educational",language:$("studioLanguage").value,platforms:studioSelectedPlatforms(),duration_seconds:60,rights_status:"original"})});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"content_factory_unavailable");studioRenderPackage(j.content_package);studioSetState("مسودة");toast("تم إنشاء مسودة منضبطة")}catch(e){studioSetState("BLOCKED","warn");toast(e.message||"Draft creation failed")}finally{b.disabled=false;b.textContent="إنشاء مسودة منضبطة"}}
+async function validateStudio(){if(!studioPackage){toast("Build a draft first");return}const q=studioPackage.quality_gate||{};studioSetState(q.status==="PASS"?"VALIDATED":"BLOCKED",q.status==="PASS"?"ok":"warn");$("studioLifecycle").textContent=q.status==="PASS"?"جاهز_FOR_REVIEW":"مسودة";toast(q.status==="PASS"?"Validation passed — human review remains required":"Validation blocked the draft") }
+async function approveStudio(){if(!studioPackage){toast("Build a draft first");return}const c=studioPackage.content||{};try{const r=await fetch("/command-center/api/bos/content-studio/approve",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({content_id:studioPackage.package_digest,version:c.version,content_type:c.content_type,language:c.language,payload:c})});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"content_approval_unavailable");studioAsset=j.asset;studioApproval=j.approval;$("studioLifecycle").textContent="APPROVED";$("studioApproval").textContent="APPROVED";studioSetState("APPROVED","ok");$("studioPublishBtn").disabled=false;toast("Exact content version approved")}catch(e){toast(e.message||"الموافقة blocked")}}
+async function requestStudioPublishing(){if(!studioAsset||!studioApproval){toast("اعتمد النسخة المحددة أولاً");return}const platform=studioSelectedPlatforms()[0];if(!platform){toast("اختر قناة واحدة على الأقل");return}try{const r=await fetch("/command-center/api/bos/content-studio/publishing-intent",{method:"POST",credentials:"same-origin",headers:postHeaders(),body:JSON.stringify({asset:studioAsset,approval:studioApproval,platform,account_ref:platform+"-account",idempotency_key:"cc-"+studioAsset.content_id+"-v"+studioAsset.version+"-"+platform})});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"publishing_intent_unavailable");studioIntent=j.publishing_intent;$("studioLifecycle").textContent="تم طلب النشر";$("studioBoundary").textContent=`نشرing intent ${studioIntent.intent_id} created for ${platform}. External publication still requires the canonical execution and provider authorization boundary.`;studioSetState("تم طلب النشر","warn");toast("نشرing request prepared — no external post was published") }catch(e){toast(e.message||"نشرing request blocked")}}
+async function loadSocialConnections(){try{const r=await fetch("/command-center/api/bos/social-connections",{credentials:"same-origin",headers:{Accept:"application/json"}});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"connector_status_unavailable");const channels=j.channels||[];const rows=channels.map(x=>{const id=String(x.channel_id||x.id||"").toLowerCase();const state=String(x.connection||"not_connected").toLowerCase();const connected=["verified","connected","ready"].includes(state);const canConnect=["youtube","tiktok","instagram","facebook"].includes(id)&&!connected;const stateText=connected?"متصل":(x.configuration==="configured"?"جاهز للربط":"غير مهيأ");const button=canConnect?'<button type="button" class="secondary social-connect-btn" data-channel="'+escapeHtml(id)+'">ربط الحساب</button>':"";return '<div class="row"><span><b>'+escapeHtml(x.name||id)+'</b><small style="display:block;color:var(--muted);margin-top:3px">'+escapeHtml(id.toUpperCase())+'</small></span><span style="display:flex;align-items:center;gap:8px"><span class="badge '+(connected?"ok":"warn")+'">'+stateText+'</span>'+button+'</span></div>'}).join("");$("socialConnectionsRows").innerHTML=rows||'<div class="row"><span>لا توجد قنوات في الكتالوج.</span></div>';$("socialConnectionsState").textContent=channels.length?channels.length+" قنوات":"غير متاح";document.querySelectorAll(".social-connect-btn").forEach(b=>b.onclick=()=>authorizeStudioChannel(b.dataset.channel))}catch(e){$("socialConnectionsState").textContent="غير متاح";$("socialConnectionsRows").innerHTML='<div class="row"><span>تعذر قراءة حالة القنوات من وقت التشغيل.</span></div>'}}
+async function loadStudioConnectors(){try{const r=await fetch("/command-center/api/bos/social-connections",{credentials:"same-origin",headers:{Accept:"application/json"}});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.error||"connector_status_unavailable");const channels=j.channels||j.connections||[];const ready=channels.filter(x=>["ready","verified","connected"].includes(String(x.connection||x.status||"").toLowerCase())).length;$("studioConnectorState").textContent=ready?`${ready} متصلة`:"تحتاج ربط";$("studioConnectorState").className=ready?"badge ok":"badge warn";$("studioConnectors").innerHTML=channels.map(x=>{const id=String(x.channel||x.id||"").toLowerCase();const state=String(x.connection||x.status||"not_connected").toUpperCase();const connected=["جاهز","VERIFIED","متصل"].includes(state);const cls=connected?"ok":"warn";const connect=(!connected && ["youtube","tiktok","instagram","facebook"].includes(id))?`<button type="button" class="secondary studio-connect-btn" data-channel="${escapeHtml(id)}" onclick="authorizeStudioChannel('${escapeHtml(id)}')">ربط الحساب</button>`:"";return `<div class="studio-connector"><span><b>${escapeHtml(x.name||id||"Channel")}</b><small style="display:block;color:var(--muted);margin-top:3px">${escapeHtml(x.purpose||"التوزيع والنشر المنضبط")}</small></span><span style="display:flex;align-items:center;gap:7px"><span class="badge ${cls}">${escapeHtml(state)}</span>${connect}</span></div>`}).join("")||"<div class='studio-connector'><span>لا توجد قنوات مسجلة.</span><span class='badge warn'>غير متصلة</span></div>";document.querySelectorAll('.studio-connect-btn').forEach(b=>b.onclick=()=>authorizeStudioChannel(b.dataset.channel))}catch(e){$("studioConnectorState").textContent="غير متاح";$("studioConnectorState").className="badge warn";$("studioConnectors").innerHTML="<div class='studio-connector'><span>حالة القنوات غير متاحة مؤقتاً. لم يتم كشف أي بيانات اعتماد.</span></div>"}}
+function authorizeStudioChannel(channel){const target=`/command-center/api/bos/social-connections/${encodeURIComponent(channel)}/authorize`;toast("جارٍ بدء ربط "+String(channel).toUpperCase()+"…");window.location.assign(target)}
+$("openConnectionsBtn")?.addEventListener("click",()=>{document.querySelector(".surface-link[data-surface=connections]")?.click()});
+$("studioBuildBtn").onclick=buildStudioDraft;$("studioValidateBtn").onclick=validateStudio;$("studioApproveBtn").onclick=approveStudio;$("studioPublishBtn").onclick=requestStudioPublishing;loadStudioConnectors();loadSocialConnections();
+loadOverview();loadRevenueCenter();loadYouTubeEvidence();loadKemetWorldsIntelligence();loadVisibilityIntelligence();loadApprovalInbox();loadOutcome();loadDecisionLifecycle();loadMLEvaluationGovernance();loadLearningLoop();loadFederation();loadProjectIntelligence();loadCorporateForce();setInterval(()=>{loadOverview();loadRevenueCenter();loadYouTubeEvidence();loadKemetWorldsIntelligence();loadVisibilityIntelligence();loadApprovalInbox();loadOutcome();loadDecisionLifecycle();loadMLEvaluationGovernance();loadLearningLoop();loadFederation();loadProjectIntelligence();loadCorporateForce()},30000);
+
+</script><script src="{{ url_for('static', filename='js/approval_inbox.js') }}"></script></body></html>

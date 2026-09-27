@@ -114,3 +114,48 @@ def test_budget_limits_fail_closed():
     result = AutomationControlPlane().compile(plan)
     assert result["success"] is False
     assert "step_budget_exceeded" in result["validation"]["errors"]
+
+
+def test_plan_cannot_raise_cost_ceiling_to_bypass_dow_guard():
+    plan = AutomationPlan(
+        plan_id="dow-ceiling",
+        organization_id=1,
+        trigger="manual",
+        steps=(AutomationStep(step_id="one", action="business_insights", estimated_cost=150.0),),
+        limits=AutomationLimits(max_estimated_cost=150.0),
+    )
+    result = AutomationControlPlane().compile(plan)
+    assert result["success"] is False
+    assert "estimated_cost_ceiling_exceeded" in result["validation"]["errors"]
+
+
+def test_nan_cost_fails_closed():
+    plan = _plan(AutomationStep(step_id="one", action="business_insights", estimated_cost=float("nan")))
+    result = AutomationControlPlane().compile(plan)
+    assert result["success"] is False
+    assert "invalid_cost:one" in result["validation"]["errors"]
+
+
+def test_infinite_cost_fails_closed():
+    plan = _plan(AutomationStep(step_id="one", action="business_insights", estimated_cost=float("inf")))
+    result = AutomationControlPlane().compile(plan)
+    assert result["success"] is False
+    assert "invalid_cost:one" in result["validation"]["errors"]
+
+
+def test_budget_numeric_types_fail_closed():
+    limits = AutomationLimits(max_steps=True, max_retries_per_step=1.5, max_runtime_seconds=0, max_external_operations=1.0, max_estimated_cost=float("nan"))
+    plan = AutomationPlan(
+        plan_id="budget-types",
+        organization_id=1,
+        trigger="manual",
+        steps=(AutomationStep(step_id="one", action="business_insights"),),
+        limits=limits,
+    )
+    result = AutomationControlPlane().compile(plan)
+    assert result["success"] is False
+    assert "max_steps_invalid" in result["validation"]["errors"]
+    assert "max_retries_invalid" in result["validation"]["errors"]
+    assert "max_runtime_invalid" in result["validation"]["errors"]
+    assert "max_external_operations_invalid" in result["validation"]["errors"]
+    assert "max_estimated_cost_invalid" in result["validation"]["errors"]

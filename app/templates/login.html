@@ -1,126 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 {% include "partials/kemet-white-ui.html" %}
 <meta charset="utf-8">
-<title>Kemet AI Login</title>
-
-<style>
-body {
-    background:#0f172a;
-    color:white;
-    font-family:Arial, sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-}
-
-.card {
-    background:#1e293b;
-    padding:35px;
-    border-radius:15px;
-    width:350px;
-}
-
-h1 {
-    text-align:center;
-}
-
-input {
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:8px;
-    border:none;
-}
-
-button {
-    width:100%;
-    padding:12px;
-    background:#374151;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-a {
-    color:#9ca3af;
-}
-</style>
-
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kemet — Sign in</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
-<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ai-ui.css') }}">
-
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ai-ui.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-modern.css') }}">
+<style>
+:root{--midnight:#06142d;--lapis:#123d78;--blue:#2369ad;--gold:#d7b45d;--sand:#eee3cf;--text:#14243d;--muted:#748097}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--midnight)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}
+.scene{min-height:100svh;position:relative;display:grid;place-items:center;overflow:hidden;background:#06142d url("{{ url_for('static', filename='assets/brand/kemet-egyptian/kemet-login-hero.svg') }}") center/cover no-repeat;}
+.temple{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1;background:linear-gradient(180deg,rgba(6,20,45,.12),rgba(6,20,45,.22));}
+.temple:before{display:none;content:"";position:absolute;left:50%;top:-12%;width:min(820px,110vw);height:115%;transform:translateX(-50%);opacity:.34;
+background:linear-gradient(90deg,transparent 0 8%,rgba(215,180,93,.30) 8.2% 8.5%,transparent 8.7% 91.3%,rgba(215,180,93,.30) 91.5% 91.8%,transparent 92%),
+linear-gradient(180deg,transparent 0 38%,rgba(215,180,93,.34) 38.2% 38.5%,transparent 38.7%);
+clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)}
+.temple:after{display:none;content:"";position:absolute;left:50%;bottom:-9%;width:min(900px,115vw);height:48%;transform:translateX(-50%);
+background:linear-gradient(180deg,rgba(215,180,93,.32),transparent 18%),repeating-linear-gradient(90deg,rgba(215,180,93,.16) 0 2px,transparent 2px 74px);
+clip-path:polygon(17% 0,83% 0,100% 100%,0 100%);opacity:.30}
+.horizon{display:none;position:absolute;left:50%;bottom:0;width:120%;height:42%;transform:translateX(-50%);background:
+radial-gradient(ellipse at center bottom,rgba(215,180,93,.23),transparent 58%);filter:blur(8px)}
+.hieroglyphs{display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 6%;font-family:serif;font-size:clamp(42px,7vw,86px);color:rgba(238,227,207,.17);letter-spacing:.25em}
+.sun{display:none;position:absolute;left:50%;top:10%;width:clamp(170px,24vw,280px);height:clamp(170px,24vw,280px);transform:translateX(-50%);
+border-radius:50%;background:radial-gradient(circle,rgba(255,226,145,.38) 0 10%,rgba(215,180,93,.19) 28%,transparent 68%);filter:blur(1px)}
+.sun:after{content:"";position:absolute;inset:18%;border:1px solid rgba(215,180,93,.34);border-radius:50%;box-shadow:0 0 55px rgba(215,180,93,.18)}
+.lotus{display:none;position:absolute;left:50%;top:18%;width:230px;height:130px;transform:translateX(-50%);opacity:.32}
+.lotus span{position:absolute;left:50%;bottom:0;width:38px;height:105px;border:1.5px solid var(--gold);border-bottom:0;border-radius:50% 50% 0 0;transform-origin:bottom center}
+.lotus span:nth-child(1){transform:translateX(-50%) rotate(0)}
+.lotus span:nth-child(2){transform:translateX(-50%) rotate(-28deg);height:78px}
+.lotus span:nth-child(3){transform:translateX(-50%) rotate(28deg);height:78px}
+.lotus span:nth-child(4){transform:translateX(-50%) rotate(-52deg);height:52px}
+.lotus span:nth-child(5){transform:translateX(-50%) rotate(52deg);height:52px}
+.compass{display:none;position:absolute;left:50%;top:34%;width:15px;height:15px;transform:translate(-50%,-50%) rotate(45deg);border:1px solid rgba(215,180,93,.82);box-shadow:0 0 28px rgba(215,180,93,.26)}
+.login-panel{position:relative;z-index:5;width:min(410px,calc(100% - 32px));padding:34px 34px 30px;margin-top:6vh;
+background:rgba(247,242,230,.50);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border:1px solid rgba(215,180,93,.48);border-radius:20px;
+box-shadow:0 32px 90px rgba(0,0,0,.46),0 0 0 1px rgba(255,255,255,.05);overflow:hidden}
+.login-panel:before{content:"";position:absolute;left:18%;right:18%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.wordmark{text-align:center;font-size:22px;font-weight:850;letter-spacing:.20em;color:#09244a;margin:0 0 4px;text-transform:uppercase}
+.rule{width:48px;height:1px;background:var(--gold);margin:0 auto 24px}
+.eyebrow{text-align:center;color:#315f92;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px}
+h1{text-align:center;margin:0 0 9px;color:#0a1d38;font-size:30px;letter-spacing:-.035em;line-height:1.1}
+.subtitle{text-align:center;margin:0 0 24px;color:var(--muted);font-size:13px}
+.field{margin-bottom:12px}.field input{width:100%;height:51px;padding:0 15px;border:1px solid #d6d0c2;border-radius:11px;background:#fff;color:#14243d;font-size:14px;outline:none}.password-wrap{position:relative}.password-wrap input{padding-right:48px}.password-toggle{position:absolute;right:7px;top:7px;width:37px;height:37px;border:0;border-radius:9px;background:transparent;color:#718097;display:grid;place-items:center;cursor:pointer}.password-toggle:hover{background:#eef3f8;color:#173f78}.password-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.field input:focus{border-color:#2369ad;box-shadow:0 0 0 4px rgba(35,105,173,.10)}
+.primary-btn{width:100%;height:51px;border:0;border-radius:11px;background:linear-gradient(135deg,#09244a,#1b5d9d);color:white;font-weight:750;font-size:14px;cursor:pointer;box-shadow:0 10px 22px rgba(9,36,74,.22)}
+.divider{display:flex;align-items:center;gap:10px;margin:19px 0;color:#9a9489;font-size:9px;letter-spacing:.1em;font-weight:700}.divider:before,.divider:after{content:"";height:1px;flex:1;background:#ddd6c8}
+.social{display:grid;grid-template-columns:1fr 1fr;gap:9px}.social a{height:44px;border:1px solid #d8d1c4;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:12px;font-weight:700;color:#17385f;background:rgba(255,255,255,.82)}.social a svg{width:18px;height:18px;flex:none}.social .facebook{background:#173f78;border-color:#173f78;color:#fff}
+.register{text-align:center;margin:18px 0 0;font-size:12px;color:#818487}.register a{color:#145d9f;font-weight:750;text-decoration:none}.note{text-align:center;margin:15px 0 0;color:#aaa293;font-size:10px}
+@media(max-width:520px){.scene{place-items:center}.login-panel{padding:29px 21px 25px;margin-top:13vh;width:calc(100% - 24px)}.sun{top:2%;width:190px;height:190px}.lotus{top:9%;opacity:.58;transform:translateX(-50%) scale(.74)}.hieroglyphs{padding:0 2%;font-size:42px;color:rgba(238,227,207,.20)}.compass{top:28%}.social{grid-template-columns:1fr}}
+</style>
 </head>
-
 <body>
-
-<section class="k-v51-auth">
-    <div class="k-v51-auth-card">
-        <h1>Welcome back</h1>
-        <p class="k-v51-muted">Sign in to your Kemet AI workspace.</p>
-
-
-<div class="card">
-
-<h1>Kemet AI</h1>
-
-<p>Login to your account</p>
-
+<div class="scene">
+<div class="temple"><div class="sun"></div><div class="lotus"><span></span><span></span><span></span><span></span><span></span></div><div class="horizon"></div><div class="hieroglyphs"><span>𓂀 𓆣</span><span>𓋹 𓂀</span></div></div>
+<div class="compass"></div>
+<main class="login-panel">
+<div class="wordmark">Kemet</div>
+<div class="rule"></div>
+<div class="eyebrow">Business Operating System</div>
+<h1>Sign in</h1>
+<p class="subtitle">Run your business from one place.</p>
 <form method="POST">
 {{ form.hidden_tag() }}
-
-<input 
-name="email"
-type="email"
-placeholder="Email"
-required>
-
-{{ form.password(placeholder="Password") }}
-
-{{ form.submit() }}
-
-
-</form>
-
-<div style="text-align:center;margin:20px 0;color:#94a3b8;">
-    OR
+<div class="field"><input name="email" type="email" placeholder="Email address" autocomplete="email" required></div>
+<div class="field password-field"><div class="password-wrap">{{ form.password(placeholder="Password", autocomplete="current-password", id="login-password") }}<button type="button" class="password-toggle" id="password-toggle" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-5.2 9.8-5.2S21.8 12 21.8 12 18.4 17.2 12 17.2 2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.7"/></svg></button></div></div>
+{{ form.submit(class="primary-btn") }}
+</form><div class="divider"><span>OR CONTINUE WITH</span></div>
+<div class="social">
+<a href="{{ url_for('auth.google') }}" aria-label="Continue with Google"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 12.23c0-.7-.06-1.38-.18-2.03H12v3.84h5.5a4.7 4.7 0 0 1-2.04 3.08v2.56h3.3c1.93-1.78 3.04-4.4 3.04-7.45Z" fill="#4285F4"/><path d="M12 22c2.76 0 5.08-.91 6.77-2.32l-3.3-2.56c-.92.62-2.1.99-3.47.99-2.67 0-4.93-1.8-5.74-4.22H2.85v2.64A10.22 10.22 0 0 0 12 22Z" fill="#34A853"/><path d="M6.26 13.89A6.14 6.14 0 0 1 5.94 12c0-.66.11-1.3.32-1.89V7.47H2.85A10.2 10.2 0 0 0 1.8 12c0 1.64.39 3.19 1.05 4.53l3.41-2.64Z" fill="#FBBC05"/><path d="M12 5.89c1.5 0 2.85.52 3.91 1.54l2.93-2.93C17.07 2.92 14.76 2 12 2a10.22 10.22 0 0 0-9.15 5.47l3.41 2.64C7.07 7.69 9.33 5.89 12 5.89Z" fill="#EA4335"/></svg><span>Google</span></a>
+<a class="facebook" href="{{ url_for('auth.facebook') }}" aria-label="Continue with Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 8.2h2.5V4.5c-.43-.06-1.9-.18-3.61-.18-3.57 0-6.02 2.18-6.02 6.19v3.45H3.1v4.13h3.97V24h4.87v-5.91h3.81l.61-4.13h-4.42v-3.04c0-1.2.32-2.02 2.26-2.02Z" fill="currentColor"/></svg><span>Facebook</span></a>
 </div>
-
-<a href="{{ url_for('auth.google') }}"
-   style="display:block;text-align:center;background:#fff;color:#111827;
-          padding:12px;border-radius:8px;text-decoration:none;
-          margin-bottom:10px;font-weight:600;">
-    Continue with Google
-</a>
-
-<a href="{{ url_for('auth.facebook') }}"
-   style="display:block;text-align:center;background:#1877f2;color:#fff;
-          padding:12px;border-radius:8px;text-decoration:none;
-          font-weight:600;">
-    Continue with Facebook
-</a>
-
-
-<br>
-
-<p>
-Don't have an account?
-<a href="{{ url_for('auth.register') }}">
-Register
-</a>
-</p>
-
+<p class="register">Don't have an account? <a href="{{ url_for('auth.register') }}">Create one</a></p>
+<p class="note">Human approval remains required before influential actions.</p>
+</main>
 </div>
-
-</div>
-</section>
+<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script><script>(function(){const b=document.getElementById("password-toggle"),p=document.getElementById("login-password");if(!b||!p)return;b.addEventListener("click",function(){const show=p.type==="password";p.type=show?"text":"password";b.setAttribute("aria-pressed",String(show));b.setAttribute("aria-label",show?"Hide password":"Show password");});})();</script>
 </body>
 </html>

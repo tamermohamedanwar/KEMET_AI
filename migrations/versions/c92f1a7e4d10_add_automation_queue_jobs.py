@@ -14,6 +14,13 @@ depends_on = None
 
 
 def upgrade():
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if inspector.has_table("automation_queue_jobs"):
+        return
+    bind = op.get_bind()
+    if sa.inspect(bind).has_table("automation_queue_jobs"):
+        return
     op.create_table(
         "automation_queue_jobs",
         sa.Column("id", sa.Integer(), primary_key=True),

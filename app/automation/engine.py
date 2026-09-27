@@ -325,7 +325,14 @@ class AutomationEngine:
 
             try:
                 from app.services.business_outcome_service import business_outcome_service
-                baseline = business_outcome_service.capture_snapshot(organization_id, "30d")
+                execution_identity = {
+                    "organization_id": organization_id,
+                    "workflow_id": workflow.id,
+                    "execution_id": execution.id,
+                    "execution_key": idempotency_key,
+                    "idempotency_key": idempotency_key,
+                }
+                baseline = business_outcome_service.capture_snapshot(organization_id, "30d", execution_identity=execution_identity)
                 execution.output_json = json.dumps({
                     "version": "1.1",
                     "status": "running",
@@ -490,7 +497,13 @@ class AutomationEngine:
                         if baseline and capability:
                             from app.services.business_outcome_service import business_outcome_service
                             outcome = business_outcome_service.build_execution_outcome(
-                                organization_id, f"kemet.{capability}", baseline, "30d"
+                                organization_id, f"kemet.{capability}", baseline, "30d", execution_identity={
+                                    "organization_id": organization_id,
+                                    "workflow_id": workflow.id,
+                                    "execution_id": execution.id,
+                                    "execution_key": idempotency_key,
+                                    "idempotency_key": idempotency_key,
+                                }
                             )
                             checkpoint["outcome"] = outcome if outcome.get("success") else {"success": False, "error": outcome.get("error")}
                             checkpoint["outcome_measurement"] = {
@@ -565,6 +578,21 @@ class AutomationEngine:
             raise RuntimeError("Automation workflow not found.")
         if approval.organization_id != organization_id or workflow.organization_id != organization_id:
             raise RuntimeError("Automation tenant mismatch.")
+        if approval.execution_id != execution.id or approval.workflow_id != workflow.id:
+            raise RuntimeError("Automation approval execution binding mismatch.")
+        if execution.workflow_id != workflow.id:
+            raise RuntimeError("Automation execution workflow mismatch.")
+        if execution.status == "completed":
+            return {
+                "success": True,
+                "status": "deduplicated",
+                "reason": "execution_already_completed",
+                "approval_id": approval.id,
+                "execution_id": execution.id,
+                "workflow_id": workflow.id,
+            }
+        if execution.status in {"rejected", "failed"}:
+            raise RuntimeError("Automation execution is not resumable.")
 
         decision_data = {}
         if approval.decision_json:
@@ -608,6 +636,32 @@ class AutomationEngine:
             raise RuntimeError("Authorized execution payload is invalid.")
 
         from app.core.execution.runtime import canonical_execution_runtime
+
+        execution_key = str(authorization.get("execution_key") or f"approval:{approval.id}")
+        from app.services.execution_entitlement_service import execution_entitlement_service
+        entitlement = execution_entitlement_service.check(
+            organization_id, execution_key=execution_key
+        )
+        if not entitlement.get("allowed"):
+            raise RuntimeError(entitlement.get("reason", "execution_not_entitled"))
+
+        from app.core.execution_ledger import execution_ledger
+        import hashlib
+        token = str(authorization.get("token") or "")
+        approval_hash = hashlib.sha256(token.encode("utf-8")).hexdigest() if token else None
+        started = execution_ledger.begin(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            plan_hash=str(authorization.get("plan_hash") or plan.get("plan_hash") or ""),
+            job_id=execution.id,
+            worker_id="automation-engine",
+            approval_hash=approval_hash,
+            decision_hash=(authorization.get("gate_handoff") or {}).get("decision_hash"),
+        )
+        if not started.get("created"):
+            raise RuntimeError("execution_ledger_replay_or_in_progress")
+
+        outcome_started_at = datetime.utcnow()
         canonical_parameters = dict(parameters)
         canonical_parameters["_approved_execution"] = True
         for key, value in data.items():
@@ -621,10 +675,17 @@ class AutomationEngine:
             authorization=authorization,
             action_registry=registry,
             user_id=canonical_parameters.get("user_id"),
+            execution_envelope_payload=authorization.get("execution_envelope"),
         )
         if approved_result.get("approval_required"):
             raise RuntimeError("Action requested approval again.")
         if not approved_result.get("success"):
+            execution_ledger.finish(
+                organization_id=organization_id,
+                execution_key=execution_key,
+                status="failed",
+                receipt=approved_result,
+            )
             raise RuntimeError(approved_result.get("message") or approved_result.get("error") or "Approved action failed.")
 
         action_results = []
@@ -756,7 +817,13 @@ class AutomationEngine:
             if baseline and capability:
                 from app.services.business_outcome_service import business_outcome_service
                 outcome = business_outcome_service.build_execution_outcome(
-                    organization_id, f"kemet.{capability}", baseline, "30d"
+                    organization_id, f"kemet.{capability}", baseline, "30d", execution_identity={
+                        "organization_id": organization_id,
+                        "workflow_id": workflow.id,
+                        "execution_id": execution.id,
+                        "execution_key": execution_key,
+                        "idempotency_key": execution.idempotency_key,
+                    }
                 )
                 checkpoint["outcome"] = outcome if outcome.get("success") else {"success": False, "error": outcome.get("error")}
                 checkpoint["outcome_measurement"] = {
@@ -775,11 +842,76 @@ class AutomationEngine:
                 execution.output_json = json.dumps(checkpoint, ensure_ascii=False, default=str)
             except Exception:
                 pass
+        from app.core.automation_outcome_service import automation_outcome_service
+        outcome_receipt = approved_result.get("receipt") or approved_result
+        outcome = automation_outcome_service.record(
+            organization_id=organization_id,
+            status="completed",
+            executed=True,
+            job_id=execution.id,
+            workflow_id=workflow.id,
+            started_at=outcome_started_at,
+            cost_amount=approved_result.get("cost_amount"),
+            currency=approved_result.get("currency"),
+            business_outcome=approved_result.get("business_outcome"),
+            receipt=outcome_receipt,
+        )
+        execution_receipt = {
+            **outcome_receipt,
+            "outcome_id": outcome.get("outcome_id"),
+            "commercial_entitlement": {
+                "plan": entitlement.get("plan"),
+                "limit": entitlement.get("limit"),
+                "used_before": entitlement.get("used"),
+                "remaining_after_reservation": entitlement.get("remaining"),
+            },
+        }
+        execution_ledger.finish(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            status="completed",
+            receipt=execution_receipt,
+        )
+        from app.core.execution_evidence import execution_evidence
+        decision_hash = (authorization.get("gate_handoff") or {}).get("decision_hash")
+        evidence_identity = {
+            "execution_key": execution_key,
+            "job_id": execution.id,
+            "workflow_id": workflow.id,
+            "decision_hash": decision_hash,
+            "approval_id": approval.id,
+        }
+        execution_evidence.record(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            job_id=execution.id,
+            workflow_id=str(workflow.id),
+            stage="outcome.recorded",
+            status="completed",
+            worker_id="automation-engine",
+            plan_hash=str(authorization.get("plan_hash") or plan.get("plan_hash") or ""),
+            evidence_key=f"{execution_key}:outcome:{outcome.get('outcome_id')}",
+            receipt={"outcome_id": outcome.get("outcome_id"), "executed": True, "execution_identity": evidence_identity},
+        )
+        execution_evidence.record(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            job_id=execution.id,
+            workflow_id=str(workflow.id),
+            stage="runtime.finished",
+            status="completed",
+            worker_id="automation-engine",
+            plan_hash=str(authorization.get("plan_hash") or plan.get("plan_hash") or ""),
+            evidence_key=f"{execution_key}:runtime.finished",
+            receipt={**execution_receipt, "execution_identity": evidence_identity},
+        )
         db.session.commit()
         return {
             "success": True, "status": "completed",
             "approval_id": approval.id, "execution_id": execution.id,
             "workflow_id": workflow.id, "actions": action_results,
+            "outcome_id": outcome.get("outcome_id"),
+            "execution_key": execution_key,
         }
 
 

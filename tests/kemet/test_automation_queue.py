@@ -78,3 +78,16 @@ def test_queue_deadline_is_persisted():
         result = queue.enqueue({"organization_id": org.id, "job_key": f"deadline-{unique}"}, deadline_seconds=30)
         row = db.session.get(AutomationQueueJob, result["job_id"])
         assert row.deadline_at is not None
+
+
+def test_scheduler_requires_approval_state_before_execution():
+    scheduler = AutomationScheduler()
+    envelope = scheduler.envelope({
+        "organization_id": 9,
+        "event_id": "evt-approval",
+        "trigger_id": "trigger-approval",
+        "workflow_id": "wf-approval",
+        "execution": {"approval_required": True},
+    })
+    assert envelope["workflow_state"] == "waiting_approval"
+    assert envelope["execution"]["executed"] is False

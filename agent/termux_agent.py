@@ -96,6 +96,86 @@ def commands():
     })
 
 
+@app.post("/governed/run")
+def governed_run():
+    if not authorized():
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    operation = str(data.get("operation") or "").strip()
+    plan = data.get("plan")
+    authorization = data.get("authorization")
+    action = str(data.get("action") or "").strip()
+    commands = {
+        "health": ["true"],
+        "test_health": ["curl", "-sS", "http://127.0.0.1:8000/api/health"],
+        "compile": [".venv/bin/python", "-m", "compileall", "-q", "app", "agent"],
+        "git_status": ["git", "status", "--short"],
+    }
+    if operation not in commands:
+        return jsonify({"ok": False, "error": "termux_operation_not_allowed"}), 403
+    if action != "termux_engineering":
+        return jsonify({"ok": False, "error": "termux_action_binding_invalid"}), 403
+    if not isinstance(plan, dict) or not isinstance(authorization, dict) or not action:
+        return jsonify({"ok": False, "error": "termux_execution_binding_required"}), 403
+    try:
+        from app.core.execution.execution_boundary import execution_boundary
+        gate = execution_boundary.require(plan=plan, authorization=authorization, action=action)
+    except Exception as exc:
+        return jsonify({"ok": False, "error": "execution_gate_error", "detail": str(exc)}), 500
+    if not gate.get("allowed"):
+        return jsonify({"ok": False, "error": gate.get("error", "execution_denied"), "gate": gate}), 403
+    try:
+        result = run(commands[operation])
+    except Exception as exc:
+        return jsonify({"ok": False, "error": "termux_execution_failed", "detail": str(exc)}), 500
+    return jsonify({"ok": result["ok"], "operation": operation, "action": action, "executed": True, "result": result}), 200 if result["ok"] else 422
+
+
+@app.post("/governed/artifact")
+def governed_artifact():
+    if not authorized():
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    artifacts = data.get("artifacts")
+    plan = data.get("plan")
+    authorization = data.get("authorization")
+    action = str(data.get("action") or "").strip()
+    preview_digest = str(data.get("preview_digest") or "").strip()
+    if action != "artifact_write":
+        return jsonify({"ok": False, "error": "artifact_action_binding_invalid"}), 403
+    if not isinstance(artifacts, list) or not artifacts:
+        return jsonify({"ok": False, "error": "artifact_binding_required"}), 403
+    if not isinstance(plan, dict) or not isinstance(authorization, dict):
+        return jsonify({"ok": False, "error": "artifact_execution_binding_required"}), 403
+    if not preview_digest:
+        return jsonify({"ok": False, "error": "artifact_preview_binding_required"}), 403
+    try:
+        from app.core.execution.execution_boundary import execution_boundary
+        gate = execution_boundary.require(plan=plan, authorization=authorization, action=action)
+        if not gate.get("allowed"):
+            return jsonify({"ok": False, "error": gate.get("error", "execution_denied"), "gate": gate}), 403
+        from app.core.execution.artifact_execution import artifact_execution
+        from app.core.execution.post_execution_validator import post_execution_validator
+        preview = artifact_execution.preview(artifacts)
+        if preview["digest"] != preview_digest:
+            return jsonify({"ok": False, "error": "artifact_preview_mismatch", "expected": preview_digest, "actual": preview["digest"]}), 409
+        result = artifact_execution.apply(artifacts, backup=True)
+        try:
+            validation = post_execution_validator.validate(artifacts)
+        except Exception as validation_exc:
+            rollback = artifact_execution.rollback(result)
+            return jsonify({
+                "ok": False, "error": "post_execution_validation_failed",
+                "validation_error": str(validation_exc), "rollback": rollback,
+                "executed": True, "recovered": True, "preview": preview, "result": result,
+            }), 422
+        result["validation"] = validation
+        result["recovered"] = False
+        return jsonify({"ok": True, "action": action, "executed": True, "preview": preview, "result": result}), 200
+    except Exception as exc:
+        return jsonify({"ok": False, "error": str(exc), "executed": False}), 422
+
+
 @app.post("/run")
 def run_command():
     if not authorized():
@@ -108,38 +188,6 @@ def run_command():
         "ok": False,
         "error": "central_execution_gate_required",
         "message": "Direct Termux execution is disabled. Use the authorized Kemet AI execution path.",
-    }), 403
-
-    data = request.get_json(silent=True) or {}
-    command_name = data.get("command")
-
-    if command_name in ALLOWED_COMMANDS:
-        result = run(ALLOWED_COMMANDS[command_name])
-
-        return jsonify({
-            "ok": result["ok"],
-            "command": command_name,
-            "returncode": result["returncode"],
-            "stdout": result["stdout"],
-            "stderr": result["stderr"],
-        }), 200
-
-    if command_name == "list_files":
-        return list_files()
-
-    if command_name == "read_file":
-        return read_file()
-
-    if command_name == "search_code":
-        return search_code()
-
-    return jsonify({
-        "ok": False,
-        "error": "command_not_allowed",
-        "allowed": sorted(
-            list(ALLOWED_COMMANDS.keys())
-            + ["list_files", "read_file", "search_code"]
-        ),
     }), 403
 
 

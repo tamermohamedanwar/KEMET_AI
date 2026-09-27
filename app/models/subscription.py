@@ -28,3 +28,5 @@ class Subscription(db.Model):
         db.DateTime,
         server_default=db.func.now()
     )
+
+    __table_args__ = (db.Index("ix_subscriptions_org_status", "organization_id", "status"),)

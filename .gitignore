@@ -1,54 +1,64 @@
-.venv/
 __pycache__/
 *.pyc
 .env
 .env.*
 !.env.example
-instance/*.db
-instance/*.sqlite
-instance/*.sqlite3
+
+# Local/generated runtime data
+instance/
 uploads/
 logs/
+runtime_logs/
+.kemet_runtime/
+.venv/
+node_modules/
 *.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Archives and local backups
 *.tar.gz
-
-# Local/generated artifacts
-PY
-for
-from
-if
-}
-approved_action.position
-test.txt
-kemet_checkout_url.txt
-
-# Local backups and audit artifacts
 archive/
 audit/
+backups/
 backup_paymob/
 backup_ui/
 *.bak
 *.backup
 *.bak_*
 *.backup_*
-
-# Local databases / runtime
-instance/
-uploads/
-logs/
-*.log
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Local safety backups
-backups/
-*.backup
 *.refund_backup
 *.paymob_backup_*
 *.before_kashier_*
 *.before_paymob_return_*
-*.before_checkout_ui_*
-.env.agent
-node_modules/
+
+# Local generated files
+kemet_checkout_url.txt
+
+# Kemet repository hygiene quarantine and generated local diagnostics
+.kemet_archive/
+*.pytest_cache/
+*.pytest_cache
+*.full.log
+phase*_full.log
+kemet_full_pytest.log
+
+# Explicit Kemet local backup directories (never commit)
+app/templates.backup_*/
+app/core/execution.backup_before_central_gate_20260905_210513/
+
+# Generated/runtime artifacts — never package or commit
+.pytest_cache/
+runtime_logs/
+uploads/
+*.pyc
+*.bak
+*.bak2
+*.bak3
+*.backup
+*.backup_*
+*.orig
+*_failed
+__pycache__
+.venv

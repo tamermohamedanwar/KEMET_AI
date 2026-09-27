@@ -356,6 +356,59 @@ def execution_approve():
         }), 500
 
 
+@app.post("/termux/run")
+def termux_run():
+    if not authorized():
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    operation = str(data.get("operation") or "").strip()
+    plan = data.get("plan")
+    authorization = data.get("authorization")
+    action = str(data.get("action") or "").strip()
+    if operation not in {"health", "test_health", "compile", "git_status"}:
+        return jsonify({"ok": False, "error": "termux_operation_not_allowed"}), 403
+    if action != "termux_engineering":
+        return jsonify({"ok": False, "error": "termux_action_binding_invalid"}), 403
+    if not isinstance(plan, dict) or not isinstance(authorization, dict) or not action:
+        return jsonify({"ok": False, "error": "termux_execution_binding_required"}), 403
+    response = requests.post(
+        f"{AGENT_URL}/governed/run",
+        headers={"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"},
+        json={"operation": operation, "plan": plan, "authorization": authorization, "action": action},
+        timeout=125,
+    )
+    try:
+        body = response.json()
+    except ValueError:
+        body = {"ok": False, "error": "invalid_agent_response", "raw": response.text}
+    return jsonify(body), response.status_code
+
+
+@app.post("/termux/artifact")
+def termux_artifact():
+    if not authorized():
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    artifacts = data.get("artifacts")
+    plan = data.get("plan")
+    authorization = data.get("authorization")
+    action = str(data.get("action") or "").strip()
+    preview_digest = str(data.get("preview_digest") or "").strip()
+    if action != "artifact_write":
+        return jsonify({"ok": False, "error": "artifact_action_binding_invalid"}), 403
+    if not isinstance(artifacts, list) or not artifacts:
+        return jsonify({"ok": False, "error": "artifact_binding_required"}), 403
+    if not isinstance(plan, dict) or not isinstance(authorization, dict):
+        return jsonify({"ok": False, "error": "artifact_execution_binding_required"}), 403
+    if not preview_digest:
+        return jsonify({"ok": False, "error": "artifact_preview_binding_required"}), 403
+    return bridge_proxy("/governed/artifact", {
+        "artifacts": artifacts, "plan": plan, "authorization": authorization,
+        "action": action, "preview_digest": preview_digest,
+    }, timeout=130)
+
+
 @app.post("/execution/run")
 def execution_run():
     if not authorized():
@@ -431,8 +484,11 @@ def execution_run():
         canonical_plan = dict(plan)
         canonical_plan["action"] = action
         canonical_plan["command"] = command
-        canonical_plan["parameters"] = {}
-        canonical_plan["data"] = {"engineering_command": command}
+        canonical_plan["parameters"] = dict(plan.get("parameters") or {})
+        canonical_plan["data"] = {
+            "engineering_command": command,
+            "operation": canonical_plan["parameters"].get("operation"),
+        }
 
         result = canonical_execution_runtime.execute(
             plan=canonical_plan,

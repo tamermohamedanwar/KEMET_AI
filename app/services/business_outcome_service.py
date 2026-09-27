@@ -12,16 +12,16 @@ from app.services.capability_registry import capability_registry
 class BusinessOutcomeService:
     """Read-only executive outcome layer for Kemet BOS."""
 
-    VERSION = "1.0"
+    VERSION = "2.0"
 
     @classmethod
-    def capture_snapshot(cls, organization_id: int | None, period: str = "30d") -> Dict[str, Any]:
+    def capture_snapshot(cls, organization_id: int | None, period: str = "30d", execution_identity: Dict[str, Any] | None = None) -> Dict[str, Any]:
         """Capture a read-only KPI baseline for a governed execution."""
         if not organization_id:
             return {"success": False, "error": "organization_required"}
         period = period if period in KPIService.PERIODS else "30d"
         kpis = KPIService.get_kpis(organization_id=organization_id, period=period)
-        return {
+        result = {
             "success": True,
             "period": period,
             "captured_at": datetime.utcnow().isoformat(),
@@ -34,15 +34,28 @@ class BusinessOutcomeService:
                 "tickets_closed": kpis.get("support", {}).get("tickets_closed", 0),
             },
         }
+        if execution_identity:
+            result["execution_identity"] = dict(execution_identity)
+        return result
 
     @classmethod
-    def build_execution_outcome(cls, organization_id: int | None, capability_id: str, baseline: Dict[str, Any], period: str = "30d") -> Dict[str, Any]:
+    def build_execution_outcome(cls, organization_id: int | None, capability_id: str, baseline: Dict[str, Any], period: str = "30d", execution_identity: Dict[str, Any] | None = None) -> Dict[str, Any]:
         """Produce an observational execution outcome receipt; never claims causality."""
         if not organization_id:
             return {"success": False, "error": "organization_required"}
         if not capability_registry.get(capability_id):
             return {"success": False, "error": "capability_not_found"}
-        current = cls.capture_snapshot(organization_id, period)
+        if not execution_identity or not isinstance(execution_identity, dict):
+            return {"success": False, "error": "execution_identity_required"}
+        required_identity = ("organization_id", "workflow_id", "execution_id", "execution_key", "idempotency_key")
+        if any(execution_identity.get(key) in (None, "") for key in required_identity):
+            return {"success": False, "error": "execution_identity_incomplete"}
+        if int(execution_identity["organization_id"]) != int(organization_id):
+            return {"success": False, "error": "execution_identity_tenant_mismatch"}
+        baseline_identity = (baseline or {}).get("execution_identity")
+        if baseline_identity != execution_identity:
+            return {"success": False, "error": "baseline_execution_identity_mismatch"}
+        current = cls.capture_snapshot(organization_id, period, execution_identity=execution_identity)
         if not current.get("success"):
             return current
         before = (baseline or {}).get("metrics", {})
@@ -51,9 +64,10 @@ class BusinessOutcomeService:
         return {
             "success": True,
             "engine": "kemet_execution_outcome",
-            "version": "1.0",
+            "version": "2.0",
             "organization_id": organization_id,
             "capability_id": capability_id,
+            "execution_identity": dict(execution_identity),
             "baseline": baseline,
             "measurement": attribution.get("measurement", {}),
             "observed": attribution.get("observed", {}),

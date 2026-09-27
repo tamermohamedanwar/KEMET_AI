@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-from flask_login import current_user, login_required
+from flask_login import current_user
+from app.admin.decorators import admin_required
 
 from app.services.revenue_command_service import (
     RevenueCommandService,
@@ -16,7 +17,7 @@ admin_revenue = Blueprint(
     "/admin/revenue",
     methods=["GET"],
 )
-@login_required
+@admin_required
 def revenue_dashboard():
     period = (
         request.args.get(

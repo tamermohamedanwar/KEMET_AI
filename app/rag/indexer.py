@@ -8,13 +8,19 @@ class RAGIndexer:
         self,
         document_id: int,
         chunks: list[str],
+        organization_id: int,
     ):
-        document = Document.query.get(document_id)
+        organization_id = int(organization_id or 0)
+        if organization_id <= 0:
+            raise ValueError("organization_required")
+
+        document = Document.query.filter_by(
+            id=document_id,
+            organization_id=organization_id,
+        ).first()
 
         if not document:
-            raise ValueError(
-                f"Document {document_id} not found"
-            )
+            raise ValueError("document_not_found_or_tenant_mismatch")
 
         DocumentChunk.query.filter_by(
             document_id=document.id

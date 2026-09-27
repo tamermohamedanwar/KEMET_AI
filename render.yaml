@@ -3,9 +3,22 @@ services:
     name: kemet-ai
     runtime: python
     buildCommand: pip install -r requirements.txt
+    preDeployCommand: flask --app app db upgrade
     startCommand: gunicorn -w 1 -b 0.0.0.0:$PORT "app:create_app()"
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.15
       - key: PAYMENT_MODE
         value: paymob
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kemet-ai-db
+          property: connectionString
+
+databases:
+  - name: kemet-ai-db
+    plan: 0.1c-256mb
+    region: frankfurt
+    postgresMajorVersion: "18"
+    connectionPool: none

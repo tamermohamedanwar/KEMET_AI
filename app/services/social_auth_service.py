@@ -79,7 +79,7 @@ def _get_or_create_user(
     return user
 
 
-def google_authorize_url():
+def google_authorize_url(*, state: str):
     client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()
     redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "").strip()
 
@@ -93,6 +93,7 @@ def google_authorize_url():
         "scope": "openid email profile",
         "access_type": "offline",
         "prompt": "select_account",
+        "state": state,
     }
 
     return (
@@ -157,7 +158,7 @@ def google_login(code):
     )
 
 
-def facebook_authorize_url():
+def facebook_authorize_url(*, state: str):
     client_id = os.getenv("FACEBOOK_CLIENT_ID", "").strip()
     redirect_uri = os.getenv("FACEBOOK_REDIRECT_URI", "").strip()
 
@@ -169,6 +170,7 @@ def facebook_authorize_url():
         "redirect_uri": redirect_uri,
         "response_type": "code",
         "scope": "email,public_profile",
+        "state": state,
     }
 
     return (

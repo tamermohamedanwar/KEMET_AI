@@ -71,5 +71,7 @@ class Ticket(db.Model):
         default=datetime.utcnow
     )
 
+    __table_args__ = (db.Index("ix_tickets_org_created_status", "organization_id", "created_at", "status"),)
+
     def __repr__(self):
         return f"<Ticket {self.id}>"

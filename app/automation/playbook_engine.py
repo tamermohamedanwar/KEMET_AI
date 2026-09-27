@@ -83,7 +83,7 @@ class PlaybookEngine:
                 "on_success": "continue",
                 "on_failure": "stop",
                 "risk": "high" if step_action in {"refund_request", "send_notification", "sales_follow_up"} else "low",
-                "requires_approval": step_action == "refund_request",
+                "requires_approval": step_action in {"refund_request", "sales_follow_up"},
                 "condition": "previous.success == true" if position > 1 else "always",
                 "retry_policy": {"max_attempts": 2, "backoff_seconds": 1, "retry_on": ["transient_error"]},
                 "result_mapping": {"previous_result": "previous_result", "workflow_steps": "workflow_context.steps"},

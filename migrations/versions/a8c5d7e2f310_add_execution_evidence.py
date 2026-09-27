@@ -13,6 +13,10 @@ depends_on = None
 
 
 def upgrade():
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if inspector.has_table("execution_evidence"):
+        return
     op.create_table(
         "execution_evidence",
         sa.Column("id", sa.Integer(), primary_key=True),

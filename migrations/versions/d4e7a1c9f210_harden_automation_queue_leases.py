@@ -14,10 +14,17 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column("automation_queue_jobs", sa.Column("lease_owner", sa.String(length=255), nullable=True))
-    op.add_column("automation_queue_jobs", sa.Column("deadline_at", sa.DateTime(), nullable=True))
-    op.create_index("ix_automation_queue_jobs_lease_owner", "automation_queue_jobs", ["lease_owner"], unique=False)
-    op.create_index("ix_automation_queue_jobs_deadline_at", "automation_queue_jobs", ["deadline_at"], unique=False)
+    bind = op.get_bind()
+    columns = {c["name"] for c in sa.inspect(bind).get_columns("automation_queue_jobs")}
+    if "lease_owner" not in columns:
+        op.add_column("automation_queue_jobs", sa.Column("lease_owner", sa.String(length=255), nullable=True))
+    if "deadline_at" not in columns:
+        op.add_column("automation_queue_jobs", sa.Column("deadline_at", sa.DateTime(), nullable=True))
+    indexes = {i["name"] for i in sa.inspect(bind).get_indexes("automation_queue_jobs")}
+    if "ix_automation_queue_jobs_lease_owner" not in indexes:
+        op.create_index("ix_automation_queue_jobs_lease_owner", "automation_queue_jobs", ["lease_owner"], unique=False)
+    if "ix_automation_queue_jobs_deadline_at" not in indexes:
+        op.create_index("ix_automation_queue_jobs_deadline_at", "automation_queue_jobs", ["deadline_at"], unique=False)
 
 
 def downgrade():

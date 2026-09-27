@@ -1,13 +1,17 @@
 import os
 from decimal import Decimal
+import os
 
 import requests
 
 from app import db
 from app.models.payment import Payment
 from app.models.subscription import Subscription
+from app.models.revenue_pipeline import RevenuePipelineRecord
 from app.services.exchange_rate_service import convert_usd_to_egp
+from app.services.revenue_pipeline_service import revenue_pipeline_service
 from app.config.plans import PLAN_DETAILS, PAID_PLANS
+from app.core.payment_secret import encrypt_payment_token, get_payment_token
 
 
 
@@ -232,7 +236,7 @@ def create_checkout(organization_id, plan):
 
     payment.checkout_id = str(order_id)
     payment.provider_order_id = str(order_id)
-    payment.client_secret = payment_token
+    payment.client_secret_encrypted = encrypt_payment_token(payment_token)
 
     checkout_url = (
         f"https://accept.paymob.com/api/acceptance/iframes/"
@@ -362,3 +366,80 @@ def refund_payment(payment, amount=None):
         "provider": "paymob",
         "provider_response": refund_data,
     }
+
+
+def create_commercial_checkout(*, organization_id: int, pipeline_key: str, amount, currency: str = "EGP", label: str = "Kemet Document Intelligence — First Customer Pilot"):
+    """Create a real Paymob checkout bound to one existing commercial pipeline.
+
+    This is intentionally separate from subscription checkout while reusing the
+    canonical Payment model/provider and revenue-pipeline lifecycle.
+    """
+    from app.models.revenue_pipeline import RevenuePipelineRecord
+
+    org_id = int(organization_id)
+    amount_dec = Decimal(str(amount)).quantize(Decimal("0.01"))
+    currency = str(currency or "").strip().upper()
+    if amount_dec <= 0 or currency != "EGP":
+        raise ValueError("invalid_commercial_payment_amount")
+
+    pipeline = RevenuePipelineRecord.query.filter_by(
+        organization_id=org_id, pipeline_key=str(pipeline_key)
+    ).first()
+    if not pipeline:
+        raise ValueError("revenue_pipeline_not_found")
+    expected = Decimal(str(pipeline.quoted_amount or 0)).quantize(Decimal("0.01"))
+    if expected != amount_dec or str(pipeline.currency or "EGP").upper() != currency:
+        raise ValueError("commercial_payment_amount_mismatch")
+    if pipeline.stage == "proposal":
+        from app.services.revenue_pipeline_service import revenue_pipeline_service
+        revenue_pipeline_service.advance(organization_id=org_id, pipeline_key=str(pipeline_key), stage="awaiting_payment")
+        db.session.refresh(pipeline)
+    if pipeline.stage != "awaiting_payment":
+        raise ValueError("commercial_payment_requires_awaiting_payment")
+    if pipeline.payment_id:
+        existing = db.session.get(Payment, int(pipeline.payment_id))
+        if existing and existing.status == "pending" and existing.checkout_id:
+            integration_id = get_paymob_integration_id()
+            payment_token = get_payment_token(existing)
+            return {"status": "ready", "payment_id": existing.id, "checkout_id": existing.checkout_id, "checkout_url": f"https://accept.paymob.com/api/acceptance/iframes/{integration_id}?payment_token={payment_token}"}
+        raise ValueError("commercial_payment_already_bound")
+
+    if os.getenv("PAYMENT_MODE", "mock").strip().lower() == "mock":
+        raise RuntimeError("commercial_payments_require_paymob")
+    if not paymob_configured():
+        raise RuntimeError("Paymob is not configured")
+
+    integration_id = get_paymob_integration_id()
+    payment = Payment(organization_id=org_id, plan="document_pilot", amount=amount_dec, currency=currency, status="pending", provider="paymob")
+    db.session.add(payment)
+    db.session.flush()
+    amount_cents = int(amount_dec * 100)
+    try:
+        api_key = os.getenv("PAYMOB_API_KEY", "").strip()
+        auth_response = requests.post("https://accept.paymob.com/api/auth/tokens", json={"api_key": api_key}, timeout=20)
+        if auth_response.status_code != 201:
+            raise RuntimeError(f"Paymob authentication failed ({auth_response.status_code})")
+        token = auth_response.json().get("token")
+        if not token:
+            raise RuntimeError("Paymob did not return auth token")
+        order_response = requests.post("https://accept.paymob.com/api/ecommerce/orders", headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}, json={"auth_token": token, "delivery_needed": False, "amount_cents": amount_cents, "currency": currency, "items": [{"name": label, "amount_cents": amount_cents, "description": label, "quantity": 1}]}, timeout=20)
+        if order_response.status_code not in (200, 201):
+            raise RuntimeError(f"Paymob order failed ({order_response.status_code})")
+        order_id = order_response.json().get("id")
+        if not order_id:
+            raise RuntimeError("Paymob did not return order ID")
+        payment_response = requests.post("https://accept.paymob.com/api/acceptance/payment_keys", json={"auth_token": token, "amount_cents": amount_cents, "expiration": 3600, "order_id": order_id, "billing_data": {"apartment": "NA", "email": "customer@example.com", "floor": "NA", "first_name": "Kemet", "street": "NA", "building": "NA", "phone_number": "NA", "shipping_method": "NA", "postal_code": "NA", "city": "Cairo", "country": "EG", "last_name": "AI", "state": "Cairo"}, "currency": currency, "integration_id": integration_id}, timeout=20)
+        if payment_response.status_code not in (200, 201):
+            raise RuntimeError(f"Paymob payment key failed ({payment_response.status_code})")
+        payment_token = payment_response.json().get("token")
+        if not payment_token:
+            raise RuntimeError("Paymob did not return payment token")
+        payment.checkout_id = str(order_id)
+        payment.provider_order_id = str(order_id)
+        payment.client_secret_encrypted = encrypt_payment_token(payment_token)
+        pipeline.payment_id = payment.id
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise
+    return {"status": "ready", "payment_id": payment.id, "checkout_id": payment.checkout_id, "checkout_url": f"https://accept.paymob.com/api/acceptance/iframes/{integration_id}?payment_token={get_payment_token(payment)}", "pipeline_key": str(pipeline_key), "amount": float(amount_dec), "currency": currency}

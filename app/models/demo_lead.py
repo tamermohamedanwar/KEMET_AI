@@ -96,6 +96,21 @@ class DemoLead(db.Model):
         nullable=True,
     )
 
+    tenant_id = db.Column(
+        db.Integer,
+        db.ForeignKey("organizations.id"),
+        nullable=True,
+        index=True,
+    )
+
+    provenance = db.Column(db.JSON, nullable=True)
+    freshness_at = db.Column(db.DateTime, nullable=True, index=True)
+    confidence = db.Column(db.Float, nullable=False, default=0.0)
+    evidence_digest = db.Column(db.String(64), nullable=True, index=True)
+    dedup_key = db.Column(db.String(64), nullable=True, index=True)
+    qualification_status = db.Column(db.String(30), nullable=True, index=True)
+    qualification_reason = db.Column(db.Text, nullable=True)
+
     created_at = db.Column(
         db.DateTime,
         server_default=db.func.now(),
@@ -108,3 +123,5 @@ class DemoLead(db.Model):
         onupdate=db.func.now(),
         nullable=False,
     )
+
+    __table_args__ = (db.Index("ix_demo_leads_org_created_status", "organization_id", "created_at", "status"),)

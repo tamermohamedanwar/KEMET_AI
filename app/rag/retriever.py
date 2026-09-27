@@ -57,18 +57,7 @@ class RAGRetriever:
             if matched:
                 return matched
 
-        # Fallback:
-        # If the query does not contain words matching the documents,
-        # return chunks from the user's organization.
-        return (
-            search_query
-            .order_by(
-                DocumentChunk.document_id.asc(),
-                DocumentChunk.chunk_index.asc(),
-            )
-            .limit(limit)
-            .all()
-        )
+        return []
 
     def count(self, organization_id=None):
         query = (

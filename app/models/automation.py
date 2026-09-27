@@ -169,6 +169,8 @@ class AutomationExecution(db.Model):
         nullable=False,
     )
 
+    __table_args__ = (db.Index("ix_automation_executions_created_workflow_status", "created_at", "workflow_id", "status"),)
+
     def __repr__(self):
         return f"<AutomationExecution {self.id} {self.status}>"
 

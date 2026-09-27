@@ -50,6 +50,10 @@ class ExecutionAuthorizationService:
             "plan_hash",
             "authorization",
             "_approved_execution",
+            "execution_envelope",
+            "approval_package_hash",
+            "approval_decision_hash",
+            "central_gate_handoff_hash",
         }
 
         def sanitize(value):
@@ -66,11 +70,40 @@ class ExecutionAuthorizationService:
             return value
 
         clean = sanitize(dict(plan))
+        if {"task_id", "organization_id", "task_type", "risk", "steps"}.issubset(clean):
+            from dataclasses import asdict
+            from app.core.task_planner import PlannedStep
+            normalized_steps = []
+            for item in clean.get("steps") or []:
+                if not isinstance(item, dict):
+                    normalized_steps.append(item)
+                    continue
+                normalized_steps.append(
+                    asdict(
+                        PlannedStep(
+                            step_id=str(item.get("step_id") or ""),
+                            objective=str(item.get("objective") or ""),
+                            action=str(item.get("action") or ""),
+                            risk=str(item.get("risk") or ""),
+                            requires_approval=bool(item.get("requires_approval")),
+                            depends_on=tuple(item.get("depends_on") or ()),
+                            capabilities=frozenset(item.get("capabilities") or ()),
+                            parameters=dict(item.get("parameters") or {}),
+                        )
+                    )
+                )
+            clean = {
+                "task_id": clean.get("task_id"),
+                "organization_id": clean.get("organization_id"),
+                "task_type": clean.get("task_type"),
+                "risk": clean.get("risk"),
+                "steps": normalized_steps,
+            }
 
         return json.dumps(
             clean,
             sort_keys=True,
-            separators=(",", ":"),
+            default=str,
             ensure_ascii=False,
         )
 
@@ -86,6 +119,8 @@ class ExecutionAuthorizationService:
         approver_id: Optional[int],
         expires_at: int,
         authorization_source: Optional[str] = None,
+        nonce: Optional[str] = None,
+        handoff_hash: Optional[str] = None,
     ) -> str:
         base = (
             f"{plan_id}:"
@@ -96,8 +131,11 @@ class ExecutionAuthorizationService:
         )
 
         if authorization_source == "governance_policy":
-            return f"{base}:governance_policy"
-
+            base = f"{base}:governance_policy"
+        if nonce:
+            base = f"{base}:{nonce}"
+        if handoff_hash:
+            base = f"{base}:handoff:{handoff_hash}"
         return base
 
     def create_authorization(
@@ -119,13 +157,17 @@ class ExecutionAuthorizationService:
 
         prepared_plan["plan_id"] = plan_id
 
-        action = str(
-            prepared_plan.get("action") or "unknown"
-        )
+        action = str(prepared_plan.get("action") or "").strip()
+        if not action:
+            steps = prepared_plan.get("steps") or []
+            if isinstance(steps, list) and steps:
+                action = str((steps[0] or {}).get("action") or "").strip()
+        action = action or "unknown"
 
         digest = self.plan_hash(prepared_plan)
 
         expires_at = int(time.time()) + TOKEN_TTL_SECONDS
+        nonce = secrets.token_hex(16)
 
         payload = self._token_payload(
             plan_id,
@@ -133,6 +175,7 @@ class ExecutionAuthorizationService:
             action,
             approver_id,
             expires_at,
+            nonce=nonce,
         )
 
         token = hmac.new(
@@ -150,6 +193,71 @@ class ExecutionAuthorizationService:
             "approver_id": approver_id,
             "expires_at": expires_at,
             "one_time": True,
+            "nonce": nonce,
+        }
+
+    def create_handoff_authorization(
+        self,
+        plan: Dict[str, Any],
+        handoff: Any,
+    ) -> Dict[str, Any]:
+        if not isinstance(plan, dict):
+            return {"authorized": False, "error": "execution_plan_required"}
+        if handoff is None:
+            return {"authorized": False, "error": "gate_handoff_required"}
+        from app.core.central_gate_handoff import verify_gate_handoff
+
+        action = str(getattr(handoff, "action", "") or "").strip()
+        execution_key = str(getattr(handoff, "execution_key", "") or "").strip()
+        handoff_hash = str(getattr(handoff, "handoff_hash", "") or "").strip()
+        organization_id = getattr(handoff, "organization_id", None)
+        if not action or not execution_key or not handoff_hash:
+            return {"authorized": False, "error": "gate_handoff_binding_required"}
+        if organization_id is None or int(plan.get("organization_id") or 0) != int(organization_id):
+            return {"authorized": False, "error": "gate_tenant_mismatch"}
+        expected_hash = self.plan_hash(plan)
+        if expected_hash != str(getattr(handoff, "plan_hash", "") or ""):
+            return {"authorized": False, "error": "gate_plan_mismatch"}
+        if not verify_gate_handoff(
+            handoff,
+            organization_id=int(organization_id),
+            plan_hash=expected_hash,
+            action=action,
+            execution_key=execution_key,
+        ):
+            return {"authorized": False, "error": "gate_handoff_invalid"}
+        if not self.secret:
+            return {"authorized": False, "error": "execution_secret_not_configured"}
+
+        approver_id = int(getattr(handoff, "approver_id", 0) or 0)
+        expires_at = int(time.time()) + TOKEN_TTL_SECONDS
+        nonce = secrets.token_hex(16)
+        plan_id = str(plan.get("plan_id") or plan.get("task_id") or plan.get("id") or secrets.token_hex(12))
+        prepared_plan = dict(plan)
+        prepared_plan["plan_id"] = plan_id
+        digest = self.plan_hash(prepared_plan)
+        if digest != expected_hash:
+            return {"authorized": False, "error": "gate_plan_id_binding_mismatch"}
+        payload = self._token_payload(
+            plan_id, digest, action, approver_id, expires_at,
+            nonce=nonce, handoff_hash=handoff_hash,
+        )
+        token = hmac.new(
+            self.secret.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256
+        ).hexdigest()
+        return {
+            "authorized": True,
+            "token": token,
+            "plan_id": plan_id,
+            "plan_hash": digest,
+            "action": action,
+            "approver_id": approver_id,
+            "expires_at": expires_at,
+            "one_time": True,
+            "nonce": nonce,
+            "execution_key": execution_key,
+            "handoff_hash": handoff_hash,
+            "authorization_source": "human_approval",
         }
 
     def create_policy_authorization(
@@ -197,6 +305,7 @@ class ExecutionAuthorizationService:
 
         digest = self.plan_hash(prepared_plan)
         expires_at = int(time.time()) + TOKEN_TTL_SECONDS
+        nonce = secrets.token_hex(16)
 
         payload = self._token_payload(
             plan_id,
@@ -205,6 +314,7 @@ class ExecutionAuthorizationService:
             None,
             expires_at,
             authorization_source="governance_policy",
+            nonce=nonce,
         )
 
         token = hmac.new(
@@ -224,6 +334,7 @@ class ExecutionAuthorizationService:
             "one_time": True,
             "authorization_source": "governance_policy",
             "governance_policy": policy,
+            "nonce": nonce,
         }
 
     def verify(
@@ -325,7 +436,27 @@ class ExecutionAuthorizationService:
             authorization.get("authorization_source") or ""
         ).strip()
 
-        if authorization_source == "governance_policy":
+        if authorization_source == "human_approval":
+            handoff_hash = str(authorization.get("handoff_hash") or "").strip()
+            if not handoff_hash:
+                return {
+                    "authorized": False,
+                    "error": "handoff_hash_required",
+                }
+
+        if authorization_source == "human_approval":
+            if not str(authorization.get("handoff_hash") or "").strip():
+                return {
+                    "authorized": False,
+                    "error": "handoff_hash_required",
+                }
+            if not str(authorization.get("execution_key") or "").strip():
+                return {
+                    "authorized": False,
+                    "error": "execution_key_required",
+                }
+
+        elif authorization_source == "governance_policy":
             governance_policy = str(
                 authorization.get("governance_policy") or ""
             ).strip()
@@ -361,6 +492,8 @@ class ExecutionAuthorizationService:
             approver_id,
             expires_at,
             authorization_source=authorization_source or None,
+            nonce=str(authorization.get("nonce") or "") or None,
+            handoff_hash=str(authorization.get("handoff_hash") or "") or None,
         )
 
         expected_token = hmac.new(

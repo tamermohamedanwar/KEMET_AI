@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from app.core.context.live_business_data import LiveBusinessData
 from app.core.decision import DecisionEngine
 from app.core.orchestration.command_center_wiring import KemetCommandCenterWiring
+from app.services.sales_support_command_center import sales_support_command_center
 
 kemet_decision_center_bp = Blueprint("kemet_decision_center", __name__)
 
@@ -20,6 +21,8 @@ def decision_center():
     wiring = KemetCommandCenterWiring()
     live_context = wiring.live_context(organization_id=organization_id)
 
+    sales_support = sales_support_command_center.snapshot(organization_id=organization_id)
+
     decision_result = DecisionEngine().decide(
         command="Review my business",
         live_context=live_context,
@@ -31,6 +34,7 @@ def decision_center():
         user_id=user_id,
         metrics=live.to_dict(),
         decision=decision_result["decision"],
+        sales_support=sales_support,
         governance={
             "mode": "advisory",
             "approval_required": True,

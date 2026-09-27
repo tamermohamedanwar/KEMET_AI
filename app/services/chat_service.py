@@ -15,10 +15,19 @@ class ChatService:
         self,
         message: str,
         user_id=None,
+        organization_id=None,
         conversation_id=None,
     ) -> tuple[str, int]:
 
         message = message.strip()
+        organization_id = int(organization_id or 0)
+
+        if organization_id <= 0:
+            raise ValueError("organization_required")
+        if not user_id or not User.query.filter_by(
+            id=user_id, organization_id=organization_id
+        ).first():
+            raise ValueError("tenant_mismatch")
 
         if not message:
             return "من فضلك اكتب رسالة.", conversation_id
@@ -26,23 +35,23 @@ class ChatService:
         if conversation_id is None:
             conversation = Conversation(
                 user_id=user_id,
+                organization_id=organization_id,
                 title=message[:50] or "محادثة جديدة",
             )
             db.session.add(conversation)
             db.session.flush()
         else:
-            conversation = Conversation.query.filter_by(id=conversation_id).first()
+            conversation = Conversation.query.filter_by(
+                id=conversation_id,
+                user_id=user_id,
+                organization_id=organization_id,
+            ).first()
 
             if conversation and user_id and conversation.user_id != user_id:
                 conversation = None
 
             if conversation is None:
-                conversation = Conversation(
-                    user_id=user_id,
-                    title=message[:50] or "محادثة جديدة",
-                )
-                db.session.add(conversation)
-                db.session.flush()
+                raise ValueError("conversation_not_found")
 
         history = ChatMessage.query.filter_by(
             conversation_id=conversation.id

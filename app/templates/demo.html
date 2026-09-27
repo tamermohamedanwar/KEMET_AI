@@ -1,153 +1,66 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 {% include "partials/kemet-white-ui.html" %}
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Kemet AI Demo</title>
-
-<style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-font-family:Tahoma,Arial;
-background:#08111f;
-color:white;
-padding:40px 20px;
-}
-
-.container{
-max-width:700px;
-margin:auto;
-background:#111827;
-padding:40px;
-border-radius:20px;
-border:1px solid #1e293b;
-}
-
-h1{
-text-align:center;
-margin-bottom:20px;
-}
-
-p{
-text-align:center;
-color:#cbd5e1;
-line-height:1.8;
-margin-bottom:30px;
-}
-
-input,textarea{
-width:100%;
-padding:15px;
-margin-bottom:15px;
-border-radius:10px;
-border:1px solid #334155;
-background:#0f172a;
-color:white;
-}
-
-textarea{
-height:130px;
-resize:none;
-}
-
-button{
-width:100%;
-padding:15px;
-border:0;
-border-radius:10px;
-background:#374151;
-color:white;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.features{
-margin-top:30px;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-}
-
-.card{
-background:#0f172a;
-padding:20px;
-border-radius:12px;
-text-align:center;
-}
-
-.card p{
-font-size:14px;
-margin:10px 0 0;
-}
-
-</style>
-
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kemet — احجز عرضًا عمليًا</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
-<script defer src="{{ url_for('static', filename='js/kemet-ui.js') }}"></script>
-
-
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-modern.css') }}">
+<style>
+body{font-family:Tahoma,Arial,sans-serif;background:#f7f9fc;color:#102033;padding:28px 16px}
+.container{max-width:980px;margin:auto}
+.hero{background:#fff;border:1px solid #e4e9f0;border-radius:24px;padding:38px;box-shadow:0 14px 40px rgba(16,32,51,.07)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.04em;color:#64748b;margin-bottom:10px}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.2;margin:0 0 14px}
+.lead{font-size:18px;line-height:1.9;color:#526174;max-width:760px;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px}
+form{display:grid;gap:14px}
+label{font-weight:700;font-size:14px;margin-bottom:-6px}
+input,textarea{width:100%;padding:14px;border:1px solid #cfd8e3;border-radius:12px;background:#fff;color:#102033;font:inherit}
+input:focus,textarea:focus{outline:2px solid #cbd5e1;border-color:#64748b}
+textarea{min-height:130px;resize:vertical}
+button{padding:15px 20px;border:0;border-radius:12px;background:#102033;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+button:hover{opacity:.92}
+.note{font-size:13px;line-height:1.7;color:#64748b}
+.benefits{display:grid;gap:12px}
+.card{border:1px solid #e4e9f0;border-radius:16px;padding:18px;background:#fbfcfe}
+.card h3{margin:0 0 7px;font-size:16px}
+.card p{margin:0;color:#64748b;line-height:1.7;font-size:14px}
+.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+@media(max-width:760px){.hero{padding:24px}.grid{grid-template-columns:1fr}}
+</style>
 </head>
-
 <body>
-
 <div class="container">
-
-<h1>تجربة Kemet AI</h1>
-
-<p>
-اكتشف كيف يساعد الذكاء الاصطناعي فريق الدعم لديك
-في الرد على العملاء وإدارة التذاكر.
-</p>
-
-<form method="POST">
-
-<input name="company" placeholder="اسم الشركة">
-
-<input name="email" placeholder="البريد الإلكتروني">
-
-<textarea name="message" placeholder="حدثنا عن احتياجات الدعم لديك"></textarea>
-
-<button>
-طلب تجربة مجانية
-</button>
-
+<section class="hero">
+<div class="eyebrow">KEMET BUSINESS COMMAND CENTER</div>
+<h1>شغّل المبيعات والمتابعة من مكان واحد.</h1>
+<p class="lead">اطلب عرضًا عمليًا مخصصًا لنشاطك. سنراجع طريقة العمل الحالية، ونوضح أين يمكن لـ Kemet تقليل فرص ضياع العملاء وتحسين المتابعة والدعم.</p>
+<div class="grid">
+<div>
+<form method="POST" novalidate>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<label for="company">اسم الشركة *</label>
+<input id="company" name="company" required maxlength="150" value="{{ form.get('company','') }}" placeholder="مثال: شركة النور للتجارة">
+<label for="email">البريد الإلكتروني *</label>
+<input id="email" name="email" type="email" required maxlength="150" value="{{ form.get('email','') }}" placeholder="name@company.com">
+<label for="phone">رقم الهاتف</label>
+<input id="phone" name="phone" type="tel" maxlength="50" value="{{ form.get('phone','') }}" placeholder="01xxxxxxxxx">
+<label for="message">ما الذي تريد تحسينه؟</label>
+<textarea id="message" name="message" maxlength="4000" placeholder="مثال: لدينا عملاء محتملون كثيرون ونحتاج متابعة أفضل وتقارير أوضح.">{{ form.get('message','') }}</textarea>
+<button type="submit">احجز العرض العملي</button>
+<div class="note">لا نطلب منك تغيير أنظمتك الحالية. نبدأ بنطاق صغير قابل للقياس، ثم نوسع فقط إذا ظهر أثر تجاري واضح.</div>
 </form>
-
-
-<div class="features">
-
-<div class="card">
-🤖
-<h3>AI Support</h3>
-<p>ردود ذكية للعملاء</p>
 </div>
-
-<div class="card">
-🎫
-<h3>Tickets</h3>
-<p>إدارة الطلبات</p>
+<div class="benefits">
+<div class="card"><h3>🎯 أولوية المتابعة</h3><p>تحديد العملاء والفرص التي تستحق اهتمام الفريق أولًا.</p></div>
+<div class="card"><h3>📊 إشارات تجارية واضحة</h3><p>تلخيص ما يحدث في المبيعات والدعم بدل الاكتفاء بمحادثة عامة.</p></div>
+<div class="card"><h3>🤝 تشغيل تحت موافقة بشرية</h3><p>الإجراءات المؤثرة خارجيًا تمر عبر مسار موافقة واضح قبل التنفيذ.</p></div>
+<div class="card"><h3>🚀 بداية سريعة</h3><p>يمكن بدء التجربة ببيانات CSV أو Excel قبل أي تكاملات معقدة.</p></div>
 </div>
-
-<div class="card">
-📚
-<h3>RAG</h3>
-<p>معرفة خاصة بالشركة</p>
 </div>
-
+</section>
 </div>
-
-</div>
-
 </body>
 </html>

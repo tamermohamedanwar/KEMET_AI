@@ -35,3 +35,5 @@ class AIUsage(db.Model):
         db.DateTime,
         server_default=db.func.now()
     )
+
+    __table_args__ = (db.Index("ix_ai_usage_org_created", "organization_id", "created_at"),)

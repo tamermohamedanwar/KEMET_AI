@@ -19,6 +19,7 @@ def chat_api():
     reply, conversation_id = service.generate_reply(
         message=message,
         user_id=current_user.id,
+        organization_id=current_user.organization_id,
         conversation_id=conversation_id,
     )
 
