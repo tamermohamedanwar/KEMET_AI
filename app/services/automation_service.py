@@ -209,7 +209,7 @@ JSON:
             ticket = None
 
             if ticket_id:
-                ticket = Ticket.query.get(ticket_id)
+                ticket = db.session.get(Ticket, ticket_id)
 
             if ticket is None:
                 organization_id = parameters.get(
@@ -405,7 +405,7 @@ JSON:
 
             # Explicit ticket ID has priority.
             if ticket_id:
-                ticket = Ticket.query.get(ticket_id)
+                ticket = db.session.get(Ticket, ticket_id)
 
             # If no explicit ticket was supplied, use message hash.
             if ticket is None and organization_id and user_id:

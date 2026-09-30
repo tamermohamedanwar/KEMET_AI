@@ -78,3 +78,4 @@ instance/*.sqlite
 kemet_checkout_url.txt
 backup_paymob/
 backup_ui/
+ops/youtube_worker/node_modules/
