@@ -84,3 +84,8 @@ instance/production/
 *.mp4
 *.db
 *.db.*
+instance/*.rc
+instance/*.json
+instance/*.txt
+[STRIPPED 155 bytes]*
+instance/profit_first_sample_delivery/
