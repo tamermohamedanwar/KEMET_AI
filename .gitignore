@@ -1,91 +1,52 @@
+# Google/Stripe 12-factor - No binary in repo
+*.db
+*.db.*
+*.sqlite
+*.sqlite3
+*.mp4
+*.wav
+*.raw
+*.mp3
+*.mov
+*.zip
+*.tar
+*.gz
+
+# Node
+ops/youtube_worker/node_modules/
+ops/youtube_worker/dist/
+**/node_modules/
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
+.venv/
+venv/
 .env
 .env.*
 !.env.example
 
-# Local/generated runtime data
-instance/
-uploads/
-logs/
-runtime_logs/
-.kemet_runtime/
-.venv/
-node_modules/
-*.log
-*.db
-*.sqlite
-*.sqlite3
-
-# Archives and local backups
-*.tar.gz
-archive/
-audit/
-backups/
-backup_paymob/
-backup_ui/
-*.bak
-*.backup
-*.bak_*
-*.backup_*
-*.refund_backup
-*.paymob_backup_*
-*.before_kashier_*
-*.before_paymob_return_*
-
-# Local generated files
-kemet_checkout_url.txt
-
-# Kemet repository hygiene quarantine and generated local diagnostics
-.kemet_archive/
-*.pytest_cache/
-*.pytest_cache
-*.full.log
-phase*_full.log
-kemet_full_pytest.log
-
-# Explicit Kemet local backup directories (never commit)
-app/templates.backup_*/
-app/core/execution.backup_before_central_gate_20260905_210513/
-
-# Generated/runtime artifacts — never package or commit
-.pytest_cache/
-runtime_logs/
-uploads/
-*.pyc
-*.bak
-*.bak2
-*.bak3
-*.backup
-*.backup_*
-*.orig
-*_failed
-__pycache__
-.venv
-
-*.zip
-ops/youtube_state/client_secret.json
-ops/youtube_state/token.json
-
-.env
-.env.local
-.env.agent
-
-# final cleanup
-.kemet_runtime/
-instance/*.db
-instance/*.sqlite
-kemet_checkout_url.txt
-backup_paymob/
-backup_ui/
-ops/youtube_worker/node_modules/
-ops/youtube_queue/archive_mp4/
-instance/production/
-*.mp4
-*.db
-*.db.*
+# Kemet Runtime - Must be outside repo
 instance/*.rc
 instance/*.json
 instance/*.txt
-[STRIPPED 155 bytes]*
-instance/profit_first_sample_delivery/
+instance/*.bundle.rc
+[STRIPPED 155 bytes]*/
+[STRIPPED 77 bytes]/*/
+[STRIPPED 90 bytes]*/
+docs/archive/root_handoffs/
+~/Kemet_AI_large_backup_2026-09-30/
+
+# IDE
+.vscode/
+.idea/
+*.log
+app/core/audit/
+*.bak_*
+*.bak
+runtime_logs/
+uploads/
+docs/archive/
+requirements.lock
+
