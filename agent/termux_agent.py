@@ -26,7 +26,7 @@ ALLOWED_COMMANDS = {
     "health": ["true"],
     "git_status": ["git", "status", "--short"],
     "compile": [".venv/bin/python", "-m", "compileall", "-q", "app"],
-    "test_health": ["curl", "-sS", "http://127.0.0.1:8000/api/health"],
+    "test_health": ["curl", "-sS", "http://127.0.0.1:5000/api/health"],
 }
 
 
@@ -107,7 +107,7 @@ def governed_run():
     action = str(data.get("action") or "").strip()
     commands = {
         "health": ["true"],
-        "test_health": ["curl", "-sS", "http://127.0.0.1:8000/api/health"],
+        "test_health": ["curl", "-sS", "http://127.0.0.1:5000/api/health"],
         "compile": [".venv/bin/python", "-m", "compileall", "-q", "app", "agent"],
         "git_status": ["git", "status", "--short"],
     }

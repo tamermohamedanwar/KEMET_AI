@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Kemet · Salla → WhatsApp</title>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 18px;background:#f7f7f5;color:#171717}
+    .card{background:#fff;border:1px solid #ddd;border-radius:18px;padding:22px;margin:14px 0}
+    label{display:block;margin:12px 0 6px;font-weight:700}
+    input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:10px}
+    button{margin-top:18px;padding:12px 18px;border:0;border-radius:10px;cursor:pointer}
+    .muted{color:#666}.status{white-space:pre-wrap}
+    code{display:block;background:#f0f0ee;padding:12px;border-radius:10px;direction:ltr;text-align:left;overflow:auto}
+  </style>
+</head>
+<body>
+  <h1>Salla → WhatsApp</h1>
+  <p class="muted">منتج مستقل وبسيط: اربط Salla وWhatsApp، اختبر الإعداد، ثم يبدأ مسار الطلب الحاكم.</p>
+
+  <div class="card">
+    <h2>1. ربط الحسابات</h2>
+    <form id="connect">
+      <label>Salla Access Token</label>
+      <input name="salla_access_token" type="password" autocomplete="off" required>
+      <label>Salla Webhook Secret</label>
+      <input name="salla_webhook_secret" type="password" autocomplete="off" required>
+      <label>WhatsApp Cloud API Access Token</label>
+      <input name="whatsapp_access_token" type="password" autocomplete="off" required>
+      <label>WhatsApp Phone Number ID</label>
+      <input name="whatsapp_phone_number_id" autocomplete="off" required>
+      <label>WhatsApp App Secret <span class="muted">(اختياري)</span></label>
+      <input name="whatsapp_app_secret" type="password" autocomplete="off">
+      <button type="submit">حفظ مشفّر والتحقق</button>
+    </form>
+    <p id="result" class="status"></p>
+  </div>
+
+  <div class="card">
+    <h2>2. Webhook</h2>
+    <p>ضع الرابط التالي في إعدادات Webhooks في Salla:</p>
+    <code id="webhook">{{ webhook_path }}</code>
+    <p class="muted">التحقق يتم قبل قبول الحدث، ولا يوجد إرسال خارجي تلقائي من دون Human Approval.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. التشغيل</h2>
+    <p>Salla order → verification → normalization → idempotency → WhatsApp plan → Human Approval → Canonical Runtime → Worker → delivery evidence.</p>
+    <p class="muted">حالة الاتصال: <strong id="ready">جارٍ التحقق…</strong></p>
+  </div>
+
+<script>
+const form = document.getElementById("connect");
+const result = document.getElementById("result");
+const ready = document.getElementById("ready");
+async function status() {
+  const r = await fetch("/api/salla-whatsapp/status");
+  const d = await r.json();
+  ready.textContent = d.ready ? "جاهز" : "يحتاج إعداد";
+}
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const body = Object.fromEntries(new FormData(form).entries());
+  result.textContent = "جارٍ الحفظ والتحقق…";
+  const csrf = document.querySelector("meta[name=\"csrf-token\"]").content;
+  const r = await fetch("/api/salla-whatsapp/connect", {
+    method:"POST", headers:{"Content-Type":"application/json","X-CSRFToken":csrf}, body:JSON.stringify(body)
+  });
+  const d = await r.json();
+  if (d.success && d.verification && d.verification.verified) {
+    result.textContent = "تم الربط والتحقق من الإعداد المشفّر. جارٍ الرجوع إلى شاشة التشغيل…";
+    window.setTimeout(() => {
+      window.location.replace("/salla-whatsapp-onboarding?connected=1");
+    }, 350);
+    return;
+  }
+  result.textContent = d.success
+    ? "تم الحفظ؛ بعض عناصر التحقق ما زالت ناقصة."
+    : ("تعذر الإعداد: " + (d.error || "unknown_error"));
+  await status();
+});
+status().catch(() => ready.textContent = "تعذر قراءة الحالة");
+</script>
+</body>
+</html>

@@ -1,0 +1,668 @@
+{
+  "records": [
+    {
+      "document_id": "884bab0647e0ce22",
+      "document_type": "invoice",
+      "document_date": "2026-09-23",
+      "invoice_number": "V4-CLEAN",
+      "supplier_name": "Alpha Supplies",
+      "customer_name": "Demo Store",
+      "currency": "EGP",
+      "subtotal": "1000",
+      "tax": "140",
+      "total": "1140",
+      "payment_status": "unpaid",
+      "line_items": "",
+      "source_file": "clean_invoice.txt",
+      "source_page": "1",
+      "source_hash": "884bab0647e0ce2292196c80a4e360082a4df01fc684955830f2eddde43b959c",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "VALID",
+      "review_status": "NOT_REQUIRED",
+      "confidence": 0.95,
+      "field_confidence": {
+        "document_date": 0.95,
+        "invoice_number": 0.95,
+        "supplier_name": 0.95,
+        "customer_name": 0.95,
+        "currency": 0.95,
+        "subtotal": 0.95,
+        "tax": 0.95,
+        "total": 0.95,
+        "payment_status": 0.95
+      },
+      "field_sources": {
+        "document_date": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 2
+        },
+        "invoice_number": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 1
+        },
+        "supplier_name": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 3
+        },
+        "customer_name": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 4
+        },
+        "currency": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 5
+        },
+        "subtotal": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 6
+        },
+        "tax": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 7
+        },
+        "total": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 8
+        },
+        "payment_status": {
+          "source_file": "clean_invoice.txt",
+          "source_line": 9
+        }
+      }
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "document_type": "invoice",
+      "document_date": "2026-09-23",
+      "invoice_number": "V4-REVIEW",
+      "supplier_name": "Beta Supplies",
+      "customer_name": "Demo Store",
+      "currency": "EGP",
+      "subtotal": "1000",
+      "tax": "140",
+      "total": "1200",
+      "payment_status": "unpaid",
+      "line_items": "",
+      "source_file": "review_invoice.txt",
+      "source_page": "1",
+      "source_hash": "8b47303bf43253a934aece69df7a2853d76080585e3b637dcca94a0d311393c8",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "NEEDS_REVIEW",
+      "review_status": "PENDING",
+      "confidence": 0.95,
+      "field_confidence": {
+        "document_date": 0.95,
+        "invoice_number": 0.95,
+        "supplier_name": 0.95,
+        "customer_name": 0.95,
+        "currency": 0.95,
+        "subtotal": 0.95,
+        "tax": 0.95,
+        "total": 0.95,
+        "payment_status": 0.95
+      },
+      "field_sources": {
+        "document_date": {
+          "source_file": "review_invoice.txt",
+          "source_line": 2
+        },
+        "invoice_number": {
+          "source_file": "review_invoice.txt",
+          "source_line": 1
+        },
+        "supplier_name": {
+          "source_file": "review_invoice.txt",
+          "source_line": 3
+        },
+        "customer_name": {
+          "source_file": "review_invoice.txt",
+          "source_line": 4
+        },
+        "currency": {
+          "source_file": "review_invoice.txt",
+          "source_line": 5
+        },
+        "subtotal": {
+          "source_file": "review_invoice.txt",
+          "source_line": 6
+        },
+        "tax": {
+          "source_file": "review_invoice.txt",
+          "source_line": 7
+        },
+        "total": {
+          "source_file": "review_invoice.txt",
+          "source_line": 8
+        },
+        "payment_status": {
+          "source_file": "review_invoice.txt",
+          "source_line": 9
+        }
+      }
+    }
+  ],
+  "errors": [
+    {
+      "source_file": "duplicate_invoice.txt",
+      "errors": [
+        "duplicate_source_hash"
+      ]
+    },
+    {
+      "source_file": "review_invoice.txt",
+      "errors": [
+        "total_mismatch"
+      ]
+    }
+  ],
+  "summary": {
+    "files_received": 4,
+    "records_extracted": 2,
+    "valid_records": 1,
+    "needs_review": 1,
+    "duplicates_detected": 1,
+    "validation_failures": 2,
+    "processing_errors": 1
+  },
+  "failures": [
+    {
+      "source_file": "notes.txt",
+      "error": "unsupported_document_type"
+    }
+  ],
+  "intake": {
+    "manifest_version": "V4",
+    "files_received": 4,
+    "supported_files": 3,
+    "unsupported_files": 1,
+    "processing_failures": 1,
+    "coverage": {
+      "invoice": 3,
+      "unknown": 1
+    },
+    "status": "REVIEW_REQUIRED",
+    "honesty": "Coverage is limited to the document types explicitly supported by this run."
+  },
+  "rules": {},
+  "field_evidence": [
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "document_id",
+      "value": "884bab0647e0ce22",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "document_type",
+      "value": "invoice",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "document_date",
+      "value": "2026-09-23",
+      "source_page": "1",
+      "source_line": 2,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "invoice_number",
+      "value": "V4-CLEAN",
+      "source_page": "1",
+      "source_line": 1,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "supplier_name",
+      "value": "Alpha Supplies",
+      "source_page": "1",
+      "source_line": 3,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "customer_name",
+      "value": "Demo Store",
+      "source_page": "1",
+      "source_line": 4,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "currency",
+      "value": "EGP",
+      "source_page": "1",
+      "source_line": 5,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "subtotal",
+      "value": "1000",
+      "source_page": "1",
+      "source_line": 6,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "tax",
+      "value": "140",
+      "source_page": "1",
+      "source_line": 7,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "total",
+      "value": "1140",
+      "source_page": "1",
+      "source_line": 8,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "payment_status",
+      "value": "unpaid",
+      "source_page": "1",
+      "source_line": 9,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "source_file",
+      "value": "clean_invoice.txt",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "source_page",
+      "value": "1",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "source_hash",
+      "value": "884bab0647e0ce2292196c80a4e360082a4df01fc684955830f2eddde43b959c",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "extraction_status",
+      "value": "EXTRACTED",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "validation_status",
+      "value": "VALID",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "review_status",
+      "value": "NOT_REQUIRED",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "884bab0647e0ce22",
+      "source_file": "clean_invoice.txt",
+      "field": "confidence",
+      "value": 0.95,
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "document_id",
+      "value": "8b47303bf43253a9",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "document_type",
+      "value": "invoice",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "document_date",
+      "value": "2026-09-23",
+      "source_page": "1",
+      "source_line": 2,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "invoice_number",
+      "value": "V4-REVIEW",
+      "source_page": "1",
+      "source_line": 1,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "supplier_name",
+      "value": "Beta Supplies",
+      "source_page": "1",
+      "source_line": 3,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "customer_name",
+      "value": "Demo Store",
+      "source_page": "1",
+      "source_line": 4,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "currency",
+      "value": "EGP",
+      "source_page": "1",
+      "source_line": 5,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "subtotal",
+      "value": "1000",
+      "source_page": "1",
+      "source_line": 6,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "tax",
+      "value": "140",
+      "source_page": "1",
+      "source_line": 7,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "total",
+      "value": "1200",
+      "source_page": "1",
+      "source_line": 8,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "payment_status",
+      "value": "unpaid",
+      "source_page": "1",
+      "source_line": 9,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "source_file",
+      "value": "review_invoice.txt",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "source_page",
+      "value": "1",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "source_hash",
+      "value": "8b47303bf43253a934aece69df7a2853d76080585e3b637dcca94a0d311393c8",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "extraction_status",
+      "value": "EXTRACTED",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "validation_status",
+      "value": "NEEDS_REVIEW",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "review_status",
+      "value": "PENDING",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    },
+    {
+      "document_id": "8b47303bf43253a9",
+      "source_file": "review_invoice.txt",
+      "field": "confidence",
+      "value": 0.95,
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "NEEDS_REVIEW"
+    }
+  ],
+  "risk_center": [
+    {
+      "source_file": "duplicate_invoice.txt",
+      "document_id": "",
+      "code": "duplicate_source_hash",
+      "severity": "HIGH",
+      "action": "Human review required"
+    },
+    {
+      "source_file": "review_invoice.txt",
+      "document_id": "",
+      "code": "total_mismatch",
+      "severity": "HIGH",
+      "action": "Human review required"
+    },
+    {
+      "source_file": "notes.txt",
+      "document_id": "",
+      "code": "processing_error",
+      "severity": "CRITICAL",
+      "action": "Re-upload or inspect source file"
+    }
+  ],
+  "quality": {
+    "overall_quality_score": 37.5,
+    "dimensions": {
+      "completeness_pct": 50.0,
+      "validation_pass_pct": 50.0,
+      "integrity_pct": 0.0
+    },
+    "interpretation": "Review required",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "readiness_gate": {
+    "status": "BLOCKED",
+    "reasons": [
+      "processing_failure_or_unsupported_input"
+    ]
+  },
+  "client_report": {
+    "report_version": "V4",
+    "executive_summary": {
+      "files_received": 4,
+      "records_extracted": 2,
+      "valid_records": 1,
+      "records_needing_review": 1,
+      "duplicates_detected": 1
+    },
+    "quality": {
+      "overall_quality_score": 37.5,
+      "dimensions": {
+        "completeness_pct": 50.0,
+        "validation_pass_pct": 50.0,
+        "integrity_pct": 0.0
+      },
+      "interpretation": "Review required",
+      "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+    },
+    "readiness": {
+      "status": "BLOCKED",
+      "reasons": [
+        "processing_failure_or_unsupported_input"
+      ]
+    },
+    "risk_count": 3,
+    "evidence_count": 36,
+    "business_insights": {
+      "record_count": 2,
+      "total_value": 2340.0,
+      "average_value": 1170.0,
+      "supplier_count": 2,
+      "customer_count": 1,
+      "currencies": [
+        "EGP"
+      ],
+      "unpaid_or_pending_count": 2,
+      "high_or_critical_risk_count": 3,
+      "duplicate_count": 1,
+      "top_supplier_by_value": [
+        "Beta Supplies",
+        1200.0
+      ]
+    },
+    "action_plan": [
+      {
+        "priority": "P0",
+        "action": "Resolve critical processing/input failures before delivery.",
+        "reason": "Critical risks can block reliable processing."
+      },
+      {
+        "priority": "P1",
+        "action": "Review high-risk records and confirm source documents.",
+        "reason": "3 high/critical risk items detected."
+      },
+      {
+        "priority": "P1",
+        "action": "Confirm duplicate invoices before posting or payment.",
+        "reason": "1 duplicate candidates detected."
+      },
+      {
+        "priority": "P1",
+        "action": "Review unpaid or pending invoices for follow-up.",
+        "reason": "2 unpaid/pending records detected."
+      }
+    ],
+    "human_review_authoritative": true,
+    "no_accuracy_guarantee": true
+  },
+  "evidence": {
+    "pipeline": "SMART INTAKE -> CLASSIFY -> EXTRACT -> EVIDENCE -> NORMALIZE -> VALIDATE -> RISK -> REVIEW -> QUALITY -> DELIVERY",
+    "input_sha256": [
+      "884bab0647e0ce2292196c80a4e360082a4df01fc684955830f2eddde43b959c",
+      "884bab0647e0ce2292196c80a4e360082a4df01fc684955830f2eddde43b959c",
+      "9035e54c63126e306c057645d7d67ea3b022cc78e3efddd1ba553b8946059c20",
+      "8b47303bf43253a934aece69df7a2853d76080585e3b637dcca94a0d311393c8"
+    ],
+    "human_review_authoritative": true,
+    "confidence_is_heuristic": true
+  }
+}

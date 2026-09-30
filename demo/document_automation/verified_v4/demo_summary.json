@@ -1,0 +1,30 @@
+{
+  "report_version": "V4",
+  "executive_summary": {
+    "files_received": 4,
+    "records_extracted": 2,
+    "valid_records": 1,
+    "records_needing_review": 1,
+    "duplicates_detected": 1
+  },
+  "quality": {
+    "overall_quality_score": 37.5,
+    "dimensions": {
+      "completeness_pct": 50.0,
+      "validation_pass_pct": 50.0,
+      "integrity_pct": 0.0
+    },
+    "interpretation": "Review required",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "readiness": {
+    "status": "BLOCKED",
+    "reasons": [
+      "processing_failure_or_unsupported_input"
+    ]
+  },
+  "risk_count": 3,
+  "evidence_count": 36,
+  "human_review_authoritative": true,
+  "no_accuracy_guarantee": true
+}

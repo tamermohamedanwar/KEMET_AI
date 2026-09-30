@@ -1,0 +1,3 @@
+﻿document_id,document_type,document_date,invoice_number,supplier_name,customer_name,currency,subtotal,tax,total,payment_status,line_items,source_file,source_page,source_hash,extraction_status,validation_status,review_status,confidence
+884bab0647e0ce22,invoice,2026-09-23,V4-CLEAN,Alpha Supplies,Demo Store,EGP,1000,140,1140,unpaid,,clean_invoice.txt,1,884bab0647e0ce2292196c80a4e360082a4df01fc684955830f2eddde43b959c,EXTRACTED,VALID,NOT_REQUIRED,0.95
+8b47303bf43253a9,invoice,2026-09-23,V4-REVIEW,Beta Supplies,Demo Store,EGP,1000,140,1200,unpaid,,review_invoice.txt,1,8b47303bf43253a934aece69df7a2853d76080585e3b637dcca94a0d311393c8,EXTRACTED,NEEDS_REVIEW,PENDING,0.95

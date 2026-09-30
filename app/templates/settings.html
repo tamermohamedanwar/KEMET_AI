@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Kemet AI — Settings</title>
+<title>Kemet — Settings</title>
 <style>
 :root{
     --bg:#07111f;
@@ -145,7 +145,7 @@ button{
 
     <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
-<body>
+<body class="kemet-public-shell">
 {% include "partials/sidebar.html" %}
 
 <div class="page">

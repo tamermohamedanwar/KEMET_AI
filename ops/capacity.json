@@ -1,0 +1,7 @@
+{
+  "available": true,
+  "production_claim": false,
+  "production_like": false,
+  "limitations": ["non-production evidence only", "managed_postgresql missing", "no production_like soak"],
+  "notes": "explicitly non-production"
+}

@@ -125,10 +125,14 @@ def execute():
 @api.route("/api/document-automation/process", methods=["POST"])
 @login_required
 def document_automation_process():
+    from hashlib import sha256
     from pathlib import Path
     from uuid import uuid4
     from werkzeug.utils import secure_filename
     from app.services.document_automation import process_files_v4, export_delivery_package_v4
+    from app.core.execution_ledger import execution_ledger
+    from app.core.execution_evidence import execution_evidence
+    from app.core.automation_outcome_service import automation_outcome_service
 
     files = [f for f in request.files.getlist("files") if f and f.filename]
     if not files:
@@ -136,33 +140,178 @@ def document_automation_process():
     if len(files) > 20:
         return jsonify({"ok": False, "error": "max_20_files_per_job"}), 400
 
+    organization_id = int(current_user.organization_id)
     job_id = uuid4().hex
-    root = Path("instance") / "document_jobs" / str(current_user.organization_id) / job_id
-    input_dir, output_dir = root / "input", root / "delivery"
-    input_dir.mkdir(parents=True, exist_ok=True)
-    saved = []
-    for uploaded in files:
-        name = secure_filename(uploaded.filename or "")
-        if not name:
-            continue
-        target = input_dir / name
-        uploaded.save(target)
-        saved.append(str(target))
-    if not saved:
-        return jsonify({"ok": False, "error": "valid_files_required"}), 400
+    execution_key = f"document_automation:{organization_id}:{job_id}"
+    plan_hash = sha256(
+        f"document_automation:v1:{organization_id}:{job_id}".encode("utf-8")
+    ).hexdigest()
 
-    payload = process_files_v4(saved)
-    outputs = export_delivery_package_v4(payload, str(output_dir))
-    return jsonify({
-        "ok": True,
-        "job_id": job_id,
-        "product": "Kemet Document Intelligence",
-        "status": payload.get("readiness_gate", {}).get("status", "REVIEW_REQUIRED"),
-        "summary": payload.get("summary", {}),
-        "quality": payload.get("quality", {}),
-        "outputs": {name: str(Path(path).relative_to(Path("instance"))) for name, path in outputs.items()},
-        "human_review_authoritative": True,
-    }), 200
+    root = Path("instance") / "document_jobs" / str(organization_id) / job_id
+    input_dir, output_dir = root / "input", root / "delivery"
+
+    execution_ledger.begin(
+        organization_id=organization_id,
+        execution_key=execution_key,
+        plan_hash=plan_hash,
+        trace_id=execution_key,
+        correlation_id=execution_key,
+    )
+
+    execution_evidence.record(
+        organization_id=organization_id,
+        execution_key=execution_key,
+        stage="document_automation.intake",
+        status="accepted",
+        evidence_key=f"{execution_key}:intake",
+        correlation_id=execution_key,
+        trace_id=execution_key,
+        receipt={
+            "job_id": job_id,
+            "files_received": len(files),
+        },
+    )
+
+    try:
+        input_dir.mkdir(parents=True, exist_ok=True)
+
+        saved = []
+        for uploaded in files:
+            name = secure_filename(uploaded.filename or "")
+            if not name:
+                continue
+            target = input_dir / name
+            uploaded.save(target)
+            saved.append(str(target))
+
+        if not saved:
+            raise ValueError("valid_files_required")
+
+        payload = process_files_v4(saved)
+
+        readiness_gate = payload.get("readiness_gate", {})
+        processing_status = (
+            readiness_gate.get("status")
+            if isinstance(readiness_gate, dict)
+            else None
+        ) or payload.get("status") or "REVIEW_REQUIRED"
+
+        execution_evidence.record(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            stage="document_automation.processing",
+            status=str(processing_status),
+            evidence_key=f"{execution_key}:processing",
+            correlation_id=execution_key,
+            trace_id=execution_key,
+            receipt={
+                "job_id": job_id,
+                "summary": payload.get("summary", {}),
+                "quality": payload.get("quality", {}),
+                "readiness_gate": readiness_gate,
+            },
+        )
+
+        outputs = export_delivery_package_v4(payload, str(output_dir))
+
+        output_names = list(outputs.keys()) if isinstance(outputs, dict) else []
+
+        delivery_receipt = {
+            "job_id": job_id,
+            "execution_key": execution_key,
+            "output_count": len(output_names),
+            "output_names": output_names,
+            "readiness_status": str(processing_status),
+        }
+
+        execution_evidence.record(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            stage="document_automation.delivery",
+            status="delivered",
+            evidence_key=f"{execution_key}:delivery",
+            correlation_id=execution_key,
+            trace_id=execution_key,
+            receipt=delivery_receipt,
+        )
+
+        execution_ledger.finish(
+            organization_id=organization_id,
+            execution_key=execution_key,
+            status="completed",
+            receipt=delivery_receipt,
+        )
+
+        automation_outcome_service.record(
+            organization_id=organization_id,
+            status="DELIVERED",
+            executed=True,
+            workflow_id="document_automation",
+            correlation_id=execution_key,
+            trace_id=execution_key,
+            receipt=delivery_receipt,
+            business_outcome="document_delivery",
+        )
+
+        return jsonify({
+            "ok": True,
+            "job_id": job_id,
+            "execution_key": execution_key,
+            "product": "Kemet Document Intelligence",
+            "status": processing_status,
+            "summary": payload.get("summary", {}),
+            "quality": payload.get("quality", {}),
+            "outputs": {
+                name: str(Path(path).relative_to(Path("instance")))
+                for name, path in outputs.items()
+            },
+            "human_review_authoritative": True,
+        }), 200
+
+    except Exception as exc:
+        error_type = type(exc).__name__
+
+        try:
+            execution_evidence.record(
+                organization_id=organization_id,
+                execution_key=execution_key,
+                stage="document_automation.failure",
+                status="failed",
+                evidence_key=f"{execution_key}:failure",
+                correlation_id=execution_key,
+                trace_id=execution_key,
+                receipt={
+                    "job_id": job_id,
+                    "error_type": error_type,
+                },
+            )
+
+            execution_ledger.finish(
+                organization_id=organization_id,
+                execution_key=execution_key,
+                status="failed",
+                receipt={
+                    "job_id": job_id,
+                    "error_type": error_type,
+                },
+            )
+
+            automation_outcome_service.record(
+                organization_id=organization_id,
+                status="FAILED",
+                executed=False,
+                workflow_id="document_automation",
+                correlation_id=execution_key,
+                trace_id=execution_key,
+                receipt={
+                    "job_id": job_id,
+                    "error_type": error_type,
+                },
+                business_outcome="document_processing_failed",
+                error_type=error_type,
+            )
+        finally:
+            raise
 
 
 @api.route("/api/document-automation/download/<job_id>/<filename>", methods=["GET"])

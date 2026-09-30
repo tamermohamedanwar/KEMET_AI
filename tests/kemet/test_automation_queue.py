@@ -91,3 +91,78 @@ def test_scheduler_requires_approval_state_before_execution():
     })
     assert envelope["workflow_state"] == "waiting_approval"
     assert envelope["execution"]["executed"] is False
+
+def test_worker_cannot_claim_waiting_approval_job():
+    from wsgi import application
+    from app import db
+    from app.models.automation_queue import AutomationQueueJob
+
+    with application.app_context():
+        queue = AutomationQueue()
+        result = queue.enqueue({
+            "organization_id": 9,
+            "job_key": "agent-approval-gate-test",
+            "workflow_id": "agent:approval-gate-test",
+            "execution_id": "agent-approval-gate-test",
+            "idempotency_key": "agent-approval-gate-test",
+            "workflow_state": "waiting_approval",
+            "payload": {
+                "canonical_execution_runtime": True,
+                "external_execution_authority": False,
+            },
+        })
+
+        assert result["accepted"] is True
+
+        claimed = queue.claim(
+            worker_id="approval-gate-worker",
+            job_id=result["job_id"],
+            organization_id=9,
+        )
+
+        assert claimed is None
+
+        job = db.session.get(AutomationQueueJob, result["job_id"])
+        assert job is not None
+        assert job.status == "queued"
+        assert job.workflow_state == "waiting_approval"
+
+
+def test_worker_claims_only_approved_queued_job():
+    from wsgi import application
+    from app import db
+    from app.models.automation_queue import AutomationQueueJob
+
+    with application.app_context():
+        queue = AutomationQueue()
+        result = queue.enqueue({
+            "organization_id": 9,
+            "job_key": "agent-approved-queue-test",
+            "workflow_id": "agent:approved-queue-test",
+            "execution_id": "agent-approved-queue-test",
+            "idempotency_key": "agent-approved-queue-test",
+            "workflow_state": "queued",
+            "payload": {
+                "canonical_execution_runtime": True,
+                "external_execution_authority": False,
+            },
+        })
+
+        assert result["accepted"] is True
+
+        claimed = queue.claim(
+            worker_id="approved-queue-worker",
+            job_id=result["job_id"],
+            organization_id=9,
+        )
+
+        assert claimed is not None
+        assert claimed["job_id"] == result["job_id"]
+        assert claimed["organization_id"] == 9
+        assert claimed["worker_id"] == "approved-queue-worker"
+
+        job = db.session.get(AutomationQueueJob, result["job_id"])
+        assert job is not None
+        assert job.status == "leased"
+        assert job.workflow_state == "processing"
+        assert job.lease_owner == "approved-queue-worker"

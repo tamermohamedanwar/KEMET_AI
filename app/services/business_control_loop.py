@@ -33,6 +33,23 @@ class BusinessControlLoopService:
             "success": True, "engine": "kemet_business_control_loop", "version": cls.VERSION,
             "organization_id": organization_id, "period": period,
             "loop": list(cls.STATES),
+            "marketing_intelligence": {
+                "enabled": True,
+                "pipeline": [
+                    "research",
+                    "audience_intelligence",
+                    "content_strategy",
+                    "experiment",
+                    "campaign_governance",
+                    "human_approval",
+                    "outcome_measurement",
+                    "learning",
+                    "next_action",
+                ],
+                "external_execution": False,
+                "automatic_action": False,
+                "requires_human_approval": True,
+            },
             "decisions": projected.get("items", []) if projected.get("success") else [],
             "count": len(projected.get("items", [])) if projected.get("success") else 0,
             "learning": {

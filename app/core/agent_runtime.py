@@ -408,6 +408,7 @@ class KemetAgentRuntime:
             {"id": "business", "description": "Business goals, customers, KPI, revenue and cost.", "capabilities": ["business", "analytics", "reasoning"]},
             {"id": "intelligence", "description": "Knowledge, evidence and business data.", "capabilities": ["knowledge", "research", "evidence"]},
             {"id": "content", "description": "Content strategy, audience, offers and creative direction.", "capabilities": ["content", "creation", "business"]},
+            {"id": "marketing", "description": "Market research, audience intelligence, campaign strategy, experiments, analytics and optimization.", "capabilities": ["marketing", "research", "audience", "content", "analytics", "optimization", "learning", "business"]},
             {"id": "production", "description": "Production, media, assets and quality.", "capabilities": ["production", "multimedia", "quality"]},
             {"id": "distribution", "description": "Distribution and publication planning with evidence.", "capabilities": ["distribution", "publishing", "evidence"]},
             {"id": "revenue", "description": "Leads, sales, payment, fulfillment, revenue and profit.", "capabilities": ["revenue", "sales", "business"]},

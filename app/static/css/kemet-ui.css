@@ -559,3 +559,145 @@ textarea {
         transition: none !important;
     }
 }
+
+/* KEMET PREMIUM SAAS CONSOLIDATION */
+:root {
+    --k-premium-bg: #f7f8fc;
+    --k-premium-surface: #ffffff;
+    --k-premium-border: #e6e8ef;
+    --k-premium-text: #151827;
+    --k-premium-muted: #667085;
+    --k-premium-accent: #635bff;
+    --k-premium-accent-hover: #5148e5;
+}
+
+.kemet-public-shell,
+body:has(.unified-sidebar),
+body:has(.k-v52-shell) {
+    background: var(--k-premium-bg) !important;
+    color: var(--k-premium-text) !important;
+}
+
+.unified-sidebar,
+.k-v52-sidebar {
+    background: #ffffff !important;
+    color: #475467 !important;
+    border-right: 1px solid var(--k-premium-border) !important;
+    box-shadow: 8px 0 30px rgba(16,24,40,.04) !important;
+}
+
+.unified-sidebar .brand,
+.k-v52-brand a {
+    color: #151827 !important;
+}
+
+.unified-sidebar .brand-mark,
+.k-v52-brand-mark {
+    background: var(--k-premium-accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 22px rgba(99,91,255,.20) !important;
+}
+
+.unified-sidebar .chat-item,
+.k-v52-nav a {
+    color: #667085 !important;
+    border-radius: 12px !important;
+}
+
+.unified-sidebar .chat-item:hover,
+.unified-sidebar .chat-item.active,
+.k-v52-nav a:hover,
+.k-v52-nav a.active {
+    background: #f3f1ff !important;
+    color: var(--k-premium-accent) !important;
+}
+
+.unified-sidebar .theme {
+    background: #f5f6fa !important;
+    color: #475467 !important;
+    border: 1px solid var(--k-premium-border) !important;
+}
+
+.k-btn,
+button,
+.btn,
+input[type="submit"] {
+    min-height: 42px !important;
+    border-radius: 11px !important;
+    font-weight: 750 !important;
+}
+
+.k-btn-primary,
+.btn-primary,
+button.primary,
+.btn.primary,
+button[type="submit"],
+input[type="submit"] {
+    background: var(--k-premium-accent) !important;
+    border-color: var(--k-premium-accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 7px 18px rgba(99,91,255,.16) !important;
+}
+
+.k-btn-primary:hover,
+.btn-primary:hover,
+button.primary:hover,
+.btn.primary:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+    background: var(--k-premium-accent-hover) !important;
+    border-color: var(--k-premium-accent-hover) !important;
+}
+
+.k-btn-secondary,
+.btn-secondary,
+.btn-outline-primary,
+.secondary {
+    background: #ffffff !important;
+    color: #344054 !important;
+    border: 1px solid #dfe3eb !important;
+}
+
+.k-card,
+.card,
+.panel,
+.settings-card,
+.content-card,
+.table-container {
+    background: #ffffff !important;
+    color: var(--k-premium-text) !important;
+    border-color: var(--k-premium-border) !important;
+    box-shadow: 0 10px 30px rgba(16,24,40,.055) !important;
+}
+
+input,
+textarea,
+select,
+.k-input,
+.k-select,
+.k-textarea {
+    background: #ffffff !important;
+    color: #151827 !important;
+    border-color: #dfe3eb !important;
+}
+
+.k-page-subtitle,
+.subtitle,
+.muted,
+.text-muted,
+.k-card-muted {
+    color: var(--k-premium-muted) !important;
+}
+
+.badge,
+.status-badge,
+.k-status {
+    font-weight: 750 !important;
+}
+
+@media (max-width: 760px) {
+    .unified-sidebar,
+    .k-v52-sidebar {
+        box-shadow: 16px 0 40px rgba(16,24,40,.14) !important;
+    }
+}

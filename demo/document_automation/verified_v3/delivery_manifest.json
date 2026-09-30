@@ -1,0 +1,29 @@
+{
+  "product": "Kemet Document Intelligence",
+  "delivery_version": "V3",
+  "status": "READY",
+  "input": {
+    "files_received": 1,
+    "sha256_evidence_count": 1
+  },
+  "coverage": {
+    "document_types_supported_in_this_run": [
+      "invoice"
+    ],
+    "records_extracted": 1
+  },
+  "quality": {
+    "overall_quality_score": 100.0,
+    "dimensions": {
+      "completeness_pct": 100.0,
+      "validation_pass_pct": 100.0,
+      "integrity_pct": 100.0
+    },
+    "interpretation": "Ready for delivery",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "exceptions": [],
+  "rules": {},
+  "human_review_authoritative": true,
+  "honesty": "No 100% accuracy claim; confidence is heuristic unless a validated provider/model contract is explicitly attached."
+}

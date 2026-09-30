@@ -1,0 +1,7 @@
+gradio>=6.0,<7
+spaces>=0.40
+transformers>=4.51
+accelerate>=1.6
+diffusers>=0.35
+ftfy
+imageio[ffmpeg]

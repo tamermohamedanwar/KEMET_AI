@@ -1,0 +1,9 @@
+Invoice Number: V4-CLEAN
+Date: 2026-09-23
+Supplier: Alpha Supplies
+Customer: Demo Store
+Currency: EGP
+Subtotal: 1000
+Tax: 140
+Total: 1140
+Payment Status: unpaid

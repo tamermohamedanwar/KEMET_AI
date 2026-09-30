@@ -1,0 +1,52 @@
+{
+  "report_version": "V4",
+  "executive_summary": {
+    "files_received": 1,
+    "records_extracted": 1,
+    "valid_records": 1,
+    "records_needing_review": 0,
+    "duplicates_detected": 0
+  },
+  "quality": {
+    "overall_quality_score": 100.0,
+    "dimensions": {
+      "completeness_pct": 100.0,
+      "validation_pass_pct": 100.0,
+      "integrity_pct": 100.0
+    },
+    "interpretation": "Ready for delivery",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "readiness": {
+    "status": "READY",
+    "reasons": []
+  },
+  "risk_count": 0,
+  "evidence_count": 18,
+  "business_insights": {
+    "record_count": 1,
+    "total_value": 1140.0,
+    "average_value": 1140.0,
+    "supplier_count": 1,
+    "customer_count": 1,
+    "currencies": [
+      "EGP"
+    ],
+    "unpaid_or_pending_count": 1,
+    "high_or_critical_risk_count": 0,
+    "duplicate_count": 0,
+    "top_supplier_by_value": [
+      "Demo Supplier",
+      1140.0
+    ]
+  },
+  "action_plan": [
+    {
+      "priority": "P1",
+      "action": "Review unpaid or pending invoices for follow-up.",
+      "reason": "1 unpaid/pending records detected."
+    }
+  ],
+  "human_review_authoritative": true,
+  "no_accuracy_guarantee": true
+}

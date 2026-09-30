@@ -1,0 +1,69 @@
+{
+  "report_version": "V4",
+  "executive_summary": {
+    "files_received": 4,
+    "records_extracted": 2,
+    "valid_records": 1,
+    "records_needing_review": 1,
+    "duplicates_detected": 1
+  },
+  "quality": {
+    "overall_quality_score": 37.5,
+    "dimensions": {
+      "completeness_pct": 50.0,
+      "validation_pass_pct": 50.0,
+      "integrity_pct": 0.0
+    },
+    "interpretation": "Review required",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "readiness": {
+    "status": "BLOCKED",
+    "reasons": [
+      "processing_failure_or_unsupported_input"
+    ]
+  },
+  "risk_count": 3,
+  "evidence_count": 36,
+  "business_insights": {
+    "record_count": 2,
+    "total_value": 2340.0,
+    "average_value": 1170.0,
+    "supplier_count": 2,
+    "customer_count": 1,
+    "currencies": [
+      "EGP"
+    ],
+    "unpaid_or_pending_count": 2,
+    "high_or_critical_risk_count": 3,
+    "duplicate_count": 1,
+    "top_supplier_by_value": [
+      "Beta Supplies",
+      1200.0
+    ]
+  },
+  "action_plan": [
+    {
+      "priority": "P0",
+      "action": "Resolve critical processing/input failures before delivery.",
+      "reason": "Critical risks can block reliable processing."
+    },
+    {
+      "priority": "P1",
+      "action": "Review high-risk records and confirm source documents.",
+      "reason": "3 high/critical risk items detected."
+    },
+    {
+      "priority": "P1",
+      "action": "Confirm duplicate invoices before posting or payment.",
+      "reason": "1 duplicate candidates detected."
+    },
+    {
+      "priority": "P1",
+      "action": "Review unpaid or pending invoices for follow-up.",
+      "reason": "2 unpaid/pending records detected."
+    }
+  ],
+  "human_review_authoritative": true,
+  "no_accuracy_guarantee": true
+}

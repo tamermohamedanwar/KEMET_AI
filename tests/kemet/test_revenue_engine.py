@@ -32,3 +32,36 @@ def test_revenue_actions_are_governed():
 
     assert len(actions) == 1
     assert actions[0]["requires_approval"] is True
+
+
+def test_revenue_decision_consumes_canonical_lead_intelligence():
+    from types import SimpleNamespace
+    from app.services.revenue_decision_service import RevenueDecisionService
+
+    lead = SimpleNamespace(
+        id=501,
+        organization_id=7,
+        tenant_id=7,
+        company_name="Acme Egypt",
+        email="sales@acme.eg",
+        phone="201001234567",
+        message="We need a proposal for a business automation platform.",
+        source="website",
+        status="new",
+        estimated_value=1500,
+        lead_score=0,
+        created_at=None,
+        updated_at=None,
+        freshness_at=None,
+        provenance={"source": "website"},
+        qualification_status="new",
+        next_follow_up_at=None,
+    )
+
+    result = RevenueDecisionService.decide(lead)
+
+    assert result["score"] == 100
+    assert result["priority"] == "critical"
+    assert result["lead_intelligence"]["scoring"]["method"] == "evidence_weighted_v1"
+    assert len(result["lead_intelligence"]["evidence_digest"]) == 64
+    assert result["lead_intelligence"]["governance"]["external_execution"] is False

@@ -58,6 +58,20 @@ class KemetAgentToolRegistry:
             frozenset({"content", "creation", "business"}),
         ))
         self.register(AgentTool(
+            "marketing_intelligence",
+            "Research markets, audience signals, campaign strategy, experiments and optimization without external side effects.",
+            frozenset({
+                "marketing",
+                "research",
+                "audience",
+                "content",
+                "analytics",
+                "optimization",
+                "learning",
+                "business",
+            }),
+        ))
+        self.register(AgentTool(
             "production_intelligence",
             "Prepare production, media, asset and quality decisions without executing external side effects.",
             frozenset({"production", "multimedia", "quality"}),

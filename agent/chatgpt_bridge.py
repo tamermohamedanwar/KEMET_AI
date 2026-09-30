@@ -63,7 +63,7 @@ READ_TOOLS = {
 
 COMMANDS = {
     "health": ["bash", "-c", "echo Kemet AI Bridge is healthy"],
-    "test_health": ["curl", "-sS", "http://127.0.0.1:8000/api/health"],
+    "test_health": ["curl", "-sS", "http://127.0.0.1:5000/api/health"],
     "compile": [".venv/bin/python", "-m", "compileall", "-q", "app"],
     "git_status": ["git", "status", "--short"],
 }

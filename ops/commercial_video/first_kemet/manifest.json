@@ -1,0 +1,60 @@
+{
+  "schema": "kemet.commercial.video.v1",
+  "artifact": "Kemet_First_Commercial_Video_v1.mp4",
+  "artifact_digest": "31119a6fae7c1cb97ff2f9cc789d3a6eb76f9b8fe01b562941844a7aa125d64c",
+  "duration_seconds": 36,
+  "resolution": "1280x720",
+  "audio": "local_arabic_espeak_ng",
+  "voice_external_provider": false,
+  "scenes": [
+    {
+      "index": 1,
+      "title": "المشكلة",
+      "message": "مشكلتك ليست نقص أدوات. مشكلتك أن أدواتك لا تعمل كمنظومة واحدة.",
+      "duration_seconds": 6
+    },
+    {
+      "index": 2,
+      "title": "المركز الواحد",
+      "message": "هنا يأتي Kemet. مكان واحد لفهم عملك، تخطيطه، ومتابعة التنفيذ.",
+      "duration_seconds": 6
+    },
+    {
+      "index": 3,
+      "title": "من الفكرة إلى الفيديو",
+      "message": "من الفكرة إلى المحتوى: سيناريو، تعليق صوتي، مشاهد، مونتاج، ورسالة بيع واضحة.",
+      "duration_seconds": 6
+    },
+    {
+      "index": 4,
+      "title": "أنت صاحب القرار",
+      "message": "وكل خطوة مهمة تمر عبر موافقتك قبل أي إجراء خارجي.",
+      "duration_seconds": 6
+    },
+    {
+      "index": 5,
+      "title": "العرض التجاري",
+      "message": "ابدأ بعرض تجاري عملي: فيديو تسويقي جاهز للنشر، مع CTA يقيس اهتمام العملاء.",
+      "duration_seconds": 6
+    },
+    {
+      "index": 6,
+      "title": "ابدأ الآن",
+      "message": "Kemet — لا تستخدم أداة AI أخرى. أدر عملك مع Kemet. اطلب أول تجربة تجارية الآن.",
+      "duration_seconds": 6
+    }
+  ],
+  "commercial_offer": {
+    "name": "Kemet Commercial Launch Video",
+    "deliverable": "marketing video with CTA and measurable lead path",
+    "cta": "اطلب أول تجربة تجارية الآن",
+    "price": "not set; requires human-approved commercial terms"
+  },
+  "governance": {
+    "status": "REVIEW_REQUIRED",
+    "human_approval_required": true,
+    "publication_requested": false,
+    "external_execution": false,
+    "mcp": false
+  }
+}

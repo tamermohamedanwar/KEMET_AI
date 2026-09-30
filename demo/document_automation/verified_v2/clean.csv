@@ -1,0 +1,2 @@
+﻿document_id,document_type,document_date,invoice_number,supplier_name,customer_name,currency,subtotal,tax,total,payment_status,line_items,source_file,source_page,source_hash,extraction_status,validation_status,review_status,confidence
+84d356feba001f18,invoice,2026-09-23,DEMO-1001,Example Supplies,Example Store,EGP,1000,140,1140,unpaid,,sample_invoice.txt,1,84d356feba001f18e807e57767e70d0a4adc443a415d3af18e3d1ffc0252ae18,EXTRACTED,VALID,NOT_REQUIRED,0.95

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>بوت واتساب لمتجرك</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101415;--panel:#191e1d;--panel-2:#151a19;--line:#292f2d;--text:#f1eee8;--muted:#8f9692;--accent:#55b79a;--accent-soft:#123128}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    body{display:flex;justify-content:center}
+    main{width:min(100%,700px);min-height:100vh;padding:22px 22px 52px;display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 28px}
+    .topbar h1{font-size:22px;margin:0;font-weight:750;letter-spacing:-.3px}
+    .icon{width:42px;height:42px;border:0;background:transparent;color:var(--text);font-size:30px;line-height:1;cursor:pointer}
+    .hero{text-align:center;padding:28px 12px 34px}
+    .hero-mark{width:96px;height:96px;margin:0 auto 42px;border-radius:30px;background:var(--accent);display:grid;place-items:center;color:#092019;box-shadow:0 14px 36px rgba(85,183,154,.13)}
+    .hero-mark span{font-size:45px;line-height:1}
+    .hero h2{font-size:35px;line-height:1.2;margin:0 auto 18px;font-weight:800;letter-spacing:-1px}
+    .hero p{margin:0 auto;max-width:590px;color:#9ca29f;font-size:20px;line-height:1.7}
+    .flow{position:relative;margin-top:8px}
+    .flow:after{content:"";position:absolute;right:52px;top:104px;width:2px;height:54px;background:var(--line);z-index:0}
+    .step{position:relative;z-index:1;display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:18px;padding:22px 16px 22px 20px;background:var(--panel);border:1px solid var(--line);border-radius:28px;margin-bottom:28px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .step-icon{width:72px;height:72px;border-radius:25px;background:#17201e;display:grid;place-items:center;color:var(--accent);font-size:31px}
+    .step-copy{text-align:right;min-width:0}
+    .step-title{font-size:24px;font-weight:800;margin:0 0 5px}
+    .step-sub{font-size:18px;color:var(--muted);line-height:1.5;margin:0}
+    .state{font-size:18px;font-weight:750;color:var(--accent);background:var(--accent-soft);border-radius:24px;padding:10px 18px;white-space:nowrap}
+    .connect-btn{border:0;border-radius:30px;background:var(--accent);color:#082019;font:inherit;font-size:18px;font-weight:800;padding:16px 25px;cursor:pointer;box-shadow:0 10px 22px rgba(85,183,154,.12);transition:transform .15s ease,opacity .15 ease}
+    .connect-btn:active{transform:scale(.97)}
+    .connect-btn[disabled]{opacity:.55;cursor:default}
+    .notice{text-align:center;color:#858b88;font-size:17px;line-height:1.6;margin-top:auto;padding:72px 10px 0}
+    .notice strong{color:#aeb3b0}
+    .sr-status{text-align:center;min-height:28px;color:var(--muted);font-size:15px;margin-top:-6px}
+    @media(max-width:520px){main{padding:18px 16px 42px}.topbar{padding-bottom:22px}.hero{padding-top:22px}.hero-mark{margin-bottom:36px}.hero h2{font-size:32px}.hero p{font-size:18px}.step{grid-template-columns:64px 1fr;gap:14px;padding:20px 14px}.step-icon{width:64px;height:64px;border-radius:22px}.state,.connect-btn{grid-column:2;justify-self:start}.state{margin-top:2px}.connect-btn{margin-top:2px}.flow:after{right:46px;top:102px;height:64px}}
+  </style>
+</bead>
+<body>
+<main>
+  <header class="topbar">
+    <button class="icon" type="button" aria-label="جوع" onclick="history.back()">↩</button>
+    <h1>بوت واتساب لمتجرك</h1>
+    <button class="icon" type="button" aria-label="إغلاق" onclick="history.back()">×</button>
+  </header>
+
+  <section class="hero">
+    <div class="hero-mark" aria-hidden="true"><span>☼</span></div>
+    <h2>بوت واتساب لمتجرك على سلة</h2>
+    <p>اربط متجرك مرة واحدة، وخلي عملاءك ياخدوا رد فوري على كل أوردر — من غير ما تلمس لوحة التحكم تاني.</p>
+  </section>
+
+  <section class="flow" aria-label="حالة الربط">
+    <article class="step">
+      <div class="step-icon" aria-hidden="true">✓</div>
+      <div class="step-copy">
+        <h3 class="step-title">متجر سلة</h3>
+        <p class="step-sub" id="salla-sub">جارٍ التحقق من الاتصال…</p>
+      </div>
+      <div class="state" id="salla-state">جارٍ التحقق</div>
+    </article>
+
+    <article class="step">
+      <div class="step-icon" aria-hidden="true">◯</div>
+      <div class="step-copy">
+        <h3 class="step-title">رقم واتساب</h3>
+        <p class="step-sub" id="whatsapp-sub">اربطه عشان تبدأ ترد على عملائك</p>
+      </div>
+      <button class="connect-btn" id="connect-btn" type="button">اربط واتساب</button>
+    </article>
+  </section>
+
+  <div class="sr-status" id="status" role="status" aria-live="polite"></div>
+  <p class="notice">تقدر توقف الربط في أي وقت من نفس الصفحة.<br><strong id="bot-state">جاري التحقق من حالة البوت…</strong></p>
+</main>
+
+<script>
+const statusUrl = {{ url_for("salla_whatsapp_product.product_status")|tojson }};
+const connectUrl = {{ url_for("salla_whatsapp_product.product_page")|tojson }};
+const sallaState = document.getElementById("salla-state");
+const sallaSub = document.getElementById("salla-sub");
+const whatsappSub = document.getElementById("whatsapp-sub");
+const button = document.getElementById("connect-btn");
+const status = document.getElementById("status");
+const botState = document.getElementById("bot-state");
+
+function render(data) {
+  const checks = data.checks || {};
+  const sallaReady = Boolean(checks.salla_access_token && checks.salla_webhook_secret);
+  const whatsappReady = Boolean(checks.whatsapp_access_token && checks.whatsapp_phone_number_id);
+  sallaState.textContent = sallaReady ? "متصل" : "يحتاج إعداد";
+  sallaSub.textContent = sallaReady ? "متصل — سيستقبل الأوردرات أول بأول" : "يحتاج إعداد بيانات متجر سلة";
+  if (whatsappReady) {
+    button.textContent = "متصل";
+    button.disabled = true;
+    whatsappSub.textContent = "متصل — البوت جاهز للرد على العملاء";
+  } else {
+    button.textContent = "اربط واتساب";
+    button.disabled = false;
+    whatsappSub.textContent = "اربطه عشان تبدأ ترد على عملائك";
+  }
+  botState.textContent = data.ready ? "البوت شغال ✅" : "أكمل ربط واتساب عشان يبدأ البوت";
+}
+
+async function refresh() {
+  try {
+    const response = await fetch(statusUrl, {headers:{"Accept":"application/json"}, credentials:"same-origin"});
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "status_failed");
+    render(data);
+    if (new URLSearchParams(window.location.search).get("connected") === "1" && data.ready) {
+      status.textContent = "تم الربط بنجاح — البوت شغال الآن ✅";
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      status.textContent = "";
+    }
+  } catch (error) {
+    status.textContent = "تعذر قراءة حالة الاتصال الآن.";
+    botState.textContent = "حالة البوت غير مؤكدة";
+  }
+}
+
+button.addEventListener("click", async () => {
+  button.disabled = true;
+  button.textContent = "جارٍ فتح الربط…";
+  status.textContent = "سيتم فتح مسار الربط الآمن لحفظ بيانات واتساب بشكل مشفّر.";
+  await new Promise(resolve => setTimeout(resolve, 120));
+  window.location.assign(connectUrl);
+});
+
+refresh();
+</script>
+</body>
+</html>

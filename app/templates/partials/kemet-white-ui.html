@@ -247,6 +247,48 @@ header,
     border-radius:14px !important;
   }
 }
+
+/* KEMET UI CONSOLIDATION — visual layer only */
+:root{
+  --kemet-radius-sm:10px;
+  --kemet-radius-md:14px;
+  --kemet-radius-lg:20px;
+  --kemet-accent:#635bff;
+  --kemet-accent-hover:#5148e5;
+  --kemet-focus:0 0 0 4px rgba(99,91,255,.12);
+}
+
+body{line-height:1.55;overflow-x:hidden}
+button,.btn,a[role="button"],input[type="submit"]{
+  min-height:42px;
+  border-radius:var(--kemet-radius-sm)!important;
+  font-weight:750!important;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease!important;
+}
+button:hover,.btn:hover,a[role="button"]:hover,input[type="submit"]:hover{transform:translateY(-1px)}
+button:focus-visible,.btn:focus-visible,a[role="button"]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none!important;box-shadow:var(--kemet-focus)!important}
+.btn-primary,.btn.primary,.btn-success{background:var(--kemet-accent)!important;border-color:var(--kemet-accent)!important}
+.btn-primary:hover,.btn.primary:hover{background:var(--kemet-accent-hover)!important;border-color:var(--kemet-accent-hover)!important;box-shadow:0 10px 24px rgba(99,91,255,.20)!important}
+.btn-outline-primary{color:var(--kemet-accent)!important;background:#fff!important;border-color:#d9d6ff!important}
+.btn-outline-primary:hover{background:#f5f3ff!important}
+
+.card,.panel,.box,.stat-card,.metric-card,.widget,.dashboard-card,.content-card,.settings-card,.ticket-card,.lead-card,.workflow-card,.table-container{
+  border-radius:var(--kemet-radius-lg)!important;
+}
+
+.page-header,.k-page-header{gap:16px}
+.page-header h1,.k-page-title{letter-spacing:-.035em}
+
+/* Consistent action groups */
+.btn-group,.button-group,.actions,.form-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Mobile-first touch targets */
+@media(max-width:768px){
+  button,.btn,a[role="button"],input[type="submit"]{min-height:44px}
+  .btn-group,.button-group,.actions,.form-actions{width:100%}
+  .btn-group>*:not(.btn),.button-group>*:not(.btn){min-width:0}
+}
+
 </style>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-page-visuals.css') }}">

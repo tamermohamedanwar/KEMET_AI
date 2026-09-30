@@ -1,0 +1,72 @@
+name: Kemet CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, development]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kemet-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Lint
+        run: python -m ruff check app ops tests
+      - name: Dependency audit
+        run: python -m pip_audit -r requirements.txt
+      - name: Secret scan
+        run: |
+          ! git grep -nE "(sk-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|Bearer [A-Za-z0-9._-]{20,})" -- . ':!*.md' ':!tests/fixtures/*'
+      - name: Clean package build
+        run: bash ops/build_review_package.sh /tmp/KEMET_AI_REVIEW.zip
+      - name: Compile
+        run: python -m compileall -q app agent
+      - name: Diff check
+        run: git diff --check
+      - name: Release contract gate
+        run: python ops/release_hardening_gate.py
+      - name: Tests
+        env:
+          FLASK_ENV: testing
+          RATELIMIT_STORAGE_URI: memory://
+        run: python -m pytest -q
+
+  security-governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install security test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install ruff pip-audit
+      - name: Strix governance and validation contract
+        env:
+          FLASK_ENV: testing
+          RATELIMIT_STORAGE_URI: memory://
+        run: |
+          python -m pytest -q tests/kemet/test_strix_security_testing_capability.py tests/kemet/test_strix_security_evidence_service.py tests/kemet/test_security_validation_gate.py
+      - name: Security boundary checks
+        run: |
+          python -m compileall -q app/services/strix_security_testing_capability.py app/services/strix_security_evidence_service.py
+          git diff --check

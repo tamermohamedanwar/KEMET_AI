@@ -167,13 +167,19 @@ def bos_channel_webhook(channel, organization_id):
             is_telegram_document = channel == "telegram" and telegram_metadata.get("telegram_update_kind") == "document"
             if not message.get("external_message_id") or not message.get("external_user_id") or (not message.get("text") and not is_telegram_document):
                 raise ValueError("inbound_message_incomplete")
+            telegram_update_id = telegram_metadata.get("telegram_update_id")
+            if channel == "telegram" and telegram_update_id is not None:
+                ingress_identity = f"{channel}:{organization_id}:update:{telegram_update_id}"
+            else:
+                ingress_identity = f"{channel}:{organization_id}:{message['external_message_id']}"
+
             event = event_ingestion_gateway.ingest(
                 organization_id=int(organization_id),
                 event_type=f"channel.{channel}.message",
                 payload=message,
                 source=f"{channel}.webhook",
-                event_id=f"{channel}:{organization_id}:{message['external_message_id']}",
-                idempotency_key=f"{channel}:{organization_id}:{message['external_message_id']}",
+                event_id=ingress_identity,
+                idempotency_key=ingress_identity,
             )
             deduplicated = not event.get("accepted")
             normalized = channel_adapter_service.ingest(channel=channel, organization_id=organization_id, payload=message)

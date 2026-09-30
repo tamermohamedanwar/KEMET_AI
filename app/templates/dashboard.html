@@ -461,13 +461,15 @@
             }
         }
     </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kemet-ui.css') }}">
 </head>
 
 <body>
 
 <div class="app">
 
-    <aside class="sidebar">
+    <aside class="sidebar unified-sidebar">
 
         <a class="brand" href="/dashboard">
             <div class="brand-mark">K</div>
@@ -479,63 +481,62 @@
 
         <div class="nav-label">COMMAND CENTER</div>
 
-        <a class="nav-item" href="/command-center/">مركز القيادة</a>
-        <a class="nav-item active" href="/dashboard">
+        <a class="nav-item chat-item active" href="/dashboard">
             <span class="nav-icon">⌂</span>
             Command Center
         </a>
 
         <div class="nav-label">AI WORKFORCE</div>
 
-        <a class="nav-item" href="/chat">
+        <a class="nav-item chat-item" href="/chat">
             <span class="nav-icon">✦</span>
             AI Workspace
         </a>
 
-        <a class="nav-item" href="/conversations">
+        <a class="nav-item chat-item" href="/conversations">
             <span class="nav-icon">◉</span>
             AI Conversations
         </a>
 
         <div class="nav-label">GROWTH</div>
 
-        <a class="nav-item" href="/admin/leads">
+        <a class="nav-item chat-item" href="/admin/leads">
             <span class="nav-icon">◎</span>
             CRM & Leads
         </a>
 
-        <a class="nav-item" href="/admin/leads">
+        <a class="nav-item chat-item" href="/admin/leads">
             <span class="nav-icon">↗</span>
             Sales Pipeline
         </a>
 
         <div class="nav-label">CUSTOMER EXPERIENCE</div>
 
-        <a class="nav-item" href="/conversations">
+        <a class="nav-item chat-item" href="/conversations">
             <span class="nav-icon">💬</span>
             Business Inbox
         </a>
 
-        <a class="nav-item" href="/admin/support">
+        <a class="nav-item chat-item" href="/admin/support">
             <span class="nav-icon">🎫</span>
             Customer Support
         </a>
 
         <div class="nav-label">AUTOMATION</div>
 
-        <a class="nav-item" href="/admin/automation/dashboard">
+        <a class="nav-item chat-item" href="/admin/automation/dashboard">
             <span class="nav-icon">⚡</span>
             Workflows
         </a>
 
         <div class="nav-label">INTELLIGENCE</div>
 
-        <a class="nav-item" href="/admin/automation/analytics">
+        <a class="nav-item chat-item" href="/admin/automation/analytics">
             <span class="nav-icon">◌</span>
             AI Intelligence
         </a>
 
-        <a class="nav-item" href="/billing/subscription">
+        <a class="nav-item chat-item" href="/billing/subscription">
             <span class="nav-icon">◇</span>
             Usage & Billing
         </a>
@@ -544,12 +545,12 @@
 
             <div class="nav-label">ADMINISTRATION</div>
 
-            <a class="nav-item" href="/settings">
+            <a class="nav-item chat-item" href="/settings">
                 <span class="nav-icon">⚙</span>
                 Settings
             </a>
 
-            <a class="nav-item" href="/profile">
+            <a class="nav-item chat-item" href="/profile">
                 <span class="nav-icon">●</span>
                 Profile
             </a>

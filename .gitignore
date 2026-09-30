@@ -66,3 +66,15 @@ __pycache__
 *.zip
 ops/youtube_state/client_secret.json
 ops/youtube_state/token.json
+
+.env
+.env.local
+.env.agent
+
+# final cleanup
+.kemet_runtime/
+instance/*.db
+instance/*.sqlite
+kemet_checkout_url.txt
+backup_paymob/
+backup_ui/

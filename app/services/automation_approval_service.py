@@ -142,6 +142,26 @@ class AutomationApprovalService:
                 organization_id=int(approval.organization_id),
                 execution_id=str(approval.execution_id),
             ).order_by(AutomationQueueJob.id.desc()).first()
+
+        # Agent Runtime may use the canonical Automation Queue without
+        # creating a synthetic AutomationExecution or AutomationWorkflow.
+        queue_job_id = request_data.get("queue_job_id")
+        if queue_job is None and queue_job_id is not None:
+            try:
+                candidate_job = db.session.get(AutomationQueueJob, int(queue_job_id))
+            except (TypeError, ValueError):
+                candidate_job = None
+            if candidate_job is not None:
+                if int(candidate_job.organization_id) != int(approval.organization_id):
+                    return {
+                        "success": False,
+                        "approval_id": approval_id,
+                        "status": "pending",
+                        "message": "Approval queue job organization mismatch.",
+                        "error": "approval_queue_tenant_mismatch",
+                    }
+                queue_job = candidate_job
+
         execution_key = str(queue_job.job_key) if queue_job is not None else f"approval:{approval.id}"
 
         try:

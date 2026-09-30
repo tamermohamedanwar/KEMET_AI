@@ -1,0 +1,21 @@
+{
+  "worker_id": "kemet_hf_zerogpu_001",
+  "provider_id": "huggingface_zerogpu",
+  "reported_at": 0,
+  "status": "READY",
+  "capabilities": ["VIDEO_GENERATION"],
+  "capacity": {
+    "attestation": {"ready": true},
+    "in_flight": 0,
+    "max_concurrency": 1,
+    "queue_depth": 0,
+    "max_queue_depth": 1
+  },
+  "hardware": {
+    "gpu": "NVIDIA RTX Pro 6000 Blackwell",
+    "vram_mb": 49152,
+    "compute_runtime": "CUDA"
+  },
+  "pricing": {"free": true},
+  "license": {"commercial_use": true}
+}

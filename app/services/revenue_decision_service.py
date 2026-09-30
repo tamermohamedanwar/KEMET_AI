@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from app.core.revenue.revenue_engine import RevenueEngine
+from app.services.lead_intelligence_service import lead_intelligence_service
 
 
 class RevenueDecisionService:
@@ -18,8 +19,30 @@ class RevenueDecisionService:
         return str(getattr(lead, "status", None) or "new").strip().lower()
 
     @classmethod
-    def decide(cls, lead, now=None):
-        return RevenueEngine.decide_lead(score=getattr(lead, "lead_score", 0), estimated_value=getattr(lead, "estimated_value", 0), status=getattr(lead, "status", "new"), follow_up_at=getattr(lead, "next_follow_up_at", None), now=now)
+    def decide(cls, lead, now=None, *, refresh_intelligence=True):
+        intelligence = None
+        score = getattr(lead, "lead_score", 0)
+        if refresh_intelligence and getattr(lead, "id", None) and (
+            getattr(lead, "tenant_id", None) or getattr(lead, "organization_id", None)
+        ):
+            intelligence = lead_intelligence_service.analyze(lead, persist=False)
+            score = intelligence["scoring"]["score"]
+        decision = RevenueEngine.decide_lead(
+            score=score,
+            estimated_value=getattr(lead, "estimated_value", 0),
+            status=getattr(lead, "status", "new"),
+            follow_up_at=getattr(lead, "next_follow_up_at", None),
+            now=now,
+        )
+        if intelligence is not None:
+            decision["lead_intelligence"] = {
+                "version": intelligence["version"],
+                "qualification": intelligence["qualification"],
+                "scoring": intelligence["scoring"],
+                "evidence_digest": intelligence["evidence_digest"],
+                "governance": intelligence["governance"],
+            }
+        return decision
 
     @classmethod
     def rank(cls, leads):

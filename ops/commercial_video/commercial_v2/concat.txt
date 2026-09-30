@@ -1,0 +1,8 @@
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/01.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/02.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/03.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/04.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/05.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/06.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/07.mp4'
+file '/data/data/com.termux/files/home/products/Kemet_AI/ops/commercial_video/commercial_v2/scenes/08.mp4'

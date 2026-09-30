@@ -219,9 +219,10 @@ def create_app():
 
     from app.tasks import chat_workflow
 
-    with app.app_context():
-        from app import models
-        db.create_all()
+    if env in {"development", "testing"}:
+        with app.app_context():
+            from app import models
+            db.create_all()
 
     app.register_blueprint(bos_command_center_bp)
     app.register_blueprint(industry_api_bp)

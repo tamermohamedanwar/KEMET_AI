@@ -1,0 +1,37 @@
+{
+  "records": [
+    {
+      "document_id": "e1a8293ea7477628",
+      "document_type": "invoice",
+      "document_date": "2026-09-23",
+      "invoice_number": "DEMO-1001",
+      "supplier_name": "Example Supplies",
+      "customer_name": "Example Store",
+      "currency": "EGP",
+      "subtotal": "1000",
+      "tax": "140",
+      "total": "1140",
+      "payment_status": "unpaid",
+      "line_items": "",
+      "source_file": "sample_invoice.txt",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "VALID"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "input_records": 1,
+    "output_records": 1,
+    "valid_records": 1,
+    "needs_review": 0,
+    "duplicates": 0
+  },
+  "failures": [],
+  "evidence": {
+    "pipeline": "INGEST -> EXTRACT -> NORMALIZE -> VALIDATE -> REVIEW -> EXPORT",
+    "input_sha256": [
+      "84d356feba001f18e807e57767e70d0a4adc443a415d3af18e3d1ffc0252ae18"
+    ],
+    "human_review_authoritative": true
+  }
+}

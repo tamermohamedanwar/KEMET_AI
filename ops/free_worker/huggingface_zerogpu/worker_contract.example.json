@@ -1,0 +1,8 @@
+{
+  "worker_id": "kemet_hf_zerogpu_001",
+  "provider_id": "huggingface_zerogpu",
+  "endpoint": "https://YOUR-SPACE.hf.space",
+  "capabilities": ["VIDEO_GENERATION"],
+  "free": true,
+  "license": {"commercial_use": true}
+}

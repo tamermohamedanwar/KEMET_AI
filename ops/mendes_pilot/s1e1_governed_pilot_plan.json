@@ -1,0 +1,1910 @@
+{
+  "job": {
+    "approval_state": "pending",
+    "asset_refs": [],
+    "episode_identity": {
+      "episode": 1,
+      "episode_id": "s1e1",
+      "season": 1
+    },
+    "episode_package_digest": "71e3e20e947a85db2bab80ffe2b5e1550f7cfdd9c35b327550ad63f404ceda7c",
+    "evidence_refs": [],
+    "governance": {
+      "canonical_runtime_only": true,
+      "database_mutation": false,
+      "execution_authority": false,
+      "external_execution": false,
+      "human_approval_required": true,
+      "read_only_contract": true
+    },
+    "idempotency_key": "mendes:production:91cb6eadde052c58d36943ea72ccfbcb017e826f45d51b67595f5a0f59fe5f21",
+    "job_digest": "47248c2b4410d3ada63ca365aceee8923cb48b84beb96d642b8c287f49c5228b",
+    "job_id": "mendes:production:91cb6eadde052c58d36943ea",
+    "organization_id": 1,
+    "quality_gates": [
+      "character_consistency",
+      "continuity",
+      "historical_label",
+      "originality",
+      "platform_policy",
+      "rights"
+    ],
+    "script_digest": "786b6b8bf1829cbeec0611e6377b7b998550bca62a315c8229e3c3ab2f2f4c55",
+    "state": "PLANNED",
+    "version": "1.1",
+    "voice_contract_digest": "f1d957e41d5feafced062f1625d49a34b75dd5927656a9943df2aa37d2852455",
+    "workflow_purpose": "production"
+  },
+  "pilot": {
+    "governance": {
+      "auto_publish": false,
+      "canonical_runtime_only": true,
+      "database_mutation": false,
+      "execution_authority": false,
+      "external_content_is_data": true,
+      "external_execution": false,
+      "historical_facts_require_evidence": true,
+      "human_approval_required": true,
+      "read_only": true
+    },
+    "package": {
+      "approval": {
+        "publication": "not_requested",
+        "required": true,
+        "status": "pending"
+      },
+      "episode": {
+        "beats": {
+          "cliffhanger": "الخاتم يضيء وتظهر علامة لم يرها أحد من قبل.",
+          "climax": "يونس يضع الخاتم أمام العلامة، فيتحرك جزء صغير من الجدار.",
+          "escalation": "صوت معدني خافت يأتي من جدار قريب، ويبدو أن العلامة على الخاتم تطابق موضعًا فيه.",
+          "hook": "يونس يلتقط خاتمًا أزرق من بين حجارة قديمة في لحظة كان يجب أن يمر فيها المكان بلا مفاجآت.",
+          "inciting_incident": "الخاتم يدفأ في يده عندما يلمسه ضوء القمر.",
+          "reversal": "آمنة تكتشف أن العلامة موجودة في شيء قديم داخل العائلة، من دون ادعاء أنه دليل تاريخي موثق.",
+          "setup": "آمنة تحذره من الاحتفاظ بأي شيء لا يعرف أصله، لكنه يلاحظ علامة محفورة تشبه رمزًا منسيًا."
+        },
+        "characters": [
+          {
+            "character_id": "mendes-younes",
+            "family_id": "family-mendes",
+            "name": "يونس",
+            "role": "protagonist",
+            "status": "alive",
+            "traits": [
+              "curious",
+              "observant",
+              "loyal"
+            ],
+            "visual_identity": "original youthful Egyptian cartoon design",
+            "voice_profile": "natural Egyptian Arabic, young male, restrained emotion"
+          },
+          {
+            "character_id": "mendes-amna",
+            "family_id": "family-mendes",
+            "name": "آمنة",
+            "role": "older_sister_and_guardian",
+            "status": "alive",
+            "traits": [
+              "practical",
+              "protective",
+              "intuitive"
+            ],
+            "visual_identity": "original Egyptian cartoon design, distinct silhouette",
+            "voice_profile": "natural Egyptian Arabic, young adult female"
+          }
+        ],
+        "cliffhanger": "الخاتم يضيء وتظهر علامة لم يرها أحد من قبل.",
+        "continuity_inputs": [],
+        "emotional_goal": "wonder_then_personal_stakes",
+        "episode": 1,
+        "episode_id": "s1e1",
+        "era": {
+          "label": "Ancient Mendes fictional setting",
+          "type": "fictional"
+        },
+        "historical_label_required": true,
+        "narrative_threads": [
+          "mendes-origin-mystery"
+        ],
+        "originality_required": true,
+        "platforms": [
+          "youtube",
+          "tiktok",
+          "instagram",
+          "facebook"
+        ],
+        "premise": "شاب من عائلة منديس يجد خاتمًا غامضًا يفتح سرًا أكبر من حياته.",
+        "rights_required": true,
+        "season": 1,
+        "title": "الخاتم الأزرق"
+      },
+      "execution": {
+        "automatic": false,
+        "canonical_runtime_only": true,
+        "external_execution": false
+      },
+      "organization_id": 1,
+      "outcome": {
+        "commerce": {
+          "monetization": "do_not_scale_yet",
+          "opportunity": {
+            "audience": "Egyptian and Arabic-speaking story audience",
+            "commercial_intent": "informational",
+            "competition_score": 0.0,
+            "demand_score": 0.0,
+            "monetization_score": 0.0,
+            "platforms": [
+              "youtube",
+              "tiktok",
+              "instagram",
+              "facebook"
+            ],
+            "recommended_format": "story",
+            "topic": "الخاتم الأزرق"
+          },
+          "rule": "optimize_for_revenue_per_qualified_view_not_raw_views"
+        },
+        "content_id": "8256b167f448149ad2ad45a43c7a25fd42bc5ed2a85500636d413011cfa68f85",
+        "distribution": [
+          {
+            "approval_required": true,
+            "asset_uri": "pending:approved_media_asset",
+            "capabilities": [
+              "long_video",
+              "short_video",
+              "scheduled_publish"
+            ],
+            "caption": "الخاتم الأزرق",
+            "contract": "1.0",
+            "direct_publish": true,
+            "execution_authority": false,
+            "governed_executor": "kemet_canonical_runtime",
+            "platform": "youtube",
+            "provider_credentials": "secret_boundary_only",
+            "status": "proposal_only",
+            "title": "الخاتم الأزرق"
+          },
+          {
+            "approval_required": true,
+            "asset_uri": "pending:approved_media_asset",
+            "capabilities": [
+              "short_video",
+              "photo",
+              "draft_or_direct_publish"
+            ],
+            "caption": "الخاتم الأزرق",
+            "contract": "1.0",
+            "direct_publish": true,
+            "execution_authority": false,
+            "governed_executor": "kemet_canonical_runtime",
+            "platform": "tiktok",
+            "provider_credentials": "secret_boundary_only",
+            "status": "proposal_only",
+            "title": "الخاتم الأزرق"
+          },
+          {
+            "approval_required": true,
+            "asset_uri": "pending:approved_media_asset",
+            "capabilities": [
+              "reels",
+              "photo",
+              "story"
+            ],
+            "caption": "الخاتم الأزرق",
+            "contract": "1.0",
+            "direct_publish": true,
+            "execution_authority": false,
+            "governed_executor": "kemet_canonical_runtime",
+            "platform": "instagram",
+            "provider_credentials": "secret_boundary_only",
+            "status": "proposal_only",
+            "title": "الخاتم الأزرق"
+          },
+          {
+            "approval_required": true,
+            "asset_uri": "pending:approved_media_asset",
+            "capabilities": [
+              "video",
+              "reels",
+              "photo"
+            ],
+            "caption": "الخاتم الأزرق",
+            "contract": "1.0",
+            "direct_publish": true,
+            "execution_authority": false,
+            "governed_executor": "kemet_canonical_runtime",
+            "platform": "facebook",
+            "provider_credentials": "secret_boundary_only",
+            "status": "proposal_only",
+            "title": "الخاتم الأزرق"
+          }
+        ],
+        "engine": "kemet_content_outcome_orchestrator",
+        "flow": [
+          "story",
+          "production",
+          "quality_gate",
+          "approval",
+          "distribution",
+          "measurement",
+          "learning"
+        ],
+        "governance": {
+          "auto_publish": false,
+          "canonical_executor": "kemet_canonical_runtime",
+          "database_mutation": false,
+          "execution_authority": false,
+          "external_execution": false,
+          "human_approval_required": true,
+          "mode": "advisory",
+          "read_only": true
+        },
+        "learning": {
+          "auto_policy_change": false,
+          "auto_publish": false,
+          "feeds_next_episode": true,
+          "mode": "observational",
+          "recommendation_only": true
+        },
+        "measurement": {
+          "attribution_required": true,
+          "causal_claim": false,
+          "metrics": [
+            "impressions",
+            "views",
+            "watch_time_seconds",
+            "retention_rate",
+            "shares",
+            "comments",
+            "followers_gained",
+            "clicks",
+            "qualified_views",
+            "conversions",
+            "revenue"
+          ],
+          "primary": [
+            "retention_rate",
+            "shares",
+            "qualified_views",
+            "revenue"
+          ]
+        },
+        "organization_id": 1,
+        "production": {
+          "duration_seconds": 90,
+          "episode_title": "الخاتم الأزرق",
+          "external_generation": {
+            "allowed": true,
+            "execution_authority": false,
+            "provider_is_untrusted": true
+          },
+          "governance": {
+            "canonical_executor": "kemet_canonical_runtime",
+            "human_approval_required": true,
+            "mode": "advisory"
+          },
+          "language": "ar-EG",
+          "organization_id": 1,
+          "pipeline": "kemet_media_production",
+          "production_studio": {
+            "approval_gates": [
+              "creative",
+              "rights",
+              "budget",
+              "distribution"
+            ],
+            "budget": {
+              "currency": "USD",
+              "hard_cap": null,
+              "mode": "estimate_before_execution"
+            },
+            "duration_seconds": 90,
+            "execution": {
+              "automatic": false,
+              "canonical_runtime_only": true
+            },
+            "governance": {
+              "database_mutation": false,
+              "external_execution": false,
+              "human_approval_required": true,
+              "read_only": true
+            },
+            "language": "ar-EG",
+            "organization_id": 1,
+            "plan_digest": "aa1fe8abc89d036eb628d6dabdc02c480a95b9bd9ce0b7f0e1fa5d81a070ef56",
+            "platforms": [
+              "youtube",
+              "tiktok",
+              "instagram",
+              "facebook"
+            ],
+            "reference": {
+              "provided": false,
+              "uri": null
+            },
+            "stages": [
+              {
+                "capability": "research",
+                "quality_gate": "source_trace",
+                "stage": "research",
+                "tool_recommendations": {
+                  "capability": "research",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "research"
+                      ],
+                      "cost_model": "local_or_hosted_compute",
+                      "fallback_ids": [
+                        "openrouter",
+                        "google_models"
+                      ],
+                      "name": "AI2 olmOCR",
+                      "provenance": "official_ai2",
+                      "provider_id": "document_intelligence",
+                      "security_tier": "high",
+                      "tool_id": "olmocr"
+                    },
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "image_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "openrouter",
+                        "groq"
+                      ],
+                      "name": "Google model APIs",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "google_models"
+                    },
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "google",
+                        "groq",
+                        "anthropic"
+                      ],
+                      "name": "OpenRouter",
+                      "provenance": "official_provider",
+                      "provider_id": "openrouter",
+                      "security_tier": "medium",
+                      "tool_id": "openrouter"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "text_generation",
+                "quality_gate": "originality",
+                "stage": "script",
+                "tool_recommendations": {
+                  "capability": "text_generation",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "image_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "openrouter",
+                        "groq"
+                      ],
+                      "name": "Google model APIs",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "google_models"
+                    },
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "google",
+                        "groq",
+                        "anthropic"
+                      ],
+                      "name": "OpenRouter",
+                      "provenance": "official_provider",
+                      "provider_id": "openrouter",
+                      "security_tier": "medium",
+                      "tool_id": "openrouter"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "image_generation",
+                "quality_gate": "character_consistency",
+                "stage": "visuals",
+                "tool_recommendations": {
+                  "capability": "image_generation",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "image_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "openrouter",
+                        "groq"
+                      ],
+                      "name": "Google model APIs",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "google_models"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "video_generation",
+                "quality_gate": "continuity",
+                "stage": "motion",
+                "tool_recommendations": {
+                  "capability": "video_generation",
+                  "organization_id": 1,
+                  "recommendations": [],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "voice_generation",
+                "local_media_providers": [
+                  {
+                    "capabilities": [
+                      "tts",
+                      "voice_clone",
+                      "dubbing",
+                      "stt",
+                      "speaker_separation",
+                      "denoise",
+                      "music",
+                      "sfx"
+                    ],
+                    "configured": false,
+                    "credentials_exposed": false,
+                    "execution_authority": false,
+                    "license_class": "external_license_review_required",
+                    "name": "VODER local media engine",
+                    "provenance": "external_local_tool",
+                    "provider_id": "voder"
+                  }
+                ],
+                "quality_gate": "voice_rights",
+                "stage": "voice",
+                "tool_recommendations": {
+                  "capability": "voice_generation",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "voice_generation"
+                      ],
+                      "cost_model": "local_compute",
+                      "fallback_ids": [
+                        "google_models",
+                        "openrouter"
+                      ],
+                      "name": "VODER local media engine",
+                      "provenance": "external_local_tool",
+                      "provider_id": "local_media",
+                      "security_tier": "medium",
+                      "tool_id": "voder"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                },
+                "voice_policy": {
+                  "execution_authority": false,
+                  "natural_delivery_preferred": true,
+                  "provider_is_untrusted": true,
+                  "voice_clone_requires_rights_attestation": true
+                }
+              },
+              {
+                "capability": "video_generation",
+                "quality_gate": "delivery_quality",
+                "stage": "edit",
+                "tool_recommendations": {
+                  "capability": "video_generation",
+                  "organization_id": 1,
+                  "recommendations": [],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "research",
+                "quality_gate": "policy_and_rights",
+                "stage": "review",
+                "tool_recommendations": {
+                  "capability": "research",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "research"
+                      ],
+                      "cost_model": "local_or_hosted_compute",
+                      "fallback_ids": [
+                        "openrouter",
+                        "google_models"
+                      ],
+                      "name": "AI2 olmOCR",
+                      "provenance": "official_ai2",
+                      "provider_id": "document_intelligence",
+                      "security_tier": "high",
+                      "tool_id": "olmocr"
+                    },
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "image_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "openrouter",
+                        "groq"
+                      ],
+                      "name": "Google model APIs",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "google_models"
+                    },
+                    {
+                      "capabilities": [
+                        "text_generation",
+                        "research",
+                        "coding"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "google",
+                        "groq",
+                        "anthropic"
+                      ],
+                      "name": "OpenRouter",
+                      "provenance": "official_provider",
+                      "provider_id": "openrouter",
+                      "security_tier": "medium",
+                      "tool_id": "openrouter"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              },
+              {
+                "capability": "analytics",
+                "quality_gate": "platform_readiness",
+                "stage": "distribution",
+                "tool_recommendations": {
+                  "capability": "analytics",
+                  "organization_id": 1,
+                  "recommendations": [
+                    {
+                      "capabilities": [
+                        "search_visibility",
+                        "analytics"
+                      ],
+                      "cost_model": "quota_dependent",
+                      "fallback_ids": [],
+                      "name": "Google Search Console",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "search_console"
+                    },
+                    {
+                      "capabilities": [
+                        "analytics"
+                      ],
+                      "cost_model": "quota_dependent",
+                      "fallback_ids": [],
+                      "name": "YouTube Data API",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "youtube_data"
+                    },
+                    {
+                      "capabilities": [
+                        "analytics"
+                      ],
+                      "cost_model": "usage_dependent",
+                      "fallback_ids": [
+                        "youtube_data"
+                      ],
+                      "name": "YouTube Analytics API",
+                      "provenance": "official_google",
+                      "provider_id": "google",
+                      "security_tier": "high",
+                      "tool_id": "youtube_analytics"
+                    }
+                  ],
+                  "selection_policy": {
+                    "fallback_required_for_critical_paths": true,
+                    "security_trust_before_cost": true,
+                    "verified_provenance_required": true
+                  }
+                }
+              }
+            ],
+            "title": "الخاتم الأزرق",
+            "version": "1.1"
+          },
+          "quality_gates": {
+            "character_consistency": "required",
+            "continuity": "required",
+            "historical_label": "required",
+            "originality": "required",
+            "platform_policy": "required",
+            "rights": "required"
+          },
+          "stages": [
+            {
+              "stage": "script",
+              "status": "planned"
+            },
+            {
+              "stage": "scenes",
+              "status": "planned"
+            },
+            {
+              "stage": "images",
+              "status": "planned"
+            },
+            {
+              "stage": "animation",
+              "status": "planned"
+            },
+            {
+              "stage": "voice",
+              "status": "planned"
+            },
+            {
+              "stage": "music",
+              "status": "planned"
+            },
+            {
+              "stage": "sound_effects",
+              "status": "planned"
+            },
+            {
+              "stage": "edit",
+              "status": "planned"
+            }
+          ],
+          "status": "production_plan",
+          "success": true,
+          "version": "1.0"
+        },
+        "status": "proposal",
+        "story": {
+          "episode_id": "s1e1",
+          "historical_label_required": true,
+          "title": "الخاتم الأزرق"
+        },
+        "success": true,
+        "version": "1.0"
+      },
+      "package_digest": "71e3e20e947a85db2bab80ffe2b5e1550f7cfdd9c35b327550ad63f404ceda7c",
+      "production": {
+        "duration_seconds": 90,
+        "episode_title": "الخاتم الأزرق",
+        "external_generation": {
+          "allowed": true,
+          "execution_authority": false,
+          "provider_is_untrusted": true
+        },
+        "governance": {
+          "canonical_executor": "kemet_canonical_runtime",
+          "human_approval_required": true,
+          "mode": "advisory"
+        },
+        "language": "ar-EG",
+        "organization_id": 1,
+        "pipeline": "kemet_media_production",
+        "production_studio": {
+          "approval_gates": [
+            "creative",
+            "rights",
+            "budget",
+            "distribution"
+          ],
+          "budget": {
+            "currency": "USD",
+            "hard_cap": null,
+            "mode": "estimate_before_execution"
+          },
+          "duration_seconds": 90,
+          "execution": {
+            "automatic": false,
+            "canonical_runtime_only": true
+          },
+          "governance": {
+            "database_mutation": false,
+            "external_execution": false,
+            "human_approval_required": true,
+            "read_only": true
+          },
+          "language": "ar-EG",
+          "organization_id": 1,
+          "plan_digest": "aa1fe8abc89d036eb628d6dabdc02c480a95b9bd9ce0b7f0e1fa5d81a070ef56",
+          "platforms": [
+            "youtube",
+            "tiktok",
+            "instagram",
+            "facebook"
+          ],
+          "reference": {
+            "provided": false,
+            "uri": null
+          },
+          "stages": [
+            {
+              "capability": "research",
+              "quality_gate": "source_trace",
+              "stage": "research",
+              "tool_recommendations": {
+                "capability": "research",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "research"
+                    ],
+                    "cost_model": "local_or_hosted_compute",
+                    "fallback_ids": [
+                      "openrouter",
+                      "google_models"
+                    ],
+                    "name": "AI2 olmOCR",
+                    "provenance": "official_ai2",
+                    "provider_id": "document_intelligence",
+                    "security_tier": "high",
+                    "tool_id": "olmocr"
+                  },
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "image_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "openrouter",
+                      "groq"
+                    ],
+                    "name": "Google model APIs",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "google_models"
+                  },
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "google",
+                      "groq",
+                      "anthropic"
+                    ],
+                    "name": "OpenRouter",
+                    "provenance": "official_provider",
+                    "provider_id": "openrouter",
+                    "security_tier": "medium",
+                    "tool_id": "openrouter"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "text_generation",
+              "quality_gate": "originality",
+              "stage": "script",
+              "tool_recommendations": {
+                "capability": "text_generation",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "image_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "openrouter",
+                      "groq"
+                    ],
+                    "name": "Google model APIs",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "google_models"
+                  },
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "google",
+                      "groq",
+                      "anthropic"
+                    ],
+                    "name": "OpenRouter",
+                    "provenance": "official_provider",
+                    "provider_id": "openrouter",
+                    "security_tier": "medium",
+                    "tool_id": "openrouter"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "image_generation",
+              "quality_gate": "character_consistency",
+              "stage": "visuals",
+              "tool_recommendations": {
+                "capability": "image_generation",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "image_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "openrouter",
+                      "groq"
+                    ],
+                    "name": "Google model APIs",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "google_models"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "video_generation",
+              "quality_gate": "continuity",
+              "stage": "motion",
+              "tool_recommendations": {
+                "capability": "video_generation",
+                "organization_id": 1,
+                "recommendations": [],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "voice_generation",
+              "local_media_providers": [
+                {
+                  "capabilities": [
+                    "tts",
+                    "voice_clone",
+                    "dubbing",
+                    "stt",
+                    "speaker_separation",
+                    "denoise",
+                    "music",
+                    "sfx"
+                  ],
+                  "configured": false,
+                  "credentials_exposed": false,
+                  "execution_authority": false,
+                  "license_class": "external_license_review_required",
+                  "name": "VODER local media engine",
+                  "provenance": "external_local_tool",
+                  "provider_id": "voder"
+                }
+              ],
+              "quality_gate": "voice_rights",
+              "stage": "voice",
+              "tool_recommendations": {
+                "capability": "voice_generation",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "voice_generation"
+                    ],
+                    "cost_model": "local_compute",
+                    "fallback_ids": [
+                      "google_models",
+                      "openrouter"
+                    ],
+                    "name": "VODER local media engine",
+                    "provenance": "external_local_tool",
+                    "provider_id": "local_media",
+                    "security_tier": "medium",
+                    "tool_id": "voder"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              },
+              "voice_policy": {
+                "execution_authority": false,
+                "natural_delivery_preferred": true,
+                "provider_is_untrusted": true,
+                "voice_clone_requires_rights_attestation": true
+              }
+            },
+            {
+              "capability": "video_generation",
+              "quality_gate": "delivery_quality",
+              "stage": "edit",
+              "tool_recommendations": {
+                "capability": "video_generation",
+                "organization_id": 1,
+                "recommendations": [],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "research",
+              "quality_gate": "policy_and_rights",
+              "stage": "review",
+              "tool_recommendations": {
+                "capability": "research",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "research"
+                    ],
+                    "cost_model": "local_or_hosted_compute",
+                    "fallback_ids": [
+                      "openrouter",
+                      "google_models"
+                    ],
+                    "name": "AI2 olmOCR",
+                    "provenance": "official_ai2",
+                    "provider_id": "document_intelligence",
+                    "security_tier": "high",
+                    "tool_id": "olmocr"
+                  },
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "image_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "openrouter",
+                      "groq"
+                    ],
+                    "name": "Google model APIs",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "google_models"
+                  },
+                  {
+                    "capabilities": [
+                      "text_generation",
+                      "research",
+                      "coding"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "google",
+                      "groq",
+                      "anthropic"
+                    ],
+                    "name": "OpenRouter",
+                    "provenance": "official_provider",
+                    "provider_id": "openrouter",
+                    "security_tier": "medium",
+                    "tool_id": "openrouter"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            },
+            {
+              "capability": "analytics",
+              "quality_gate": "platform_readiness",
+              "stage": "distribution",
+              "tool_recommendations": {
+                "capability": "analytics",
+                "organization_id": 1,
+                "recommendations": [
+                  {
+                    "capabilities": [
+                      "search_visibility",
+                      "analytics"
+                    ],
+                    "cost_model": "quota_dependent",
+                    "fallback_ids": [],
+                    "name": "Google Search Console",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "search_console"
+                  },
+                  {
+                    "capabilities": [
+                      "analytics"
+                    ],
+                    "cost_model": "quota_dependent",
+                    "fallback_ids": [],
+                    "name": "YouTube Data API",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "youtube_data"
+                  },
+                  {
+                    "capabilities": [
+                      "analytics"
+                    ],
+                    "cost_model": "usage_dependent",
+                    "fallback_ids": [
+                      "youtube_data"
+                    ],
+                    "name": "YouTube Analytics API",
+                    "provenance": "official_google",
+                    "provider_id": "google",
+                    "security_tier": "high",
+                    "tool_id": "youtube_analytics"
+                  }
+                ],
+                "selection_policy": {
+                  "fallback_required_for_critical_paths": true,
+                  "security_trust_before_cost": true,
+                  "verified_provenance_required": true
+                }
+              }
+            }
+          ],
+          "title": "الخاتم الأزرق",
+          "version": "1.1"
+        },
+        "quality_gates": {
+          "character_consistency": "required",
+          "continuity": "required",
+          "historical_label": "required",
+          "originality": "required",
+          "platform_policy": "required",
+          "rights": "required"
+        },
+        "stages": [
+          {
+            "stage": "script",
+            "status": "planned"
+          },
+          {
+            "stage": "scenes",
+            "status": "planned"
+          },
+          {
+            "stage": "images",
+            "status": "planned"
+          },
+          {
+            "stage": "animation",
+            "status": "planned"
+          },
+          {
+            "stage": "voice",
+            "status": "planned"
+          },
+          {
+            "stage": "music",
+            "status": "planned"
+          },
+          {
+            "stage": "sound_effects",
+            "status": "planned"
+          },
+          {
+            "stage": "edit",
+            "status": "planned"
+          }
+        ],
+        "status": "production_plan",
+        "success": true,
+        "version": "1.0"
+      },
+      "quality_gates": [
+        "originality",
+        "rights",
+        "historical_label",
+        "character_consistency",
+        "continuity",
+        "platform_policy"
+      ],
+      "scenes": [
+        {
+          "characters": [
+            "mendes-younes"
+          ],
+          "description": "لقطة افتتاحية سريعة ليد يونس وهي تلتقط الخاتم الأزرق.",
+          "dialogue": "يونس: إيه ده؟",
+          "duration_seconds": 10,
+          "scene_number": 1,
+          "visual_prompt": "original Egyptian cartoon, cinematic close-up, ancient-inspired stone setting, no copyrighted style"
+        },
+        {
+          "characters": [
+            "mendes-younes",
+            "mendes-amna"
+          ],
+          "description": "آمنة تمنعه من الاحتفاظ بالخاتم وتطلب منه فحص العلامة.",
+          "dialogue": "آمنة: الحاجة اللي مش عارفين أصلها، ما ناخدهاش معانا.",
+          "duration_seconds": 15,
+          "scene_number": 2,
+          "visual_prompt": "two original characters, warm Egyptian evening light, consistent wardrobe and proportions"
+        },
+        {
+          "characters": [
+            "mendes-younes"
+          ],
+          "description": "الخاتم يدفأ ويظهر انعكاس ضوء غير معتاد.",
+          "dialogue": "يونس: استني... هو كان دافي؟",
+          "duration_seconds": 15,
+          "scene_number": 3,
+          "visual_prompt": "mysterious blue ring glow, restrained magical realism, original environment"
+        },
+        {
+          "characters": [
+            "mendes-younes",
+            "mendes-amna"
+          ],
+          "description": "صوت معدني يقود الاثنين إلى جدار يحمل علامة مشابهة.",
+          "dialogue": "آمنة: العلامة دي مش صدفة.",
+          "duration_seconds": 15,
+          "scene_number": 4,
+          "visual_prompt": "ancient-inspired wall, subtle mystery, no historical claim, original design"
+        },
+        {
+          "characters": [
+            "mendes-younes",
+            "mendes-amna"
+          ],
+          "description": "يونس يضع الخاتم أمام العلامة فيتحرك جزء من الجدار.",
+          "dialogue": "يونس: آمنة... شوفي!",
+          "duration_seconds": 20,
+          "scene_number": 5,
+          "visual_prompt": "original cinematic reveal, stone mechanism moving slightly, suspense"
+        },
+        {
+          "characters": [
+            "mendes-younes",
+            "mendes-amna"
+          ],
+          "description": "الضوء يكشف علامة جديدة وينتهي المشهد قبل معرفة ما وراءها.",
+          "dialogue": "آمنة: إحنا فتحنا إيه؟",
+          "duration_seconds": 15,
+          "scene_number": 6,
+          "visual_prompt": "blue light, original mysterious symbol, cliffhanger composition"
+        }
+      ],
+      "script": {
+        "beats": {
+          "cliffhanger": "الخاتم يضيء وتظهر علامة لم يرها أحد من قبل.",
+          "climax": "يونس يضع الخاتم أمام العلامة، فيتحرك جزء صغير من الجدار.",
+          "escalation": "صوت معدني خافت يأتي من جدار قريب، ويبدو أن العلامة على الخاتم تطابق موضعًا فيه.",
+          "hook": "يونس يلتقط خاتمًا أزرق من بين حجارة قديمة في لحظة كان يجب أن يمر فيها المكان بلا مفاجآت.",
+          "inciting_incident": "الخاتم يدفأ في يده عندما يلمسه ضوء القمر.",
+          "reversal": "آمنة تكتشف أن العلامة موجودة في شيء قديم داخل العائلة، من دون ادعاء أنه دليل تاريخي موثق.",
+          "setup": "آمنة تحذره من الاحتفاظ بأي شيء لا يعرف أصله، لكنه يلاحظ علامة محفورة تشبه رمزًا منسيًا."
+        },
+        "classification": "fictional_events_and_dialogue",
+        "dialogue_policy": "original_dialogue_only",
+        "historical_claim": false,
+        "language": "ar-EG",
+        "rights_status": "original_content_planned",
+        "source_policy": "historical facts require traceable sources before publication",
+        "summary": "شاب من عائلة منديس يجد خاتمًا غامضًا يفتح سرًا أكبر من حياته.",
+        "title": "الخاتم الأزرق"
+      },
+      "script_digest": "786b6b8bf1829cbeec0611e6377b7b998550bca62a315c8229e3c3ab2f2f4c55",
+      "series": "Hikayat Mendes",
+      "version": "1.0",
+      "voice_contract": {
+        "contract_digest": "f1d957e41d5feafced062f1625d49a34b75dd5927656a9943df2aa37d2852455",
+        "delivery": "natural_egyptian_arabic",
+        "execution_authority": false,
+        "language": "ar-EG",
+        "organization_id": 1,
+        "provider": "unselected",
+        "rights_attestation_required": true,
+        "script_digest": "786b6b8bf1829cbeec0611e6377b7b998550bca62a315c8229e3c3ab2f2f4c55",
+        "status": "pending_rights_and_provider_selection",
+        "version": "1.0",
+        "voice_clone": false
+      },
+      "world": "Mendes World"
+    },
+    "status": "pilot_plan",
+    "success": true
+  },
+  "readiness": {
+    "approval": {
+      "publication": "NOT_REQUESTED",
+      "status": "pending"
+    },
+    "binding": {
+      "episode_package_digest": "71e3e20e947a85db2bab80ffe2b5e1550f7cfdd9c35b327550ad63f404ceda7c",
+      "quality_gates": [
+        "originality",
+        "rights",
+        "historical_label",
+        "character_consistency",
+        "continuity",
+        "platform_policy"
+      ],
+      "script_digest": "786b6b8bf1829cbeec0611e6377b7b998550bca62a315c8229e3c3ab2f2f4c55",
+      "voice_contract_digest": "f1d957e41d5feafced062f1625d49a34b75dd5927656a9943df2aa37d2852455"
+    },
+    "blocking_items": [],
+    "budget_review": {
+      "actual_charge": null,
+      "blocking_items": [],
+      "categories": {
+        "analytics": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "animation": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "contingency": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "distribution": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "editing": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "music": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "script": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "sound_effects": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "story_development": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "thumbnail": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "visuals": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        },
+        "voice": {
+          "actual_charge": null,
+          "currency": "USD",
+          "estimated_cost": null,
+          "pricing_confidence": "unknown",
+          "pricing_source": null,
+          "pricing_timestamp": null,
+          "pricing_version": null,
+          "status": "UNKNOWN",
+          "verified_cost": null
+        }
+      },
+      "cost_status": "partially_evidenced",
+      "currency": "USD",
+      "estimated_cost": null,
+      "evidence": {
+        "pricing": {
+          "evidence_digest": "de507e302e8ff9596f42cc06632d9ead21b27ed78605efdaf4db9d25316ff147",
+          "pricing_confidence": "high_for_listed_plan_prices",
+          "pricing_source": "https://elevenlabs.io/pricing",
+          "pricing_timestamp": "2026-09-15",
+          "pricing_version": "current_page",
+          "provider": "elevenlabs",
+          "source_type": "official_provider_pricing"
+        },
+        "unknown_categories": [
+          "script",
+          "story_development",
+          "visuals",
+          "animation",
+          "music",
+          "sound_effects",
+          "editing",
+          "thumbnail",
+          "distribution",
+          "analytics",
+          "contingency"
+        ],
+        "voice": {
+          "evidence_digest": "de507e302e8ff9596f42cc06632d9ead21b27ed78605efdaf4db9d25316ff147",
+          "pricing_confidence": "high_for_listed_plan_prices",
+          "pricing_source": "https://elevenlabs.io/pricing/api",
+          "pricing_status": "official_source_available",
+          "pricing_timestamp": "2026-09-15",
+          "pricing_version": "current_page",
+          "provider": "elevenlabs"
+        }
+      },
+      "review_required_items": [
+        "budget:remaining_provider_pricing_required"
+      ],
+      "status": "REVIEW_REQUIRED",
+      "verified_cost": null
+    },
+    "creative_review": {
+      "blocking_items": [],
+      "checks": {
+        "clear_premise": true,
+        "cliffhanger": true,
+        "emotional_goal": true,
+        "hook": true,
+        "original_dialogue": true,
+        "originality_planned": true,
+        "protagonist": true,
+        "six_scenes": true,
+        "supporting_character": true
+      },
+      "review_required_items": [],
+      "status": "PASS"
+    },
+    "critical_review_items": [],
+    "digest_integrity": {
+      "package_script_voice_bindings_verified": true,
+      "readiness_digest_generated_after_material_binding": true,
+      "status": "PASS"
+    },
+    "episode_identity": {
+      "episode": 1,
+      "episode_id": "s1e1",
+      "season": 1,
+      "title": "الخاتم الأزرق"
+    },
+    "governance": {
+      "auto_publish": false,
+      "canonical_runtime_only": true,
+      "database_mutation": false,
+      "decision_support_only": true,
+      "execution_authority": false,
+      "external_execution": false,
+      "human_approval_required": true
+    },
+    "historical_review": {
+      "blocking_items": [],
+      "checks": {
+        "fictional_classification": true,
+        "source_required_for_future_facts": true
+      },
+      "classification": "fictional",
+      "historical_claim": false,
+      "review_required_items": [],
+      "status": "PASS"
+    },
+    "job_identity": {
+      "approval_state": "pending",
+      "idempotency_key": "mendes:production:91cb6eadde052c58d36943ea72ccfbcb017e826f45d51b67595f5a0f59fe5f21",
+      "job_digest": "47248c2b4410d3ada63ca365aceee8923cb48b84beb96d642b8c287f49c5228b",
+      "job_id": "mendes:production:91cb6eadde052c58d36943ea",
+      "state": "PLANNED",
+      "workflow_purpose": "production"
+    },
+    "organization_id": 1,
+    "platform_readiness": {
+      "blocking_items": [],
+      "checks": {
+        "duration_90_seconds": true,
+        "facebook": true,
+        "instagram": true,
+        "language_ar_eg": true,
+        "publishing_not_requested": true,
+        "tiktok": true,
+        "youtube": true
+      },
+      "evidence": {
+        "facebook": {
+          "evidence_digest": "8165a2380f5f105a169cca7e4152d47686036ebbdead7ae4f6a2d619cae87612",
+          "retrieved_at": "2026-09-15",
+          "source_type": "official_platform_or_meta_help",
+          "source_uri": "https://www.facebook.com/help/289207354498410",
+          "verified_requirement": "Page_access_or_task_access_can_manage_Page_content; API_publishing_authority_not_verified"
+        },
+        "instagram": {
+          "evidence_digest": "1641405e26ed7baea7dbe1c3e14c7c660bbd0bf7207b1136ff84e949adf43c99",
+          "retrieved_at": "2026-09-15",
+          "source_type": "official_platform_or_meta_help",
+          "source_uri": "https://www.facebook.com/help/instagram/439971288310029",
+          "verified_requirement": "professional_account_required_for_native_scheduled_reels; API_publishing_authority_not_verified"
+        },
+        "tiktok": {
+          "evidence_digest": "44bc9f42d1bb8e8ac5a8b8408a2022ccd09fda02cf29cfa6a79b84c9faec31b1",
+          "retrieved_at": "2026-09-15",
+          "source_type": "official_platform_or_meta_help",
+          "source_uri": "https://developers.tiktok.com/docs/en/content-posting-api-media-transfer-guide",
+          "verified_requirement": "video_duration_and_creator_limits_are_account_and_api_dependent"
+        },
+        "youtube": {
+          "evidence_digest": "af7f31350b7dd43dcb333ad46d714888226c32f9a46434f8d314e5835daa3ff8",
+          "retrieved_at": "2026-09-15",
+          "source_type": "official_platform_or_meta_help",
+          "source_uri": "https://support.google.com/youtube/answer/15424877",
+          "verified_requirement": "square_or_vertical_up_to_3_minutes_is_eligible_for_shorts_classification"
+        }
+      },
+      "metadata": {
+        "category": "fictional_story",
+        "content_classification": "fictional_events_and_dialogue",
+        "fictional_content_label": true,
+        "keywords": [
+          "حكايات مندس",
+          "الخاتم الأزرق",
+          "قصة قصيرة",
+          "خيال"
+        ],
+        "language": "ar-EG",
+        "long_description": "شاب من عائلة منديس يجد خاتمًا غامضًا يفتح سرًا أكبر من حياته.",
+        "publication_status": "NOT_REQUESTED",
+        "short_description": "شاب من عائلة منديس يجد خاتمًا غامضًا يفتح سرًا أكبر من حياته.",
+        "thumbnail_requirement": "platform_specific_thumbnail_or_cover",
+        "title": "الخاتم الأزرق"
+      },
+      "metadata_status": "planned_not_published",
+      "platforms": [
+        "youtube",
+        "tiktok",
+        "instagram",
+        "facebook"
+      ],
+      "records": {
+        "facebook": {
+          "approval_required": true,
+          "aspect_ratio": "UNKNOWN_UNTIL_RENDER",
+          "authority_distinction": {
+            "channel_connection": "not_authority",
+            "login_authentication": "not_authority",
+            "publication_approval": "human_approval_required",
+            "publishing_authority": "must_be_verified"
+          },
+          "content_type": "short_video",
+          "description_ready": true,
+          "duration": 90,
+          "evidence": {
+            "evidence_digest": "8165a2380f5f105a169cca7e4152d47686036ebbdead7ae4f6a2d619cae87612",
+            "retrieved_at": "2026-09-15",
+            "source_type": "official_platform_or_meta_help",
+            "source_uri": "https://www.facebook.com/help/289207354498410",
+            "verified_requirement": "Page_access_or_task_access_can_manage_Page_content; API_publishing_authority_not_verified"
+          },
+          "language": "ar-EG",
+          "metadata_ready": true,
+          "platform": "facebook",
+          "policy_review": "REVIEW_REQUIRED",
+          "publication_status": "NOT_REQUESTED",
+          "publishing_authority": "NOT_VERIFIED",
+          "resolution": "UNKNOWN_UNTIL_RENDER",
+          "rights_ready": true,
+          "status": "REVIEW_REQUIRED",
+          "thumbnail_ready": false,
+          "title_ready": true
+        },
+        "instagram": {
+          "approval_required": true,
+          "aspect_ratio": "UNKNOWN_UNTIL_RENDER",
+          "authority_distinction": {
+            "channel_connection": "not_authority",
+            "login_authentication": "not_authority",
+            "publication_approval": "human_approval_required",
+            "publishing_authority": "must_be_verified"
+          },
+          "content_type": "short_video",
+          "description_ready": true,
+          "duration": 90,
+          "evidence": {
+            "evidence_digest": "1641405e26ed7baea7dbe1c3e14c7c660bbd0bf7207b1136ff84e949adf43c99",
+            "retrieved_at": "2026-09-15",
+            "source_type": "official_platform_or_meta_help",
+            "source_uri": "https://www.facebook.com/help/instagram/439971288310029",
+            "verified_requirement": "professional_account_required_for_native_scheduled_reels; API_publishing_authority_not_verified"
+          },
+          "language": "ar-EG",
+          "metadata_ready": true,
+          "platform": "instagram",
+          "policy_review": "REVIEW_REQUIRED",
+          "publication_status": "NOT_REQUESTED",
+          "publishing_authority": "NOT_VERIFIED",
+          "resolution": "UNKNOWN_UNTIL_RENDER",
+          "rights_ready": true,
+          "status": "REVIEW_REQUIRED",
+          "thumbnail_ready": false,
+          "title_ready": true
+        },
+        "tiktok": {
+          "approval_required": true,
+          "aspect_ratio": "UNKNOWN_UNTIL_RENDER",
+          "authority_distinction": {
+            "channel_connection": "not_authority",
+            "login_authentication": "not_authority",
+            "publication_approval": "human_approval_required",
+            "publishing_authority": "must_be_verified"
+          },
+          "content_type": "short_video",
+          "description_ready": true,
+          "duration": 90,
+          "evidence": {
+            "evidence_digest": "44bc9f42d1bb8e8ac5a8b8408a2022ccd09fda02cf29cfa6a79b84c9faec31b1",
+            "retrieved_at": "2026-09-15",
+            "source_type": "official_platform_or_meta_help",
+            "source_uri": "https://developers.tiktok.com/docs/en/content-posting-api-media-transfer-guide",
+            "verified_requirement": "video_duration_and_creator_limits_are_account_and_api_dependent"
+          },
+          "language": "ar-EG",
+          "metadata_ready": true,
+          "platform": "tiktok",
+          "policy_review": "REVIEW_REQUIRED",
+          "publication_status": "NOT_REQUESTED",
+          "publishing_authority": "NOT_VERIFIED",
+          "resolution": "UNKNOWN_UNTIL_RENDER",
+          "rights_ready": true,
+          "status": "REVIEW_REQUIRED",
+          "thumbnail_ready": false,
+          "title_ready": true
+        },
+        "youtube": {
+          "approval_required": true,
+          "aspect_ratio": "UNKNOWN_UNTIL_RENDER",
+          "authority_distinction": {
+            "channel_connection": "not_authority",
+            "login_authentication": "not_authority",
+            "publication_approval": "human_approval_required",
+            "publishing_authority": "must_be_verified"
+          },
+          "content_type": "short_video",
+          "description_ready": true,
+          "duration": 90,
+          "evidence": {
+            "evidence_digest": "af7f31350b7dd43dcb333ad46d714888226c32f9a46434f8d314e5835daa3ff8",
+            "retrieved_at": "2026-09-15",
+            "source_type": "official_platform_or_meta_help",
+            "source_uri": "https://support.google.com/youtube/answer/15424877",
+            "verified_requirement": "square_or_vertical_up_to_3_minutes_is_eligible_for_shorts_classification"
+          },
+          "language": "ar-EG",
+          "metadata_ready": true,
+          "platform": "youtube",
+          "policy_review": "REVIEW_REQUIRED",
+          "publication_status": "NOT_REQUESTED",
+          "publishing_authority": "NOT_VERIFIED",
+          "resolution": "UNKNOWN_UNTIL_RENDER",
+          "rights_ready": true,
+          "status": "REVIEW_REQUIRED",
+          "thumbnail_ready": false,
+          "title_ready": true
+        }
+      },
+      "review_required_items": [
+        "platform:policy_and_metadata_review_required",
+        "platform:publishing_approval_required"
+      ],
+      "rights_ready": true,
+      "status": "REVIEW_REQUIRED"
+    },
+    "policy_review": {
+      "blocking_items": [],
+      "checks": {
+        "fictional_content_reviewed": true,
+        "risk_signals_absent": true
+      },
+      "review_required_items": [],
+      "signals": {
+        "dangerous_instruction": false,
+        "deceptive_claim": false,
+        "harassment": false,
+        "hate_or_extremism": false,
+        "historical_misinformation": false,
+        "sexual_content": false
+      },
+      "status": "PASS"
+    },
+    "quality_gates": {
+      "character_consistency": "PASS",
+      "continuity": "PASS",
+      "historical_label": "PASS",
+      "originality": "REVIEW_REQUIRED",
+      "platform_policy": "REVIEW_REQUIRED",
+      "rights": "REVIEW_REQUIRED"
+    },
+    "readiness_digest": "753b8b72faa12b2c1359aa6fc883393021f99f921cc4eafc041def90d959bf35",
+    "readiness_status": "REVIEW_REQUIRED",
+    "review_required_items": [
+      "budget:remaining_provider_pricing_required",
+      "platform:policy_and_metadata_review_required",
+      "platform:publishing_approval_required",
+      "voice:provider_selection_required"
+    ],
+    "rights_review": {
+      "blocking_items": [],
+      "checks": {
+        "external_assets_declared": true,
+        "no_external_assets_without_provenance": true,
+        "script_originality_status": true,
+        "voice_clone_disabled": true,
+        "voice_rights_attestation_required": true
+      },
+      "external_assets": [],
+      "review_required_items": [],
+      "status": "PASS"
+    },
+    "risks": [
+      "budget:remaining_provider_pricing_required",
+      "platform:policy_and_metadata_review_required",
+      "platform:publishing_approval_required",
+      "voice:provider_selection_required"
+    ],
+    "tenant_integrity": {
+      "job_organization_matches": true,
+      "organization_id": 1,
+      "package_organization_matches": true,
+      "status": "PASS"
+    },
+    "version": "1.3",
+    "voice_review": {
+      "blocking_items": [],
+      "candidate_provider": "elevenlabs",
+      "checks": {
+        "clone_disabled": true,
+        "commercial_use_requires_paid_plan": true,
+        "execution_authority": true,
+        "official_terms_available": true,
+        "provider_selected": false,
+        "rights_attestation_required": true
+      },
+      "decision": "VOICE_PROVIDER_SELECTION_REQUIRED",
+      "evidence": {
+        "commercial_use": "paid_plan_required",
+        "evidence_digest": "d2b443a9f3f0c311024dfb1fbee5de055d2176dde98d3a7f82c943f70752159b",
+        "pricing_uri": "https://elevenlabs.io/pricing/api",
+        "provider": "elevenlabs",
+        "retrieved_at": "2026-09-15",
+        "service_terms_uri": "https://elevenlabs.io/service-specific-terms",
+        "source_type": "official_provider_documentation",
+        "terms_uri": "https://elevenlabs.io/terms-of-use",
+        "voice_clone": "rights_and_authorization_required"
+      },
+      "evidence_reference": {
+        "evidence_digest": "d2b443a9f3f0c311024dfb1fbee5de055d2176dde98d3a7f82c943f70752159b",
+        "retrieved_at": "2026-09-15",
+        "source_type": "official_provider_documentation"
+      },
+      "provider": "unselected",
+      "review_required_items": [
+        "voice:provider_selection_required"
+      ],
+      "status": "REVIEW_REQUIRED",
+      "strategies": [
+        {
+          "commercial_use_status": "requires_rights_evidence",
+          "provider": "human",
+          "rights_status": "requires_attestation",
+          "status": "REVIEW_REQUIRED",
+          "voice_clone": false,
+          "voice_strategy": "human_voice"
+        },
+        {
+          "commercial_use_status": "paid_plan_required_for_commercial_use",
+          "provider": "elevenlabs_candidate",
+          "rights_status": "requires_selected_voice_and_terms_review",
+          "status": "REVIEW_REQUIRED",
+          "voice_clone": false,
+          "voice_strategy": "licensed_synthetic_voice"
+        },
+        {
+          "commercial_use_status": "UNKNOWN",
+          "provider": "unselected",
+          "rights_status": "UNKNOWN",
+          "status": "REVIEW_REQUIRED",
+          "voice_clone": false,
+          "voice_strategy": "provider_generated_voice"
+        },
+        {
+          "commercial_use_status": "not_evaluated",
+          "provider": "disabled",
+          "rights_status": "explicit_rights_required",
+          "status": "BLOCKED",
+          "voice_clone": true,
+          "voice_strategy": "voice_cloning"
+        }
+      ]
+    }
+  }
+}

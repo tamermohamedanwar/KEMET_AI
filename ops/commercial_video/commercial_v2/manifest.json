@@ -1,0 +1,15 @@
+{
+  "schema": "kemet.commercial.video.v2",
+  "artifact": "ops/commercial_video/commercial_v2/Kemet_Commercial_V2.mp4",
+  "sha256": "b09a66ed64e89f9345601b8745d644dde4cc5a433b28de14d879c86889c34697",
+  "duration_target_seconds": 48,
+  "resolution": "1920x1080",
+  "scenes": 8,
+  "voice": "espeak-ng ar",
+  "music": "subtle 440Hz ambient, no bass",
+  "mcp": false,
+  "publication": "REVIEW_REQUIRED",
+  "human_approval_required": true,
+  "voice_provider": "local",
+  "voice_external_provider": false
+}

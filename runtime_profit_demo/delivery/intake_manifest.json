@@ -1,0 +1,13 @@
+{
+  "manifest_version": "V4",
+  "files_received": 1,
+  "supported_files": 1,
+  "unsupported_files": 0,
+  "processing_failures": 0,
+  "coverage": {
+    "invoice": 1,
+    "unknown": 0
+  },
+  "status": "READY",
+  "honesty": "Coverage is limited to the document types explicitly supported by this run."
+}

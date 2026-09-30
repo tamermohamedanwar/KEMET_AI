@@ -1,0 +1,366 @@
+{
+  "records": [
+    {
+      "document_id": "335665a595d8d7ce",
+      "document_type": "invoice",
+      "document_date": "2026-09-23",
+      "invoice_number": "INV-2026-001",
+      "supplier_name": "Demo Supplier",
+      "customer_name": "Demo Customer",
+      "currency": "EGP",
+      "subtotal": "1000",
+      "tax": "140",
+      "total": "1140",
+      "payment_status": "Pending",
+      "line_items": "",
+      "source_file": "invoice_demo.txt",
+      "source_page": "1",
+      "source_hash": "335665a595d8d7ce057a7ad8c5142e1f0a666ed16a8bfc3d734c9d55363e6ff2",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "VALID",
+      "review_status": "NOT_REQUIRED",
+      "confidence": 0.95,
+      "field_confidence": {
+        "document_date": 0.95,
+        "invoice_number": 0.95,
+        "supplier_name": 0.95,
+        "customer_name": 0.95,
+        "currency": 0.95,
+        "subtotal": 0.95,
+        "tax": 0.95,
+        "total": 0.95,
+        "payment_status": 0.95
+      },
+      "field_sources": {
+        "document_date": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 2
+        },
+        "invoice_number": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 1
+        },
+        "supplier_name": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 3
+        },
+        "customer_name": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 4
+        },
+        "currency": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 5
+        },
+        "subtotal": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 6
+        },
+        "tax": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 7
+        },
+        "total": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 8
+        },
+        "payment_status": {
+          "source_file": "invoice_demo.txt",
+          "source_line": 9
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "files_received": 1,
+    "records_extracted": 1,
+    "valid_records": 1,
+    "needs_review": 0,
+    "duplicates_detected": 0,
+    "validation_failures": 0,
+    "processing_errors": 0
+  },
+  "failures": [],
+  "intake": {
+    "manifest_version": "V4",
+    "files_received": 1,
+    "supported_files": 1,
+    "unsupported_files": 0,
+    "processing_failures": 0,
+    "coverage": {
+      "invoice": 1,
+      "unknown": 0
+    },
+    "status": "READY",
+    "honesty": "Coverage is limited to the document types explicitly supported by this run."
+  },
+  "rules": {
+    "required_columns": [
+      "document_date",
+      "invoice_number",
+      "supplier_name",
+      "total"
+    ],
+    "allowed_currencies": [
+      "EGP"
+    ]
+  },
+  "field_evidence": [
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "document_id",
+      "value": "335665a595d8d7ce",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "document_type",
+      "value": "invoice",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "document_date",
+      "value": "2026-09-23",
+      "source_page": "1",
+      "source_line": 2,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "invoice_number",
+      "value": "INV-2026-001",
+      "source_page": "1",
+      "source_line": 1,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "supplier_name",
+      "value": "Demo Supplier",
+      "source_page": "1",
+      "source_line": 3,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "customer_name",
+      "value": "Demo Customer",
+      "source_page": "1",
+      "source_line": 4,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "currency",
+      "value": "EGP",
+      "source_page": "1",
+      "source_line": 5,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "subtotal",
+      "value": "1000",
+      "source_page": "1",
+      "source_line": 6,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "tax",
+      "value": "140",
+      "source_page": "1",
+      "source_line": 7,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "total",
+      "value": "1140",
+      "source_page": "1",
+      "source_line": 8,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "payment_status",
+      "value": "Pending",
+      "source_page": "1",
+      "source_line": 9,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "source_file",
+      "value": "invoice_demo.txt",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "source_page",
+      "value": "1",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "source_hash",
+      "value": "335665a595d8d7ce057a7ad8c5142e1f0a666ed16a8bfc3d734c9d55363e6ff2",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "extraction_status",
+      "value": "EXTRACTED",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "validation_status",
+      "value": "VALID",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "review_status",
+      "value": "NOT_REQUIRED",
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    },
+    {
+      "document_id": "335665a595d8d7ce",
+      "source_file": "invoice_demo.txt",
+      "field": "confidence",
+      "value": 0.95,
+      "source_page": "1",
+      "source_line": null,
+      "confidence": 0.95,
+      "validation_status": "VALID"
+    }
+  ],
+  "risk_center": [],
+  "quality": {
+    "overall_quality_score": 100.0,
+    "dimensions": {
+      "completeness_pct": 100.0,
+      "validation_pass_pct": 100.0,
+      "integrity_pct": 100.0
+    },
+    "interpretation": "Ready for delivery",
+    "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+  },
+  "readiness_gate": {
+    "status": "READY",
+    "reasons": []
+  },
+  "client_report": {
+    "report_version": "V4",
+    "executive_summary": {
+      "files_received": 1,
+      "records_extracted": 1,
+      "valid_records": 1,
+      "records_needing_review": 0,
+      "duplicates_detected": 0
+    },
+    "quality": {
+      "overall_quality_score": 100.0,
+      "dimensions": {
+        "completeness_pct": 100.0,
+        "validation_pass_pct": 100.0,
+        "integrity_pct": 100.0
+      },
+      "interpretation": "Ready for delivery",
+      "method": "deterministic pipeline metrics; confidence is heuristic and not model accuracy"
+    },
+    "readiness": {
+      "status": "READY",
+      "reasons": []
+    },
+    "risk_count": 0,
+    "evidence_count": 18,
+    "business_insights": {
+      "record_count": 1,
+      "total_value": 1140.0,
+      "average_value": 1140.0,
+      "supplier_count": 1,
+      "customer_count": 1,
+      "currencies": [
+        "EGP"
+      ],
+      "unpaid_or_pending_count": 1,
+      "high_or_critical_risk_count": 0,
+      "duplicate_count": 0,
+      "top_supplier_by_value": [
+        "Demo Supplier",
+        1140.0
+      ]
+    },
+    "action_plan": [
+      {
+        "priority": "P1",
+        "action": "Review unpaid or pending invoices for follow-up.",
+        "reason": "1 unpaid/pending records detected."
+      }
+    ],
+    "human_review_authoritative": true,
+    "no_accuracy_guarantee": true
+  },
+  "evidence": {
+    "pipeline": "SMART INTAKE -> CLASSIFY -> EXTRACT -> EVIDENCE -> NORMALIZE -> VALIDATE -> RISK -> REVIEW -> QUALITY -> DELIVERY",
+    "input_sha256": [
+      "335665a595d8d7ce057a7ad8c5142e1f0a666ed16a8bfc3d734c9d55363e6ff2"
+    ],
+    "human_review_authoritative": true,
+    "confidence_is_heuristic": true
+  }
+}

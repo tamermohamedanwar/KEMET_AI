@@ -1,0 +1,8 @@
+ab6ad8c5 (HEAD -> development) fix: remove node_modules from repo
+9c568bbd feat: sync local durable execution before sales agent
+11dcff3d chore: save Kemet project checkpoint
+010c19c9 release: Kemet AI v5.34 CRM intelligence and entitlements
+f8a22bd5 release: Kemet AI v5.33 centralized commercial plans
+04fae9d0 Kemet AI V4.7 follow-up scheduler
+7e9a9e29 Kemet AI V4.6 follow-up worker
+618a6d21 Kemet AI V4.5 human review queue

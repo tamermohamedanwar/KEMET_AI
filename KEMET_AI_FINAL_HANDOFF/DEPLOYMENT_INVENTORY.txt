@@ -1,4 +1,0 @@
-Procfile
-gunicorn.conf.py
-run_production.sh
-.env

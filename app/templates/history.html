@@ -3,14 +3,15 @@
 <head>
 {% include "partials/kemet-white-ui.html" %}
 <meta charset="utf-8">
-<title>Kemet AI History</title>
+<title>Kemet — History & Activity</title>
 
 <style>
 body {
-    background:#0f172a;
-    color:white;
+    background:#f7f8fc;
+    color:#151827;
     font-family:Arial, sans-serif;
-    margin:40px;
+    margin:0;
+    padding:40px 20px;
 }
 
 .container {
@@ -19,27 +20,35 @@ body {
 }
 
 .card {
-    background:#1e293b;
-    padding:20px;
-    margin-bottom:20px;
-    border-radius:15px;
+    background:#ffffff;
+    color:#151827;
+    padding:24px;
+    margin-bottom:18px;
+    border:1px solid #e6e8ef;
+    border-radius:14px;
+    box-shadow:0 10px 30px rgba(16,24,40,.055);
 }
 
 .question {
-    background:#334155;
+    background:#f7f8fc;
+    color:#344054;
     padding:15px;
-    border-radius:10px;
+    border:1px solid #e6e8ef;
+    border-radius:11px;
 }
 
 .answer {
-    background:#374151;
+    background:#f3f1ff;
+    color:#344054;
     padding:15px;
-    border-radius:10px;
+    border:1px solid #e1ddff;
+    border-radius:11px;
 }
 
 a {
-    color:white;
+    color:#635bff;
     text-decoration:none;
+    font-weight:700;
 }
 </style>
 
@@ -51,7 +60,7 @@ a {
     <link rel="stylesheet" href="{{ url_for("static", filename="css/kemet-modern.css") }}">
 </head>
 
-<body>
+<body class="kemet-public-shell">
 
 <div class="container">
 

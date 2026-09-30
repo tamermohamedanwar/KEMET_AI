@@ -14,6 +14,7 @@ class TaskClassification:
 _RULES = (
     ("coding", ("code", "coding", "debug", "bug", "api", "python", "flask", "website", "app", "bot"), {"coding", "tool_calling"}),
     ("research", ("research", "compare", "comparison", "analyze", "analysis", "report", "market", "study"), {"research", "long_context", "reasoning"}),
+    ("marketing", ("marketing", "campaign", "audience", "advertising", "advertisement", "promotion", "promote", "conversion", "brand", "customer acquisition"), {"marketing", "research", "audience", "analytics", "optimization", "reasoning"}),
     ("reasoning", ("why", "explain", "calculate", "strategy", "decision", "plan", "reasoning"), {"reasoning"}),
     ("multimodal", ("image", "photo", "picture", "video", "audio", "visual"), {"multimodal"}),
     ("automation", ("automate", "automation", "workflow", "execute", "send", "create", "update"), {"agentic", "tool_calling"}),

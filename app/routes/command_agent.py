@@ -4,6 +4,9 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
 from app.core.agent_runtime import kemet_agent_runtime
+from app.core.agent_approval_adapter import agent_approval_adapter
+from app.services.automation_approval_service import automation_approval_service
+from app.models.automation import AutomationApproval
 
 command_agent_bp = Blueprint(
     "command_agent",
@@ -33,6 +36,9 @@ def command_agent():
             user_id=user_id,
         )
         run, decision = kemet_agent_runtime.reason(run)
+        approval = None
+        if run.state == "approve":
+            approval = agent_approval_adapter.prepare(run, decision=decision.as_dict(), actor_id=user_id)
 
         return jsonify({
             "ok": True,
@@ -53,6 +59,7 @@ def command_agent():
             },
             "decision": decision.as_dict(),
             "execution": None,
+            "approval": approval,
             "approval_required": run.state == "approve",
             "executed": False,
             "external_execution_authority": False,
@@ -70,3 +77,16 @@ def command_agent():
             "error": "command_agent_failed",
             "message": str(exc),
         }), 502
+
+@command_agent_bp.post("/command-agent/approvals/<int:approval_id>/approve")
+@login_required
+def approve_command_agent(approval_id):
+    organization_id = getattr(current_user, "organization_id", None)
+    user_id = getattr(current_user, "id", None)
+    if not organization_id:
+        return jsonify({"ok": False, "error": "organization_id_required"}), 403
+    approval = AutomationApproval.query.filter_by(id=approval_id, organization_id=int(organization_id)).first()
+    if approval is None:
+        return jsonify({"ok": False, "error": "approval_not_in_organization"}), 404
+    result = automation_approval_service.approve(approval_id, decided_by=user_id)
+    return jsonify({"ok": bool(result.get("success")), "approval_id": approval_id, "result": result}), (200 if result.get("success") else 409)

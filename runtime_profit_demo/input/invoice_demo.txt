@@ -1,0 +1,9 @@
+Invoice Number: INV-2026-001
+Date: 23/09/2026
+Supplier: Demo Supplier
+Customer: Demo Customer
+Currency: EGP
+Subtotal: 1000
+Tax: 140
+Total: 1140
+Payment Status: Pending

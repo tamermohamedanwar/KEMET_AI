@@ -1,0 +1,93 @@
+{
+  "records": [
+    {
+      "document_id": "84d356feba001f18",
+      "document_type": "invoice",
+      "document_date": "2026-09-23",
+      "invoice_number": "DEMO-1001",
+      "supplier_name": "Example Supplies",
+      "customer_name": "Example Store",
+      "currency": "EGP",
+      "subtotal": "1000",
+      "tax": "140",
+      "total": "1140",
+      "payment_status": "unpaid",
+      "line_items": "",
+      "source_file": "sample_invoice.txt",
+      "source_page": "1",
+      "source_hash": "84d356feba001f18e807e57767e70d0a4adc443a415d3af18e3d1ffc0252ae18",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "VALID",
+      "review_status": "NOT_REQUIRED",
+      "confidence": 0.95,
+      "field_confidence": {
+        "document_date": 0.95,
+        "invoice_number": 0.95,
+        "supplier_name": 0.95,
+        "customer_name": 0.95,
+        "currency": 0.95,
+        "subtotal": 0.95,
+        "tax": 0.95,
+        "total": 0.95,
+        "payment_status": 0.95
+      },
+      "field_sources": {
+        "document_date": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 2
+        },
+        "invoice_number": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 1
+        },
+        "supplier_name": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 3
+        },
+        "customer_name": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 4
+        },
+        "currency": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 5
+        },
+        "subtotal": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 6
+        },
+        "tax": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 7
+        },
+        "total": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 8
+        },
+        "payment_status": {
+          "source_file": "sample_invoice.txt",
+          "source_line": 9
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "files_received": 1,
+    "records_extracted": 1,
+    "valid_records": 1,
+    "needs_review": 0,
+    "duplicates_detected": 0,
+    "validation_failures": 0,
+    "processing_errors": 0
+  },
+  "failures": [],
+  "evidence": {
+    "pipeline": "INGEST -> CLASSIFY -> EXTRACT -> NORMALIZE -> VALIDATE -> CONFIDENCE -> DUPLICATE -> REVIEW -> EXPORT",
+    "input_sha256": [
+      "84d356feba001f18e807e57767e70d0a4adc443a415d3af18e3d1ffc0252ae18"
+    ],
+    "human_review_authoritative": true,
+    "confidence_is_heuristic": true
+  }
+}

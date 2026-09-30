@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "partials/kemet-white-ui.html" %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Kemet — Document Intelligence</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;padding:20px;background:#f7f8fa;color:#17202a}main{background:#fff;padding:28px;border-radius:16px;box-shadow:0 4px 24px #00000010}h1{margin-top:0}input,button{font:inherit}button{padding:10px 16px;border:0;border-radius:10px;background:#17202a;color:#fff;cursor:pointer}button:disabled{opacity:.5}#status{margin-top:20px;white-space:pre-wrap}.files{margin:16px 0}
+a{display:block;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+<h1>Kemet Document Intelligence</h1>
+<p>Upload invoices or business documents. Kemet extracts structured data, validates it, and prepares delivery files.</p>
+<div class="files"><input id="files" type="file" multiple accept=".pdf,.docx,.html,.json,.pptx,.txt,.csv,.xlsx,.xml"></div>
+<button id="submit">Process Documents</button>
+<div id="status"></div>
+<div id="downloads"></div>
+</main>
+<script>
+const statusEl=document.getElementById('status');
+const downloads=document.getElementById('downloads');
+const button=document.getElementById('submit');
+button.onclick=async()=>{
+ const files=document.getElementById('files').files;
+ if(!files.length){statusEl.textContent='Select at least one file.';return;}
+ const form=new FormData();
+ for(const file of files) form.append('files',file,file.name);
+ button.disabled=true; downloads.innerHTML=''; statusEl.textContent='Processing...';
+ try{
+  const csrfToken=document.querySelector('meta[name="csrf-token"]')?.content||'';
+  const res=await fetch('/api/document-automation/process',{method:'POST',credentials:'same-origin',headers:csrfToken?{'X-CSRFToken':csrfToken}: {},body:form});
+  const contentType=res.headers.get('content-type')||'';
+  const raw=await res.text();
+  let data={};
+  if(contentType.includes('application/json')){try{data=JSON.parse(raw);}catch(e){throw new Error(`Invalid JSON response (HTTP ${res.status})`);}}
+  else{throw new Error(`Server returned non-JSON response (HTTP ${res.status}). Refresh the page and sign in again.`);}
+  if(!res.ok||!data.ok) throw new Error(data.error||data.message||'Processing failed');
+  statusEl.textContent=`Status: ${data.status}\nQuality: ${JSON.stringify(data.quality)}\nValid records: ${data.summary.valid_records}\nNeeds review: ${data.summary.needs_review}`;
+  for(const name of Object.keys(data.outputs||{})){const a=document.createElement('a');a.href=`/api/document-automation/download/${encodeURIComponent(data.job_id)}/${encodeURIComponent(name)}`;a.textContent=`Download ${name}`;downloads.appendChild(a);}
+ }catch(err){statusEl.textContent=`Error: ${err.message}`;}finally{button.disabled=false;}
+};
+</script>
+</body>
+</html>

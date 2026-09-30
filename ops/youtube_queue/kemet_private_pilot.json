@@ -1,0 +1,16 @@
+{
+  "video": "./ops/youtube_queue/kemet_first_commercial_v1.mp4",
+  "title": "Kemet — Run Your Business With Kemet",
+  "description": "Commercial review cut for Kemet. Real Arabic voiceover, six rendered scenes, clear commercial offer and CTA. REVIEW_REQUIRED: no publication requested.",
+  "tags": ["Kemet", "business operating system", "business automation", "commercial video"],
+  "category_id": "28",
+  "privacy_status": "private",
+  "made_for_kids": false,
+  "idempotency_key": "kemet-first-commercial-v1",
+  "commercial_offer": "Kemet Commercial Launch Video — marketing video with CTA and measurable lead path; commercial terms require human approval.",
+  "cta": "اطلب أول تجربة تجارية الآن",
+  "approval_status": "REVIEW_REQUIRED",
+  "publication_requested": false,
+  "external_execution": false,
+  "mcp": false
+}
