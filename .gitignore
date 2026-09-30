@@ -79,3 +79,8 @@ kemet_checkout_url.txt
 backup_paymob/
 backup_ui/
 ops/youtube_worker/node_modules/
+ops/youtube_queue/archive_mp4/
+instance/production/
+*.mp4
+*.db
+*.db.*
